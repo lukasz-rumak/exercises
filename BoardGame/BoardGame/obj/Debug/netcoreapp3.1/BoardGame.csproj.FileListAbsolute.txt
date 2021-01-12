@@ -1,0 +1,11 @@
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.exe
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.deps.json
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.runtimeconfig.json
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.runtimeconfig.dev.json
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.dll
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\bin\Debug\netcoreapp3.1\BoardGame.pdb
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\obj\Debug\netcoreapp3.1\BoardGame.csprojAssemblyReference.cache
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\obj\Debug\netcoreapp3.1\BoardGame.AssemblyInfoInputs.cache
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\obj\Debug\netcoreapp3.1\BoardGame.AssemblyInfo.cs
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\obj\Debug\netcoreapp3.1\BoardGame.dll
+C:\Users\lukasz.rumak\Documents\Exercises\BoardGame\BoardGame\obj\Debug\netcoreapp3.1\BoardGame.pdb

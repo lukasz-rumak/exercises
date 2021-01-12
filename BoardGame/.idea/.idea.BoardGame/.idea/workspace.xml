@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f252d77c-d933-4f77-a235-4b1234ade891" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BoardGame/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BoardGame/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BoardGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BoardGame/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGame/Interfaces/IMove.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGame/Managers/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGame/Managers/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGame/Managers/MoveManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGameTests/BoardGame1x1SizeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGameTests/BoardGame1x1SizeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGameTests/BoardGame2x2SizeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGameTests/BoardGame2x2SizeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGameTests/BoardGame3x3SizeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGameTests/BoardGame3x3SizeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGameTests/BoardGame5x5SizeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGameTests/BoardGame5x5SizeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BoardGameTests/BoardGame8x8SizeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BoardGameTests/BoardGame8x8SizeTests.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/BoardGameTests/BoardGame8x8SizeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://C:/Program Files (x86)/NuGet/Config/Microsoft.VisualStudio.Offline.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGameTests/BoardGame3x3SizeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGameTests/BoardGame5x5SizeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Interfaces/IBoardBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGameTests/BoardGame1x1SizeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Interfaces/IGame.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGameTests/BoardGame2x2SizeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Managers/BoardBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Interfaces/IValidator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Managers/Validator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Models/Direction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Interfaces/IPlayer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Models/Field.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Managers/GameManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BoardGame/Managers/Pawn.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Roaming/NuGet/NuGet.Config" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/BoardGame/Models/Direction.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/OutputManager.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/BoardBuilder.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IValidator.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IBoard.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGameTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/BoardManager.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IGame.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/ValidationManager.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame5x5SizeTests - Copy - Copy - Copy.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame8x8SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame1x1SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame2x2SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame3x3SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/UnitTests/BoardGame5x5SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Models/Field.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/UnitTest1.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/Validator.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IMove.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Program.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/MoveManager.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IBoardBuilder.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/BoardBuilder.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Interfaces/IPlayer.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/Pawn.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/BoardGame1x1SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/BoardGame2x2SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/BoardGame3x3SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/BoardGame5x5SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGameTests/BoardGame8x8SizeTests.cs" />
+        <option value="$PROJECT_DIR$/BoardGame/Managers/GameManager.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1mpKEedaCjZsONJdHfqoosRbNFj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="RiderNuGetOptionsPageId" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Project.Default">
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/BoardGame/bin/Debug/netcoreapp3.1/BoardGame.dll" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BoardGame/bin/Debug/netcoreapp3.1" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/BoardGame/BoardGame.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value=".NETCoreApp,Version=v3.1" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f252d77c-d933-4f77-a235-4b1234ade891" name="Default Changelist" comment="" />
+      <created>1610184984769</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1610184984769</updated>
+      <workItem from="1610184998950" duration="1457000" />
+      <workItem from="1610186586546" duration="1755000" />
+      <workItem from="1610188415818" duration="1763000" />
+      <workItem from="1610190421195" duration="1587000" />
+      <workItem from="1610192251577" duration="1766000" />
+      <workItem from="1610194086584" duration="27000" />
+      <workItem from="1610272252492" duration="1738000" />
+      <workItem from="1610274059804" duration="1758000" />
+      <workItem from="1610276031630" duration="1666000" />
+      <workItem from="1610277826144" duration="2228000" />
+      <workItem from="1610280420671" duration="1761000" />
+      <workItem from="1610282363129" duration="32000" />
+      <workItem from="1610347544717" duration="1760000" />
+      <workItem from="1610349423264" duration="1763000" />
+      <workItem from="1610351286515" duration="1623000" />
+      <workItem from="1610353648762" duration="1761000" />
+      <workItem from="1610355519844" duration="793000" />
+      <workItem from="1610358970652" duration="1755000" />
+      <workItem from="1610360936248" duration="2153000" />
+      <workItem from="1610444360860" duration="1178000" />
+      <workItem from="1610446569622" duration="604000" />
+      <workItem from="1610448663163" duration="3958000" />
+      <workItem from="1610458803764" duration="1062000" />
+      <workItem from="1610484598207" duration="590000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/BoardGame/Program.cs</url>
+          <line>9</line>
+          <properties documentPath="$PROJECT_DIR$/BoardGame/Program.cs" initialLine="10">
+            <startOffsets>
+              <option value="149" />
+            </startOffsets>
+            <endOffsets>
+              <option value="185" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="DotNetProject">
+        <watch expression="board[4,4]" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
