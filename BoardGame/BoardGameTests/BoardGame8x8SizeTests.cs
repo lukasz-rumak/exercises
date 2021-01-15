@@ -10,19 +10,18 @@ namespace BoardGameTests
         
         public BoardGame8x8SizeTests()
         {
-            _game = new GameManager(new Validator(), new BoardBuilder(8), new Pawn(8));
+            _game = new GameMaster(new Validator(), new BoardBuilder(8));
         }
 
         [Theory]
-        [InlineData("MRMLMRM", "2 2 East")]
-        [InlineData("RMMMLMM", "3 2 North")]
-        [InlineData("MMMMM", "0 5 North")]
-        [InlineData("MXMMM", "Instruction not clear. Exiting...")]
-        [InlineData("", "Instruction not clear. Exiting...")]
-        [InlineData(" ", "Instruction not clear. Exiting...")]
-        [InlineData(null, "Instruction not clear. Exiting...")]
-        //[InlineData(new [] { 1, 2, 3, 4, 5 }, "Instruction not clear. Exiting...")]
-        public void ReturnExpectedVResultForDifferentInputInstructions(string input, string expectedResult)
+        [InlineData(new []{"MRMLMRM"}, new []{"2 2 East"})]
+        [InlineData(new []{"RMMMLMM"}, new []{"3 2 North"})]
+        [InlineData(new []{"MMMMM"}, new []{"0 5 North"})]
+        [InlineData(new []{"MXMMM"}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(null, new []{"Instruction not clear. Exiting..."})]
+        public void ReturnExpectedVResultForDifferentInputInstructions(string[] input, string[] expectedResult)
         {
             var actual = _game.PlayTheGame(input);
             Assert.Equal(expectedResult, actual);

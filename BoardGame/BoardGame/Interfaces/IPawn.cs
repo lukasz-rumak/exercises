@@ -1,7 +1,10 @@
 ﻿namespace BoardGame.Interfaces
 {
-    public interface IPlayer
+    public interface IPawn
     {
-        string ExecuteThePlayerInstruction(IValidator validator, IBoardBuilder board, string input);
+        int PawnId { get; set; }
+        bool IsAlive { get; set; }
+        IPosition Position { get; }
+        void ExecuteThePlayerInstruction(string input);
     }
 }

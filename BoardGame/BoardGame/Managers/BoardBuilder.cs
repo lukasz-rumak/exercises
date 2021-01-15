@@ -5,22 +5,20 @@ namespace BoardGame.Managers
 {
     public class BoardBuilder : IBoardBuilder
     {
-        private readonly int _size;
-//        public Field[,] Board { get; set; }
-//        public int WithSize { get ; set; }
+        public Field[,] Board { get; }
+        public int WithSize { get; }
 
         public BoardBuilder(int size)
         {
-            _size = size;
-//            Board = GenerateBoard();
-//            WithSize = size;
+            Board = GenerateBoard(size);
+            WithSize = size;
         }
-
-        public Field[,] GenerateBoard()
+        
+        private Field[,] GenerateBoard(int size)
         {
-            var board = new Field[_size, _size];
-            for (int i = 0; i < _size; i++)
-                for (int j = 0; j < _size; j++)
+            var board = new Field[size, size];
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
                     board[i, j] = new Field(i, j);
             return board;
         }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {}
+    "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {
+    "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj",
+        "projectUniqueName": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj",
         "projectName": "BoardGame",
-        "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj",
+        "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj",
         "packagesPath": "C:\\Users\\lukasz.rumak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\obj\\",
+        "outputPath": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

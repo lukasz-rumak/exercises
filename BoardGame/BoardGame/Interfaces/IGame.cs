@@ -2,6 +2,6 @@
 {
     public interface IGame
     {
-        string PlayTheGame(string input);
+        string[] PlayTheGame(string[] instructions);
     }
 }

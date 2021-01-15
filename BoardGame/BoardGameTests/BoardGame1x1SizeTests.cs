@@ -10,23 +10,22 @@ namespace BoardGameTests
         
         public BoardGame1x1SizeTests()
         {
-            _game = new GameManager(new Validator(), new BoardBuilder(1), new Pawn(1));
+            _game = new GameMaster(new Validator(), new BoardBuilder(1));
         }
 
         [Theory]
-        [InlineData("MRMLMRM", "0 0 East")]
-        [InlineData("RMMMLMM", "0 0 North")]
-        [InlineData("MMMMM", "0 0 North")]
-        [InlineData("MMMMMMMMM", "0 0 North")]
-        [InlineData("MMMMMMMMMR", "0 0 East")]
-        [InlineData("MMMMMMMMML", "0 0 West")]
-        [InlineData("MMMMMMMMMRMMMMMMM", "0 0 East")]
-        [InlineData("MXMMM", "Instruction not clear. Exiting...")]
-        [InlineData("", "Instruction not clear. Exiting...")]
-        [InlineData(" ", "Instruction not clear. Exiting...")]
-        [InlineData(null, "Instruction not clear. Exiting...")]
-        //[InlineData(new [] { 1, 2, 3, 4, 5 }, "Instruction not clear. Exiting...")]
-        public void ReturnExpectedVResultForDifferentInputInstructions(string input, string expectedResult)
+        [InlineData(new []{"MRMLMRM"}, new []{"0 0 East"})]
+        [InlineData(new []{"RMMMLMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"MMMMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"MMMMMMMMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"MMMMMMMMMR"}, new []{"0 0 East"})]
+        [InlineData(new []{"MMMMMMMMML"}, new []{"0 0 West"})]
+        [InlineData(new []{"MMMMMMMMMRMMMMMMM"}, new []{"0 0 East"})]
+        [InlineData(new []{"MXMMM"}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(null, new []{"Instruction not clear. Exiting..."})]
+        public void ReturnExpectedVResultForDifferentInputInstructions(string[] input, string[] expectedResult)
         {
             var actual = _game.PlayTheGame(input);
             Assert.Equal(expectedResult, actual);

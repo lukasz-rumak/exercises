@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using BoardGame.Models;
+﻿using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {
     public interface IBoardBuilder
     {
-        Field[,] GenerateBoard();
+        Field[,] Board { get; }
+        int WithSize { get; }
     }
 }

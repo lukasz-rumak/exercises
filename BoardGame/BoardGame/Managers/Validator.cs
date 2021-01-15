@@ -4,10 +4,6 @@ namespace BoardGame.Managers
 {
     public class Validator : IValidator
     {
-        public Validator()
-        {
-        }
-
         public bool ValidateInput(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

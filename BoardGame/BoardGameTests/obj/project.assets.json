@@ -6836,11 +6836,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGameTests\\BoardGameTests.csproj",
+      "projectUniqueName": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGameTests\\BoardGameTests.csproj",
       "projectName": "BoardGameTests",
-      "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGameTests\\BoardGameTests.csproj",
+      "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGameTests\\BoardGameTests.csproj",
       "packagesPath": "C:\\Users\\lukasz.rumak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGameTests\\obj\\",
+      "outputPath": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGameTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -6859,8 +6859,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {
-              "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\Exercises\\BoardGame\\BoardGame\\BoardGame.csproj"
+            "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj": {
+              "projectPath": "C:\\Users\\lukasz.rumak\\Documents\\exercises\\BoardGame\\BoardGame\\BoardGame.csproj"
             }
           }
         }

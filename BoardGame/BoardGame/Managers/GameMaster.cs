@@ -1,54 +1,47 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using BoardGame.Interfaces;
-using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class GameManager : IGame
+    public class GameMaster : IGame
     {
         private readonly IValidator _validator;
         private readonly IBoardBuilder _board;
-        private readonly IPlayer _pawn;
         
-        public GameManager(IValidator validator, IBoardBuilder boardBuilder, IPlayer pawn)
+        public GameMaster(IValidator validator, IBoardBuilder boardBuilder)
         {
             _validator = validator;
             _board = boardBuilder;
-            _pawn = pawn;
         }
-        
-        public string PlayTheGame(string input)
-        {
-            if (!_validator.ValidateInput(input))
-                return "Instruction not clear. Exiting...";
 
-            var x = 0;
-            var y = 0;
-            var direction = Direction.North;
+        public string[] PlayTheGame(string[] instructions)
+        {
+            if (instructions is null)
+                return new []{"Instruction not clear. Exiting..."};
             
-            foreach (var instruction in input)
+            var pawns = new List<Pawn>();
+            for (var i = 0; i < instructions.Length; i++)
+                pawns.Add(new Pawn(_validator, _board, i));
+            
+            for (var i = 0; i < instructions.Length; i++)
+                pawns[i].ExecuteThePlayerInstruction(instructions[i]);
+
+            return GetResult(pawns);
+        }
+
+        private string[] GetResult(List<Pawn> pawns)
+        {
+            var result = new string[pawns.Count];
+            for (var i = 0; i < pawns.Count; i++)
             {
-                if (instruction == 'M')
-                {
-                    (x, y) = _pawn.MakeMove(_board.WithSize, direction, x, y);
-                }
-                else
-                {
-                    direction = instruction == 'R' ? _pawn.ChangeDirectionToRight(direction) : _pawn.ChangeDirectionToLeft(direction);
-                }
+                result[i] = pawns[i].IsAlive
+                    ? new StringBuilder().Append(pawns[i].Position.X).Append(" ").Append(pawns[i].Position.Y)
+                        .Append(" ").Append(pawns[i].Position.Direction).ToString()
+                    : result[i] = @"Instruction not clear. Exiting...";
             }
             
-            return ConvertResult(_board.Board, direction, x, y);
-        }
-
-        private string ConvertResult(Field[,] board, Direction direction, int x, int y)
-        {
-            return new StringBuilder().Append(board[x, y].X)
-                .Append(" ")
-                .Append(board[x, y].Y)
-                .Append(" ")
-                .Append(direction)
-                .ToString();
+            return result;
         }
     }
 }
