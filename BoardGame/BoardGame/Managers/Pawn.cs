@@ -30,7 +30,10 @@ namespace BoardGame.Managers
         public void ExecuteThePlayerInstruction(string input)
         {
             if (!_validator.ValidateInput(input))
+            {
                 IsAlive = false;
+                return;
+            }
 
             foreach (var instruction in input)
             {
