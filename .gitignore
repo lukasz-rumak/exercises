@@ -9,3 +9,16 @@ BoardGame/BoardGame/bin/Debug/netcoreapp3.1/BoardGame.runtimeconfig.dev.json
 BoardGame/BoardGame/bin/Debug/netcoreapp3.1/BoardGame.deps.json
 BoardGame/BoardGameTests/bin/Debug/netcoreapp3.1/BoardGameTests.runtimeconfig.dev.json
 BoardGame/BoardGameTests/bin/Debug/netcoreapp3.1/BoardGameTests.runtimeconfig.json
+*.props
+*.cache
+*.txt
+BoardGame/BoardGame/obj/Debug/netcoreapp3.1/BoardGame.AssemblyInfo.cs
+*.targets
+BoardGame/BoardGame/obj/BoardGame.csproj.nuget.dgspec.json
+BoardGame/BoardGame/obj/project.assets.json
+BoardGame/BoardGame/obj/project.packagespec.json
+BoardGame/BoardGameTests/obj/BoardGameTests.csproj.nuget.dgspec.json
+BoardGame/BoardGameTests/obj/Debug/netcoreapp3.1/BoardGameTests.AssemblyInfo.cs
+BoardGame/BoardGameTests/obj/Debug/netcoreapp3.1/BoardGameTests.csproj.CopyComplete
+BoardGame/BoardGameTests/obj/project.assets.json
+BoardGame/BoardGameTests/obj/project.packagespec.json
