@@ -7,13 +7,13 @@ namespace BoardGame.Managers
     public class GameManager : IGame
     {
         private readonly IValidator _validator;
-        private readonly Field[,] _board;
+        private readonly IBoardBuilder _board;
         private readonly IPlayer _pawn;
         
         public GameManager(IValidator validator, IBoardBuilder boardBuilder, IPlayer pawn)
         {
             _validator = validator;
-            _board = boardBuilder.GenerateBoard();
+            _board = boardBuilder;
             _pawn = pawn;
         }
         
@@ -30,7 +30,7 @@ namespace BoardGame.Managers
             {
                 if (instruction == 'M')
                 {
-                    (x, y) = _pawn.MakeMove(direction, x, y);
+                    (x, y) = _pawn.MakeMove(_board.WithSize, direction, x, y);
                 }
                 else
                 {
@@ -38,7 +38,7 @@ namespace BoardGame.Managers
                 }
             }
             
-            return ConvertResult(_board, direction, x, y);
+            return ConvertResult(_board.Board, direction, x, y);
         }
 
         private string ConvertResult(Field[,] board, Direction direction, int x, int y)
