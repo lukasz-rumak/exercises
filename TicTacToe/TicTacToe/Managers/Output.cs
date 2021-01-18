@@ -14,7 +14,11 @@ namespace TicTacToe.Managers
                 var stringBuilder = new StringBuilder().Append("| ");
                 for (int j = 0; j < 3; j++)
                 {
-                    stringBuilder.Append(board[i, j].Player).Append(" | ");
+                    if (board[i, j].Player == Player.None)
+                        stringBuilder.Append("-");
+                    else
+                        stringBuilder.Append(board[i, j].Player);
+                    stringBuilder.Append(" | ");
                 }
 
                 Console.WriteLine(stringBuilder.ToString());
