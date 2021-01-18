@@ -1,10 +1,9 @@
-﻿using BoardGame.Models;
-
 namespace BoardGame.Interfaces
 {
     public interface IBoardBuilder
     {
-        Field[,] Board { get; }
-        int WithSize { get; }
+        IBoardBuilder WithSize(int size);
+        IBoardBuilder GenerateBoard();
+        IGameBoard Build();
     }
 }

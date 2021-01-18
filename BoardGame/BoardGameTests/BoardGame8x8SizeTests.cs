@@ -10,7 +10,7 @@ namespace BoardGameTests
         
         public BoardGame8x8SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder(8));
+            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(8).GenerateBoard().Build());
         }
 
         [Theory]

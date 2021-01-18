@@ -1,35 +1,31 @@
 ﻿using BoardGame.Interfaces;
-using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
     public class BoardBuilder : IBoardBuilder
     {
-        public Field[,] Board { get; }
-        public int WithSize { get; }
-
-        public BoardBuilder(int size)
+        private IGameBoard _board;
+        
+        public BoardBuilder()
         {
-            Board = GenerateBoard(size);
-            WithSize = size;
+            _board = new GameBoard();
+        }
+
+        public IBoardBuilder WithSize(int size)
+        {
+            _board.WithSize = size;
+            return this;
         }
         
-        private Field[,] GenerateBoard(int size)
+        public IBoardBuilder GenerateBoard()
         {
-            var board = new Field[size, size];
-            for (int i = 0; i < size; i++)
-                for (int j = 0; j < size; j++)
-                    board[i, j] = new Field(i, j);
-            return board;
+            _board.Board = _board.GenerateBoard();
+            return this;
+        }
+        
+        public IGameBoard Build()
+        {
+            return _board;
         }
     }
 }
-
-//        public List<Field> GenerateBoardObsolete()
-//        {
-//            var board = new List<Field>();
-//            for (int i = 0; i < _size; i++)
-//            for (int j = 0; j < _size; j++)
-//                board.Add(new Field(j, i));
-//            return board;
-//        }

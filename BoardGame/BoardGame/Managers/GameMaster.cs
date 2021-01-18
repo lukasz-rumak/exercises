@@ -7,12 +7,12 @@ namespace BoardGame.Managers
     public class GameMaster : IGame
     {
         private readonly IValidator _validator;
-        private readonly IBoardBuilder _board;
+        private readonly IGameBoard _board;
         
-        public GameMaster(IValidator validator, IBoardBuilder boardBuilder)
+        public GameMaster(IValidator validator, IGameBoard board)
         {
             _validator = validator;
-            _board = boardBuilder;
+            _board = board;
         }
 
         public string[] PlayTheGame(string[] instructions)

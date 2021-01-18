@@ -12,9 +12,9 @@ namespace BoardGame.Managers
         public IPosition Position { get; }
         
         private readonly IValidator _validator;
-        private readonly IBoardBuilder _board;
+        private readonly IGameBoard _board;
 
-        public Pawn(IValidator validator, IBoardBuilder board, int pawnId)
+        public Pawn(IValidator validator, IGameBoard board, int pawnId)
         {
             _validator = validator;
             _board = board;
