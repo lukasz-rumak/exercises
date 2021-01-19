@@ -6,6 +6,6 @@ namespace BoardGame.Interfaces
     {
         Field[,] Board { get; set; }
         int WithSize { get; set; }
-        Field[,] GenerateBoard();
+        Field[,] GenerateBoard(int size);
     }
 }

@@ -19,7 +19,7 @@ namespace BoardGame.Managers
         
         public IBoardBuilder GenerateBoard()
         {
-            _board.Board = _board.GenerateBoard();
+            _board.Board = _board.GenerateBoard(_board.WithSize);
             return this;
         }
         

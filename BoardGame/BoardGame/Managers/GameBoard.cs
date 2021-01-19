@@ -8,11 +8,11 @@ namespace BoardGame.Managers
         public Field[,] Board { get; set; }
         public int WithSize { get; set; }
 
-        public Field[,] GenerateBoard()
+        public Field[,] GenerateBoard(int size)
         {
-            var board = new Field[WithSize, WithSize];
-            for (int i = 0; i < WithSize; i++)
-            for (int j = 0; j < WithSize; j++)
+            var board = new Field[size, size];
+            for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
                 board[i, j] = new Field(i, j);
             return board;
         }
