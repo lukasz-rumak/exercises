@@ -5,6 +5,6 @@
         int PawnId { get; set; }
         bool IsAlive { get; set; }
         IPosition Position { get; }
-        void ExecuteThePlayerInstruction(string input);
+        void ExecuteThePlayerInstruction(char instruction);
     }
 }

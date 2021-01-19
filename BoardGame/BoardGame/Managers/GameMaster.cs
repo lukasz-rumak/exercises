@@ -20,17 +20,48 @@ namespace BoardGame.Managers
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
             
-            var pawns = new List<Pawn>();
-            for (var i = 0; i < instructions.Length; i++)
-                pawns.Add(new Pawn(_validator, _board, i));
-            
-            for (var i = 0; i < instructions.Length; i++)
-                pawns[i].ExecuteThePlayerInstruction(instructions[i]);
-
+            var pawns = CreatePawns(instructions);
+            ExecuteValidation(pawns, instructions);
+            ExecuteTheInstructions(pawns, instructions);
             return GetResult(pawns);
         }
+        
+        private List<Pawn> CreatePawns(IReadOnlyCollection<string> instructions)
+        {
+            var pawns = new List<Pawn>();
+            for (var i = 0; i < instructions.Count; i++)
+                pawns.Add(new Pawn(_board, i));
+            return pawns;
+        }
+        
+        private void ExecuteValidation(IReadOnlyList<Pawn> pawns, IReadOnlyList<string> instructions)
+        {
+            for (var i = 0; i < pawns.Count; i++)
+                if (!_validator.ValidateInput(instructions[i]))
+                    pawns[i].IsAlive = false;
+        }
+        
+        private void ExecuteTheInstructions(IReadOnlyList<Pawn> pawns, IReadOnlyList<string> instructions)
+        {
+            var longestInstruction = GetTheLongestInstruction(pawns, instructions);
+            
+            for (var i = 0; i < longestInstruction; i++)
+                for (var j = 0; j < pawns.Count; j++)
+                    if (pawns[j].IsAlive)
+                        if (instructions[j].Length > i)
+                            pawns[j].ExecuteThePlayerInstruction(instructions[j][i]);
+        }
 
-        private string[] GetResult(List<Pawn> pawns)
+        private int GetTheLongestInstruction(IReadOnlyCollection<Pawn> pawns, IReadOnlyList<string> instructions)
+        {
+            var longest = 0;
+            for (var i = 0; i < pawns.Count; i++)
+                if (instructions[i].Length > longest)
+                    longest = instructions[i].Length;
+            return longest;
+        }
+        
+        private string[] GetResult(IReadOnlyList<Pawn> pawns)
         {
             var result = new string[pawns.Count];
             for (var i = 0; i < pawns.Count; i++)
