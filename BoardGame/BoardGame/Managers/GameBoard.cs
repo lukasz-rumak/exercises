@@ -16,5 +16,59 @@ namespace BoardGame.Managers
                 board[i, j] = new Field(i, j);
             return board;
         }
+        
+        public void ExecuteThePlayerInstruction(Pawn pawn, char instruction)
+        {
+            if (instruction == 'M')
+                MovePawn(pawn);
+            else
+                pawn.Position.Direction = instruction == 'R' ? pawn.ChangeDirectionToRight(pawn.Position.Direction) : pawn.ChangeDirectionToLeft(pawn.Position.Direction);
+        }
+
+        private void MovePawn(Pawn pawn)
+        {
+            if (!IsMovePossible(pawn.Position.Direction, pawn.Position.X, pawn.Position.Y)) return;
+            MarkFieldAsNotTaken(pawn.Position.X, pawn.Position.Y);
+            if (pawn.Position.Direction == Direction.North)
+                pawn.Position.Y += 1;
+            else if (pawn.Position.Direction == Direction.East)
+                pawn.Position.X += 1;
+            else if (pawn.Position.Direction == Direction.South)
+                pawn.Position.Y -= 1;
+            else if (pawn.Position.Direction == Direction.West)
+                pawn.Position.X -= 1;
+            MarkFieldAsTaken(pawn);
+        }
+        
+        private bool IsMovePossible(Direction direction, int x, int y)
+        {
+            switch (direction)
+            {
+                case Direction.North:
+                    return y + 1 < WithSize && !Board[x, y + 1].IsTaken;
+                case Direction.East:
+                    return x + 1 < WithSize && !Board[x + 1, y].IsTaken;
+                case Direction.South:
+                    return y - 1 >= 0 && !Board[x, y - 1].IsTaken;
+                case Direction.West:
+                    return x - 1 >= 0 && !Board[x - 1, y].IsTaken;
+                case Direction.None:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+
+        private void MarkFieldAsTaken(Pawn pawn)
+        {
+            Board[pawn.Position.X, pawn.Position.Y].TakenBy = pawn;
+            Board[pawn.Position.X, pawn.Position.Y].IsTaken = true;
+        }
+        
+        private void MarkFieldAsNotTaken(int x, int y)
+        {
+            Board[x, y].TakenBy = null;
+            Board[x, y].IsTaken = false;
+        }
     }
 }

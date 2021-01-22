@@ -10,9 +10,7 @@ namespace BoardGame.Managers
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
         
-        private readonly IGameBoard _board;
-
-        public Pawn(IGameBoard board, int pawnId)
+        public Pawn(int pawnId)
         {
             PawnId = pawnId;
             IsAlive = true;
@@ -22,36 +20,9 @@ namespace BoardGame.Managers
                 Y = 0,
                 Direction = Direction.North
             };
-            _board = board;
         }
-        public void ExecuteThePlayerInstruction(char instruction)
-        {
-            if (instruction == 'M')
-                (Position.X, Position.Y) = MakeMove(_board.WithSize, Position.Direction, Position.X, Position.Y);
-            else
-                Position.Direction = instruction == 'R' ? ChangeDirectionToRight(Position.Direction) : ChangeDirectionToLeft(Position.Direction);
-        }
-
-        private (int, int) MakeMove(int boardSize, Direction direction, int x, int y)
-        {
-            switch (direction)
-            {
-                case Direction.North:
-                    return y + 1 < boardSize ? (x, y + 1) : (x, y);
-                case Direction.East:
-                    return x + 1 < boardSize ? (x + 1, y) : (x, y);
-                case Direction.South:
-                    return y - 1 >= 0 ? (x, y - 1) : (x, y);
-                case Direction.West:
-                    return x - 1 >= 0 ? (x - 1, y) : (x, y);
-                case Direction.None:
-                    return (x, y);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private Direction ChangeDirectionToRight(Direction direction)
+        
+        public Direction ChangeDirectionToRight(Direction direction)
         {
             switch (direction)
             {
@@ -70,7 +41,7 @@ namespace BoardGame.Managers
             }
         }
 
-        private Direction ChangeDirectionToLeft(Direction direction)
+        public Direction ChangeDirectionToLeft(Direction direction)
         {
             switch (direction)
             {

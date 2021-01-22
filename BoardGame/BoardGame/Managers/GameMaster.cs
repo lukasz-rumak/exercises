@@ -8,11 +8,13 @@ namespace BoardGame.Managers
     {
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
+        private readonly IPresentation _present;
         
-        public GameMaster(IValidator validator, IGameBoard board)
+        public GameMaster(IValidator validator, IGameBoard board, IPresentation present)
         {
             _validator = validator;
             _board = board;
+            _present = present;
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -30,7 +32,7 @@ namespace BoardGame.Managers
         {
             var pawns = new List<Pawn>();
             for (var i = 0; i < instructions.Count; i++)
-                pawns.Add(new Pawn(_board, i));
+                pawns.Add(new Pawn(i));
             return pawns;
         }
         
@@ -49,7 +51,10 @@ namespace BoardGame.Managers
                 for (var j = 0; j < pawns.Count; j++)
                     if (pawns[j].IsAlive)
                         if (instructions[j].Length > i)
-                            pawns[j].ExecuteThePlayerInstruction(instructions[j][i]);
+                        {
+                            _board.ExecuteThePlayerInstruction(pawns[j], instructions[j][i]);
+                            _present.GenerateOutput(_board, pawns);
+                        }
         }
 
         private int GetTheLongestInstruction(IReadOnlyCollection<Pawn> pawns, IReadOnlyList<string> instructions)
