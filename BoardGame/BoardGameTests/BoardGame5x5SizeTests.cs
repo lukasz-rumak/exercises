@@ -10,7 +10,7 @@ namespace BoardGameTests
         
         public BoardGame5x5SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(5).GenerateBoard().Build(), new ConsoleOutput());
+            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(5).BuildBoard(), new ConsoleOutput());
         }
 
         [Theory]

@@ -62,13 +62,11 @@ namespace BoardGame.Managers
         private void MarkFieldAsTaken(Pawn pawn)
         {
             Board[pawn.Position.X, pawn.Position.Y].TakenBy = pawn;
-            Board[pawn.Position.X, pawn.Position.Y].IsTaken = true;
         }
         
         private void MarkFieldAsNotTaken(int x, int y)
         {
             Board[x, y].TakenBy = null;
-            Board[x, y].IsTaken = false;
         }
     }
 }

@@ -16,15 +16,10 @@ namespace BoardGame.Managers
             _board.WithSize = size;
             return this;
         }
-        
-        public IBoardBuilder GenerateBoard()
+
+        public IGameBoard BuildBoard()
         {
             _board.Board = _board.GenerateBoard(_board.WithSize);
-            return this;
-        }
-        
-        public IGameBoard Build()
-        {
             return _board;
         }
     }

@@ -21,7 +21,7 @@ namespace BoardGame.Managers
                 Direction = Direction.North
             };
         }
-        
+
         public Direction ChangeDirectionToRight(Direction direction)
         {
             switch (direction)
