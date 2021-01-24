@@ -17,9 +17,7 @@ namespace BoardGame.Managers
                 var str = new StringBuilder();
                 for (int j = 0; j < board.WithSize; j++)
                 {
-                    if (i == 0 && j == 0)
-                        str.Append("S");
-                    else if (board.Board[j, i].IsTaken)
+                    if (board.Board[j, i].IsTaken)
                         str.Append(board.Board[j, i].TakenBy.PawnId);
                     else
                         str.Append("-");

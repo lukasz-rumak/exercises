@@ -21,7 +21,7 @@ namespace BoardGameTests
         [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(null, new []{"Instruction not clear. Exiting..."})]
-        public void ReturnExpectedVResultForDifferentInputInstructions(string[] input, string[] expectedResult)
+        public void ReturnExpectedVersusActualForDifferentInputInstructions(string[] input, string[] expectedResult)
         {
             var actual = _game.PlayTheGame(input);
             Assert.Equal(expectedResult, actual);

@@ -12,17 +12,19 @@ namespace BoardGame.Managers
         {
             var board = new Field[size, size];
             for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                board[i, j] = new Field(i, j);
+                for (int j = 0; j < size; j++)
+                    board[i, j] = new Field(i, j);
             return board;
         }
-        
+
         public void ExecuteThePlayerInstruction(Pawn pawn, char instruction)
         {
             if (instruction == 'M')
                 MovePawn(pawn);
-            else
-                pawn.Position.Direction = instruction == 'R' ? pawn.ChangeDirectionToRight(pawn.Position.Direction) : pawn.ChangeDirectionToLeft(pawn.Position.Direction);
+            else if (instruction == 'R')
+                pawn.ChangeDirectionToRight();
+            else if (instruction == 'L')
+                pawn.ChangeDirectionToLeft();
         }
 
         private void MovePawn(Pawn pawn)

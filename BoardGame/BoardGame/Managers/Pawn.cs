@@ -1,5 +1,4 @@
-﻿using System;
-using BoardGame.Interfaces;
+﻿using BoardGame.Interfaces;
 using BoardGame.Models;
 
 namespace BoardGame.Managers
@@ -16,48 +15,36 @@ namespace BoardGame.Managers
             IsAlive = true;
             Position = new Position
             {
-                X = 0,
-                Y = 0,
+                X = pawnId,
+                Y = pawnId,
                 Direction = Direction.North
             };
         }
 
-        public Direction ChangeDirectionToRight(Direction direction)
+        public void ChangeDirectionToRight()
         {
-            switch (direction)
+            Position.Direction = Position.Direction switch
             {
-                case Direction.North:
-                    return Direction.East;
-                case Direction.East:
-                    return Direction.South;
-                case Direction.South:
-                    return Direction.West;
-                case Direction.West:
-                    return Direction.North;
-                case Direction.None:
-                    return Direction.None;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                Direction.North => Direction.East,
+                Direction.East => Direction.South,
+                Direction.South => Direction.West,
+                Direction.West => Direction.North,
+                Direction.None => Direction.None,
+                _ => Position.Direction
+            };
         }
 
-        public Direction ChangeDirectionToLeft(Direction direction)
+        public void ChangeDirectionToLeft()
         {
-            switch (direction)
+            Position.Direction = Position.Direction switch
             {
-                case Direction.North:
-                    return Direction.West;
-                case Direction.West:
-                    return Direction.South;
-                case Direction.South:
-                    return Direction.East;
-                case Direction.East:
-                    return Direction.North;
-                case Direction.None:
-                    return Direction.None;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                Direction.North => Direction.West,
+                Direction.West => Direction.South,
+                Direction.South => Direction.East,
+                Direction.East => Direction.North,
+                Direction.None => Direction.None,
+                _ => Position.Direction
+            };
         }
     }
 }
