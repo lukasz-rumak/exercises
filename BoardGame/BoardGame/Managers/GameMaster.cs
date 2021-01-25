@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -33,8 +34,11 @@ namespace BoardGame.Managers
             var pawns = new List<Pawn>();
             for (var i = 0; i < instructions.Count; i++)
             {
-                pawns.Add(new Pawn(i));
-                _board.Board[i, i].TakenBy = pawns[i];
+                if (_board.WithSize > i)
+                {
+                    pawns.Add(new Pawn(i));
+                    _board.Board[i, i].TakenBy = pawns[i];    
+                }
             }
             return pawns;
         }

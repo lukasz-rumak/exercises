@@ -21,6 +21,7 @@ namespace BoardGameTests
         [InlineData(new []{"MMMMMMMMMR"}, new []{"0 1 East"})]
         [InlineData(new []{"MMMMMMMMML"}, new []{"0 1 West"})]
         [InlineData(new []{"MMMMMMMMMRMMMMMMM"}, new []{"1 1 East"})]
+        [InlineData(new []{"M","M","M","M","M"}, new []{"0 1 North", "1 1 North"})]
         [InlineData(new []{"MXMMM"}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
