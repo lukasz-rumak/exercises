@@ -17,7 +17,7 @@ namespace BoardGame.Managers
             {
                 X = knightId,
                 Y = knightId,
-                Direction = Direction.North
+                Direction = Direction.NorthEast
             };
         }
 
@@ -25,7 +25,6 @@ namespace BoardGame.Managers
         {
             Position.Direction = Position.Direction switch
             {
-                Direction.North => Direction.NorthEast,
                 Direction.NorthEast => Direction.SouthEast,
                 Direction.SouthEast => Direction.SouthWest,
                 Direction.SouthWest => Direction.NorthWest,
@@ -38,7 +37,6 @@ namespace BoardGame.Managers
         {
             Position.Direction = Position.Direction switch
             {
-                Direction.North => Direction.NorthWest,
                 Direction.NorthWest => Direction.SouthWest,
                 Direction.SouthWest => Direction.SouthEast,
                 Direction.SouthEast => Direction.NorthEast,
