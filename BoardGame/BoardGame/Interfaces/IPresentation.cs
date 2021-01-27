@@ -6,6 +6,6 @@ namespace BoardGame.Interfaces
 {
     public interface IPresentation
     {
-        void GenerateOutput(IGameBoard board, IReadOnlyList<Pawn> pawns);
+        void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pawns);
     }
 }

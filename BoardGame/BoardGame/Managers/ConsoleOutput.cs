@@ -7,10 +7,10 @@ namespace BoardGame.Managers
 {
     public class ConsoleOutput : IPresentation
     {
-        public void GenerateOutput(IGameBoard board, IReadOnlyList<Pawn> pawns)
+        public void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pieces)
         {
             Console.WriteLine("=====");
-            Console.WriteLine($"Player(s): {pawns.Count}");
+            Console.WriteLine($"Player(s): {pieces.Count}");
             Console.WriteLine("=====");
             for (int i = board.WithSize - 1; i >= 0; i--)
             {

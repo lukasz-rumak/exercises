@@ -1,8 +1,11 @@
-﻿namespace BoardGame.Interfaces
+﻿using BoardGame.Models;
+
+namespace BoardGame.Interfaces
 {
-    public interface IPawn
+    public interface IPiece
     {
         int PawnId { get; set; }
+        Piece PieceType { get; set; }
         bool IsAlive { get; set; }
         IPosition Position { get; }
         void ChangeDirectionToRight();

@@ -3,15 +3,17 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class Knight : IPawn
+    public class Knight : IPiece
     {
         public int PawnId { get; set; }
+        public Piece PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
 
-        public Knight(int knightId)
+        public Knight(int knightId, Piece pieceType)
         {
             PawnId = knightId;
+            PieceType = pieceType;
             IsAlive = true;
             Position = new Position
             {

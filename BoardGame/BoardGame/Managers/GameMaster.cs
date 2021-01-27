@@ -23,64 +23,64 @@ namespace BoardGame.Managers
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
             
-            var pawns = CreatePawns(instructions);
-            ExecuteValidation(pawns, instructions);
-            ExecuteTheInstructions(pawns, instructions);
-            return GetResult(pawns);
+            var pieces = CreatePieces(instructions);
+            ExecuteValidation(pieces, instructions);
+            ExecuteTheInstructions(pieces, instructions);
+            return GetResult(pieces);
         }
         
-        private List<Pawn> CreatePawns(IReadOnlyCollection<string> instructions)
+        private List<IPiece> CreatePieces(IReadOnlyCollection<string> instructions)
         {
-            var pawns = new List<Pawn>();
+            var pieces = new List<IPiece>();
             for (var i = 0; i < instructions.Count; i++)
             {
                 if (_board.WithSize > i)
                 {
-                    pawns.Add(new Pawn(i));
-                    _board.Board[i, i].TakenBy = pawns[i];    
+                    pieces.Add(new Pawn(i, Piece.Pawn));
+                    _board.Board[i, i].TakenBy = pieces[i];    
                 }
             }
-            return pawns;
+            return pieces;
         }
-        
-        private void ExecuteValidation(IReadOnlyList<Pawn> pawns, IReadOnlyList<string> instructions)
+
+        private void ExecuteValidation(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
         {
-            for (var i = 0; i < pawns.Count; i++)
+            for (var i = 0; i < pieces.Count; i++)
                 if (!_validator.ValidateInput(instructions[i]))
-                    pawns[i].IsAlive = false;
+                    pieces[i].IsAlive = false;
         }
         
-        private void ExecuteTheInstructions(IReadOnlyList<Pawn> pawns, IReadOnlyList<string> instructions)
+        private void ExecuteTheInstructions(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
         {
-            var longestInstruction = GetTheLongestInstruction(pawns, instructions);
+            var longestInstruction = GetTheLongestInstruction(pieces, instructions);
             
             for (var i = 0; i < longestInstruction; i++)
-                for (var j = 0; j < pawns.Count; j++)
-                    if (pawns[j].IsAlive)
+                for (var j = 0; j < pieces.Count; j++)
+                    if (pieces[j].IsAlive)
                         if (instructions[j].Length > i)
                         {
-                            _board.ExecuteThePlayerInstruction(pawns[j], instructions[j][i]);
-                            _present.GenerateOutput(_board, pawns);
+                            _board.ExecuteThePlayerInstruction(pieces[j], instructions[j][i]);
+                            _present.GenerateOutput(_board, pieces);
                         }
         }
 
-        private int GetTheLongestInstruction(IReadOnlyCollection<Pawn> pawns, IReadOnlyList<string> instructions)
+        private int GetTheLongestInstruction(IReadOnlyCollection<IPiece> pieces, IReadOnlyList<string> instructions)
         {
             var longest = 0;
-            for (var i = 0; i < pawns.Count; i++)
+            for (var i = 0; i < pieces.Count; i++)
                 if (instructions[i].Length > longest)
                     longest = instructions[i].Length;
             return longest;
         }
         
-        private string[] GetResult(IReadOnlyList<Pawn> pawns)
+        private string[] GetResult(IReadOnlyList<IPiece> pieces)
         {
-            var result = new string[pawns.Count];
-            for (var i = 0; i < pawns.Count; i++)
+            var result = new string[pieces.Count];
+            for (var i = 0; i < pieces.Count; i++)
             {
-                result[i] = pawns[i].IsAlive
-                    ? new StringBuilder().Append(pawns[i].Position.X).Append(" ").Append(pawns[i].Position.Y)
-                        .Append(" ").Append(pawns[i].Position.Direction).ToString()
+                result[i] = pieces[i].IsAlive
+                    ? new StringBuilder().Append(pieces[i].Position.X).Append(" ").Append(pieces[i].Position.Y)
+                        .Append(" ").Append(pieces[i].Position.Direction).ToString()
                     : result[i] = @"Instruction not clear. Exiting...";
             }
             

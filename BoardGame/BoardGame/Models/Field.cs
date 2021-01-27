@@ -1,4 +1,5 @@
-﻿using BoardGame.Managers;
+﻿using BoardGame.Interfaces;
+using BoardGame.Managers;
 
 namespace BoardGame.Models
 {
@@ -7,7 +8,7 @@ namespace BoardGame.Models
         public int X { get; set; }
         public int Y { get; set; }
         public bool IsTaken => TakenBy != null;
-        public Pawn TakenBy { get; set; }
+        public IPiece TakenBy { get; set; }
         
         public Field(int x, int y)
         {

@@ -1,4 +1,3 @@
-using BoardGame.Managers;
 using BoardGame.Models;
 
 namespace BoardGame.Interfaces
@@ -8,6 +7,6 @@ namespace BoardGame.Interfaces
         Field[,] Board { get; set; }
         int WithSize { get; set; }
         Field[,] GenerateBoard(int size);
-        void ExecuteThePlayerInstruction(Pawn pawn, char instruction);
+        void ExecuteThePlayerInstruction(IPiece piece, char instruction);
     }
 }

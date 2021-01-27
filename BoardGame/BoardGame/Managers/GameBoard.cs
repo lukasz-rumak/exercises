@@ -17,43 +17,80 @@ namespace BoardGame.Managers
             return board;
         }
 
-        public void ExecuteThePlayerInstruction(Pawn pawn, char instruction)
+        public void ExecuteThePlayerInstruction(IPiece piece, char instruction)
         {
             if (instruction == 'M')
-                MovePawn(pawn);
+                MovePiece(piece);
             else if (instruction == 'R')
-                pawn.ChangeDirectionToRight();
+                piece.ChangeDirectionToRight();
             else if (instruction == 'L')
-                pawn.ChangeDirectionToLeft();
+                piece.ChangeDirectionToLeft();
         }
 
-        private void MovePawn(Pawn pawn)
+        private void MovePiece(IPiece piece)
         {
-            if (!IsMovePossible(pawn.Position.Direction, pawn.Position.X, pawn.Position.Y)) return;
-            MarkFieldAsNotTaken(pawn.Position.X, pawn.Position.Y);
-            if (pawn.Position.Direction == Direction.North)
-                pawn.Position.Y += 1;
-            else if (pawn.Position.Direction == Direction.East)
-                pawn.Position.X += 1;
-            else if (pawn.Position.Direction == Direction.South)
-                pawn.Position.Y -= 1;
-            else if (pawn.Position.Direction == Direction.West)
-                pawn.Position.X -= 1;
-            MarkFieldAsTaken(pawn);
+            if (!IsMovePossible(piece.Position.Direction, piece.Position.X, piece.Position.Y)) return;
+            MarkFieldAsNotTaken(piece.Position.X, piece.Position.Y);
+            if (piece.Position.Direction == Direction.North)
+            {
+                piece.Position.Y += 1;
+            }
+            else if (piece.Position.Direction == Direction.NorthEast)
+            {
+                piece.Position.X += 1;
+                piece.Position.Y += 1;
+            }
+            else if (piece.Position.Direction == Direction.East)
+            {
+                piece.Position.X += 1;
+            }
+            else if (piece.Position.Direction == Direction.SouthEast)
+            {
+                piece.Position.X += 1;
+                piece.Position.Y -= 1;
+            }
+            else if (piece.Position.Direction == Direction.South)
+            {
+                piece.Position.Y -= 1;
+            }
+            else if (piece.Position.Direction == Direction.SouthWest)
+            {
+                piece.Position.X -= 1;
+                piece.Position.Y -= 1;
+            }
+            else if (piece.Position.Direction == Direction.West)
+            {
+                piece.Position.X -= 1;
+            }
+            else if (piece.Position.Direction == Direction.NorthWest)
+            {
+                piece.Position.X -= 1;
+                piece.Position.Y += 1;
+            }
+                
+            MarkFieldAsTaken(piece);
         }
-        
+
         private bool IsMovePossible(Direction direction, int x, int y)
         {
             switch (direction)
             {
                 case Direction.North:
                     return y + 1 < WithSize && !Board[x, y + 1].IsTaken;
+                case Direction.NorthEast:
+                    return x + 1 < WithSize && y + 1 < WithSize && !Board[x + 1, y + 1].IsTaken;
                 case Direction.East:
                     return x + 1 < WithSize && !Board[x + 1, y].IsTaken;
+                case Direction.SouthEast:
+                    return x + 1 < WithSize && y - 1 >= 0 && !Board[x + 1, y - 1].IsTaken;
                 case Direction.South:
                     return y - 1 >= 0 && !Board[x, y - 1].IsTaken;
+                case Direction.SouthWest:
+                    return x - 1 >= 0 && y - 1 >= 0 && !Board[x - 1, y - 1].IsTaken;
                 case Direction.West:
                     return x - 1 >= 0 && !Board[x - 1, y].IsTaken;
+                case Direction.NorthWest:
+                    return x - 1 >= 0 && y + 1 < WithSize && !Board[x - 1, y + 1].IsTaken;
                 case Direction.None:
                     return false;
                 default:
@@ -61,9 +98,9 @@ namespace BoardGame.Managers
             }
         }
 
-        private void MarkFieldAsTaken(Pawn pawn)
+        private void MarkFieldAsTaken(IPiece piece)
         {
-            Board[pawn.Position.X, pawn.Position.Y].TakenBy = pawn;
+            Board[piece.Position.X, piece.Position.Y].TakenBy = piece;
         }
         
         private void MarkFieldAsNotTaken(int x, int y)

@@ -7,11 +7,11 @@ namespace BoardGameTests
 {
     public class PawnUnitTests
     {
-        private IPawn _pawn;
+        private IPiece _pawn;
         
         public PawnUnitTests()
         {
-            _pawn = new Pawn(0);
+            _pawn = new Pawn(0, Piece.Pawn);
         }
 
         [Theory]
