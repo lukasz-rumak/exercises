@@ -18,7 +18,7 @@ namespace BoardGame.Managers
                 for (int j = 0; j < board.WithSize; j++)
                 {
                     if (board.Board[j, i].IsTaken)
-                        str.Append(board.Board[j, i].TakenBy.PawnId);
+                        str.Append(board.Board[j, i].TakenBy.PieceId);
                     else
                         str.Append("-");
                 }

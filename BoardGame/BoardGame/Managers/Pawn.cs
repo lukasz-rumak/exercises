@@ -5,14 +5,14 @@ namespace BoardGame.Managers
 {
     public class Pawn : IPiece
     {
-        public int PawnId { get; set; }
+        public int PieceId { get; set; }
         public Piece PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
         
         public Pawn(int pawnId, Piece pieceType)
         {
-            PawnId = pawnId;
+            PieceId = pawnId;
             PieceType = pieceType;
             IsAlive = true;
             Position = new Position

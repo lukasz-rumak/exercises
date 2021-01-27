@@ -4,7 +4,7 @@ namespace BoardGame.Interfaces
 {
     public interface IPiece
     {
-        int PawnId { get; set; }
+        int PieceId { get; set; }
         Piece PieceType { get; set; }
         bool IsAlive { get; set; }
         IPosition Position { get; }
