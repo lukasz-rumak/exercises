@@ -6,14 +6,14 @@ namespace BoardGame.Managers
     public class Knight : IPiece
     {
         public int PieceId { get; set; }
-        public Piece PieceType { get; set; }
+        public string PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
 
-        public Knight(int knightId, Piece pieceType)
+        public Knight(int knightId)
         {
             PieceId = knightId;
-            PieceType = pieceType;
+            PieceType = "Knight";
             IsAlive = true;
             Position = new Position
             {
@@ -21,6 +21,11 @@ namespace BoardGame.Managers
                 Y = knightId,
                 Direction = Direction.NorthEast
             };
+        }
+
+        public IPosition MovePiece()
+        {
+            return null;
         }
 
         public void ChangeDirectionToRight()

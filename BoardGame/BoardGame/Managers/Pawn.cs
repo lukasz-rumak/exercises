@@ -6,14 +6,14 @@ namespace BoardGame.Managers
     public class Pawn : IPiece
     {
         public int PieceId { get; set; }
-        public Piece PieceType { get; set; }
+        public string PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
         
-        public Pawn(int pawnId, Piece pieceType)
+        public Pawn(int pawnId)
         {
             PieceId = pawnId;
-            PieceType = pieceType;
+            PieceType = "Pawn";
             IsAlive = true;
             Position = new Position
             {
@@ -21,6 +21,11 @@ namespace BoardGame.Managers
                 Y = pawnId,
                 Direction = Direction.North
             };
+        }
+        
+        public IPosition MovePiece()
+        {
+            return null;
         }
 
         public void ChangeDirectionToRight()

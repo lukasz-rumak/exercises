@@ -11,7 +11,7 @@ namespace BoardGameTests
 
         public KnightUnitTests()
         {
-            _knight = new Knight(0, Piece.Knight);
+            _knight = new Knight(0);
         }
 
         [Theory]

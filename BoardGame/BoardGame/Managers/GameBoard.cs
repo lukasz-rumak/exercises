@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 
@@ -7,6 +8,7 @@ namespace BoardGame.Managers
     {
         public Field[,] Board { get; set; }
         public int WithSize { get; set; }
+        public List<Wall> Walls { get; set; }
 
         public Field[,] GenerateBoard(int size)
         {
@@ -15,6 +17,32 @@ namespace BoardGame.Managers
                 for (int j = 0; j < size; j++)
                     board[i, j] = new Field(i, j);
             return board;
+        }
+
+        public List<Wall> AddWallsToBoardTmp(int size)
+        {
+            return new List<Wall>
+            {
+                new Wall
+                {
+                    WallPositionX = (0, 1),
+                    WallPositionY = (1, 2)
+                }
+            };
+        }
+
+        public bool WatchOutForWallsTmp(Direction direction, int x, int y)
+        {
+            if (direction == Direction.North)
+            {
+                for (int i = 0; i < Walls.Count; i++)
+                {
+                    if ((y, y + 1) == Walls[i].WallPositionY)
+                        return false;
+                }
+            }
+            
+            return true;
         }
 
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)

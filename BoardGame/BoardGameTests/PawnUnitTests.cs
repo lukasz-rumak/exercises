@@ -11,7 +11,7 @@ namespace BoardGameTests
         
         public PawnUnitTests()
         {
-            _pawn = new Pawn(0, Piece.Pawn);
+            _pawn = new Pawn(0);
         }
 
         [Theory]

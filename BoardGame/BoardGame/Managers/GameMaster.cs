@@ -36,7 +36,7 @@ namespace BoardGame.Managers
             {
                 if (_board.WithSize > i)
                 {
-                    pieces.Add(new Pawn(i, Piece.Pawn));
+                    pieces.Add(new Pawn(i));
                     _board.Board[i, i].TakenBy = pieces[i];    
                 }
             }
