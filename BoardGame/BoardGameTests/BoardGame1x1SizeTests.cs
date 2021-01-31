@@ -10,18 +10,18 @@ namespace BoardGameTests
         
         public BoardGame1x1SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(1).BuildBoard(), new ConsoleOutput());
+            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(1).BuildBoard(), new ConsoleOutput(), new PawnFactory(), new KnightFactory());
         }
 
         [Theory]
-        [InlineData(new []{"MRMLMRM"}, new []{"0 0 East"})]
-        [InlineData(new []{"RMMMLMM"}, new []{"0 0 North"})]
-        [InlineData(new []{"MMMMM"}, new []{"0 0 North"})]
-        [InlineData(new []{"MMMMMMMMM"}, new []{"0 0 North"})]
-        [InlineData(new []{"MMMMMMMMMR"}, new []{"0 0 East"})]
-        [InlineData(new []{"MMMMMMMMML"}, new []{"0 0 West"})]
-        [InlineData(new []{"MMMMMMMMMRMMMMMMM"}, new []{"0 0 East"})]
-        [InlineData(new []{"MXMMM"}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{"PMRMLMRM"}, new []{"0 0 East"})]
+        [InlineData(new []{"PRMMMLMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"PMMMMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"PMMMMMMMMM"}, new []{"0 0 North"})]
+        [InlineData(new []{"PMMMMMMMMMR"}, new []{"0 0 East"})]
+        [InlineData(new []{"PMMMMMMMMML"}, new []{"0 0 West"})]
+        [InlineData(new []{"PMMMMMMMMMRMMMMMMM"}, new []{"0 0 East"})]
+        [InlineData(new []{"PMXMMM"}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(null, new []{"Instruction not clear. Exiting..."})]

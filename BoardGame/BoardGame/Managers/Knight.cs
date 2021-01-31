@@ -22,12 +22,26 @@ namespace BoardGame.Managers
                 Direction = Direction.NorthEast
             };
         }
-
-        public IPosition MovePiece()
+        
+        public (int, int) CalculatePieceNewPosition()
         {
-            return null;
+            return Position.Direction switch
+            {
+                Direction.NorthEast => (Position.X + 1, Position.Y + 1),
+                Direction.SouthEast => (Position.X + 1, Position.Y - 1),
+                Direction.SouthWest => (Position.X - 1, Position.Y - 1),
+                Direction.NorthWest => (Position.X - 1, Position.Y + 1),
+                Direction.None => (Position.X, Position.Y),
+                _ => (Position.X, Position.Y)
+            };
         }
-
+        
+        public void ChangePiecePosition(int x, int y)
+        {
+            Position.X = x;
+            Position.Y = y;
+        }
+        
         public void ChangeDirectionToRight()
         {
             Position.Direction = Position.Direction switch

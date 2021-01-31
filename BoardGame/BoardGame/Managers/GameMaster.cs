@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using BoardGame.Interfaces;
-using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -10,12 +9,16 @@ namespace BoardGame.Managers
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
         private readonly IPresentation _present;
+        private readonly PieceFactoryTmp _pawnFactory;
+        private readonly PieceFactoryTmp _knightFactory;
         
-        public GameMaster(IValidator validator, IGameBoard board, IPresentation present)
+        public GameMaster(IValidator validator, IGameBoard board, IPresentation present, PieceFactoryTmp pawnFactory, PieceFactoryTmp knightFactory)
         {
             _validator = validator;
             _board = board;
             _present = present;
+            _pawnFactory = pawnFactory;
+            _knightFactory = knightFactory;
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -29,15 +32,24 @@ namespace BoardGame.Managers
             return GetResult(pieces);
         }
         
-        private List<IPiece> CreatePieces(IReadOnlyCollection<string> instructions)
+        private List<IPiece> CreatePieces(IReadOnlyList<string> instructions)
         {
             var pieces = new List<IPiece>();
+            var err = 9999;
             for (var i = 0; i < instructions.Count; i++)
             {
                 if (_board.WithSize > i)
                 {
-                    pieces.Add(new Pawn(i));
-                    _board.Board[i, i].TakenBy = pieces[i];    
+                    if (!string.IsNullOrWhiteSpace(instructions[i]) && instructions[i][0] == 'P')
+                    {
+                        pieces.Add(_pawnFactory.CreatePiece(i));
+                        _board.Board[i, i].TakenBy = pieces[i];
+                    }
+                    else
+                    {
+                        pieces.Add(_pawnFactory.CreatePiece(err));
+                        err -= 1;
+                    }
                 }
             }
             return pieces;

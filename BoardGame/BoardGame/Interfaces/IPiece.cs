@@ -8,7 +8,8 @@ namespace BoardGame.Interfaces
         string PieceType { get; set; }
         bool IsAlive { get; set; }
         IPosition Position { get; }
-        IPosition MovePiece();
+        (int, int) CalculatePieceNewPosition();
+        void ChangePiecePosition(int x, int y);
         void ChangeDirectionToRight();
         void ChangeDirectionToLeft();
     }

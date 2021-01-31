@@ -1,4 +1,5 @@
-﻿using BoardGame.Interfaces;
+﻿using System.Linq;
+using BoardGame.Interfaces;
 
 namespace BoardGame.Managers
 {
@@ -7,19 +8,9 @@ namespace BoardGame.Managers
         public bool ValidateInput(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
-            {
                 return false;
-            }
-            
-            foreach (var character in input)
-            {
-                if (!(character == 'M' || character == 'R' || character == 'L'))
-                {
-                    return false;
-                }
-            }
 
-            return true;
+            return input.All(c => c == 'P' || c == 'M' || c == 'R' || c == 'L');
         }
     }
 }

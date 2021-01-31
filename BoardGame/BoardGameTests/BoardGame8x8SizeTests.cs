@@ -10,14 +10,14 @@ namespace BoardGameTests
         
         public BoardGame8x8SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(8).BuildBoard(), new ConsoleOutput());
+            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(8).BuildBoard(), new ConsoleOutput(), new PawnFactory(), new KnightFactory());
         }
 
         [Theory]
-        [InlineData(new []{"MRMLMRM"}, new []{"2 2 East"})]
-        [InlineData(new []{"RMMMLMM"}, new []{"3 2 North"})]
-        [InlineData(new []{"MMMMM"}, new []{"0 5 North"})]
-        [InlineData(new []{"MXMMM"}, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new []{"PMRMLMRM"}, new []{"2 2 East"})]
+        [InlineData(new []{"PRMMMLMM"}, new []{"3 2 North"})]
+        [InlineData(new []{"PMMMMM"}, new []{"0 5 North"})]
+        [InlineData(new []{"PMXMMM"}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(null, new []{"Instruction not clear. Exiting..."})]
