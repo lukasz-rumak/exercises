@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -9,16 +10,16 @@ namespace BoardGame.Managers
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
         private readonly IPresentation _present;
-        private readonly PieceFactoryTmp _pawnFactory;
-        private readonly PieceFactoryTmp _knightFactory;
+        private readonly PieceFactory _pieceFactory;
         
-        public GameMaster(IValidator validator, IGameBoard board, IPresentation present, PieceFactoryTmp pawnFactory, PieceFactoryTmp knightFactory)
+        public GameMaster(IValidator validator, IGameBoard board, IPresentation present)
         {
             _validator = validator;
             _board = board;
             _present = present;
-            _pawnFactory = pawnFactory;
-            _knightFactory = knightFactory;
+            _pieceFactory = new PieceFactory();
+            _pieceFactory.Register("P", new PawnFactory());
+            _pieceFactory.Register("K", new KnightFactory());
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -35,21 +36,12 @@ namespace BoardGame.Managers
         private List<IPiece> CreatePieces(IReadOnlyList<string> instructions)
         {
             var pieces = new List<IPiece>();
-            var err = 9999;
             for (var i = 0; i < instructions.Count; i++)
             {
                 if (_board.WithSize > i)
                 {
-                    if (!string.IsNullOrWhiteSpace(instructions[i]) && instructions[i][0] == 'P')
-                    {
-                        pieces.Add(_pawnFactory.CreatePiece(i));
-                        _board.Board[i, i].TakenBy = pieces[i];
-                    }
-                    else
-                    {
-                        pieces.Add(_pawnFactory.CreatePiece(err));
-                        err -= 1;
-                    }
+                    pieces.Add(_pieceFactory.GetPiece(instructions[i].Length > 0 ? instructions[i][0].ToString() : string.Empty, i));
+                    _board.Board[i, i].TakenBy = pieces[i];
                 }
             }
             return pieces;

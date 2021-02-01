@@ -10,12 +10,13 @@ namespace BoardGameTests
         
         public BoardGame5x5SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(5).BuildBoard(), new ConsoleOutput(), new PawnFactory(), new KnightFactory());
+            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(5).BuildBoard(), new ConsoleOutput());
         }
 
         [Theory]
         [InlineData(new []{"PMRMLMRM"}, new []{"2 2 East"})]
         [InlineData(new []{"PMRMLMRM", "PRMMMLMMM"}, new []{"2 2 East", "4 4 North"})]
+        [InlineData(new []{"KMRMLMRM", "KRMMMLMMM"}, new []{"2 0 SouthEast", "4 2 NorthEast"})]
         [InlineData(new []{"PRMMMLMM"}, new []{"3 2 North"})]
         [InlineData(new []{"PRMMMLMM", "PMRMLMRM"}, new []{"3 2 North", "3 3 East"})]
         [InlineData(new []{"PMMMMM"}, new []{"0 4 North"})]
