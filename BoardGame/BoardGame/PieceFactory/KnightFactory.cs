@@ -2,11 +2,11 @@ using BoardGame.Interfaces;
 
 namespace BoardGame.Managers
 {
-    public class PawnFactory : PieceFactoryTmp
+    public class KnightAbstractFactory : PieceAbstractFactory
     {
         public override IPiece CreatePiece(int pieceId)
         {
-            return new Pawn(pieceId);
+            return new Knight(pieceId);
         }
     }
 }

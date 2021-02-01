@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using BoardGame.Interfaces;
-using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -18,8 +17,9 @@ namespace BoardGame.Managers
             _board = board;
             _present = present;
             _pieceFactory = new PieceFactory();
-            _pieceFactory.Register("P", new PawnFactory());
-            _pieceFactory.Register("K", new KnightFactory());
+            _pieceFactory.Register("P", new PawnAbstractFactory());
+            _pieceFactory.Register("K", new KnightAbstractFactory());
+            _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
         }
 
         public string[] PlayTheGame(string[] instructions)

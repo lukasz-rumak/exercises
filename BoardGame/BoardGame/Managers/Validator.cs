@@ -6,13 +6,8 @@ namespace BoardGame.Managers
 {
     public class Validator : IValidator
     {
-        private readonly List<string> _allowedPieceTypes;
+        public List<string> AllowedPieceTypes { get; set; }
 
-        public Validator(List<string> allowedPieceTypes)
-        {
-            _allowedPieceTypes = allowedPieceTypes;
-        }
-        
         public bool ValidateInput(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -23,7 +18,7 @@ namespace BoardGame.Managers
 
         private bool IsPieceType(char c)
         {
-            return c == 'P' || c == 'K';
+            return AllowedPieceTypes.Contains(c.ToString());
         }
 
         private bool IsMovementType(char c)
