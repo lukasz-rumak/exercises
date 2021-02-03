@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
@@ -12,6 +11,7 @@ namespace BoardGame.Managers
         private readonly IGameBoard _board;
         private readonly IPresentation _present;
         private readonly PieceFactory _pieceFactory;
+        private readonly List<string> _gameResult;
         
         public GameMaster(IValidator validator, IGameBoard board, IPresentation present)
         {
@@ -22,6 +22,7 @@ namespace BoardGame.Managers
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
             _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
+            _gameResult = new List<string>();
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -29,65 +30,32 @@ namespace BoardGame.Managers
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
             
-            AddWallsToBoard(instructions);
-            instructions = RemoveWallsFromTheInstructions(instructions);
+            CreateWallsIfAny(instructions);
+            instructions = RemoveWallsFromTheInstructionsIfAny(instructions);
             var pieces = CreatePieces(instructions);
             ExecuteValidation(pieces, instructions);
             ExecuteTheInstructions(pieces, instructions);
-            return GetResult(pieces);
+            CollectResult(pieces);
+            return _gameResult.ToArray();
         }
 
-        private void AddWallsToBoard(string[] instructions)
+        private void CreateWallsIfAny(string[] instructions)
         {
             if (string.IsNullOrWhiteSpace(instructions[0]))
                 return;
             if (instructions[0][0] != 'W')
                 return;
-            if (!ValidateTheWallCoordinates(instructions[0]))
+            if (!_validator.ValidateWallsInput(instructions[0]))
             {
-                _present.GenerateWallCreationError();
+                _present.GenerateWallCreationErrorOutput();
+                _gameResult.Add("The wall(s) coordinates were incorrect!");
                 return;
             }
 
-            var stringBuilder = new StringBuilder();
-            foreach (var c in instructions[0].Where(c => c != ' '))
-                stringBuilder.Append(c);
-            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
-            foreach (var coordinates in wallsToBuild)
-                CreateWall(coordinates);
+            _board.GenerateWalls(instructions[0]);
         }
 
-        private bool ValidateTheWallCoordinates(string instruction)
-        {
-            var counter = 0;
-            foreach (var c in instruction)
-            {
-                if (counter == 0 && c != 'W')
-                    return false;
-                if ((counter == 1 || counter == 3 || counter == 5 || counter == 7) && c != ' ')
-                    return false;
-                if ((counter == 2 || counter == 4 || counter == 6 || counter == 8) &&
-                    !int.TryParse(c.ToString(), out var r))
-                    return false;
-                counter += 1;
-                if (counter == 9) counter = 0;
-            }
-
-            return true;
-        }
-
-        private void CreateWall(string coordinates)
-        {
-            _board.Walls.Add(
-                new Wall
-                {
-                    WallPositionField1 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
-                    WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
-                }
-            );
-        }
-        
-        private string[] RemoveWallsFromTheInstructions(string[] instructions)
+        private string[] RemoveWallsFromTheInstructionsIfAny(string[] instructions)
         {
             if (!string.IsNullOrWhiteSpace(instructions[0]) && instructions[0][0] == 'W')
                 return instructions.Where((source, index) => index != 0).ToArray();
@@ -111,7 +79,7 @@ namespace BoardGame.Managers
         private void ExecuteValidation(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
         {
             for (var i = 0; i < pieces.Count; i++)
-                if (!_validator.ValidateInput(instructions[i]))
+                if (!_validator.ValidateInstructionsInput(instructions[i]))
                     pieces[i].IsAlive = false;
         }
         
@@ -138,18 +106,15 @@ namespace BoardGame.Managers
             return longest;
         }
         
-        private string[] GetResult(IReadOnlyList<IPiece> pieces)
+        private void CollectResult(IEnumerable<IPiece> pieces)
         {
-            var result = new string[pieces.Count];
-            for (var i = 0; i < pieces.Count; i++)
+            foreach (var piece in pieces)
             {
-                result[i] = pieces[i].IsAlive
-                    ? new StringBuilder().Append(pieces[i].Position.X).Append(" ").Append(pieces[i].Position.Y)
-                        .Append(" ").Append(pieces[i].Position.Direction).ToString()
-                    : result[i] = @"Instruction not clear. Exiting...";
+                _gameResult.Add(piece.IsAlive
+                    ? new StringBuilder().Append(piece.Position.X).Append(" ").Append(piece.Position.Y)
+                        .Append(" ").Append(piece.Position.Direction).ToString()
+                    : @"Instruction not clear. Exiting...");
             }
-            
-            return result;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -26,9 +27,9 @@ namespace BoardGame.Managers
             }
         }
 
-        public void GenerateWallCreationError()
+        public void GenerateWallCreationErrorOutput()
         {
-            Console.WriteLine("WARNING! The wall(s) coordinates are incorrect!");
+            Console.WriteLine("WARNING! The wall(s) coordinates were incorrect!");
         }
     }
 }

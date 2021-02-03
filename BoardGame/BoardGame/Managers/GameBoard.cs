@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 
@@ -18,6 +19,27 @@ namespace BoardGame.Managers
             for (int j = 0; j < size; j++)
                 board[i, j] = new Field(i, j);
             return board;
+        }
+
+        public void GenerateWalls(string instruction)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var c in instruction.Where(c => c != ' '))
+                stringBuilder.Append(c);
+            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
+            foreach (var coordinates in wallsToBuild)
+                CreateWall(coordinates);
+        }
+        
+        private void CreateWall(string coordinates)
+        {
+            Walls.Add(
+                new Wall
+                {
+                    WallPositionField1 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
+                    WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
+                }
+            );
         }
 
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)
@@ -41,7 +63,8 @@ namespace BoardGame.Managers
 
         private bool IsMovePossible(int currentX, int currentY, int newX, int newY)
         {
-            return IsInBoundaries(newX, newY) && IsFieldFree(newX, newY) && !IsWallOnTheRoute(currentX, currentY, newX, newY);
+            return IsInBoundaries(newX, newY) && IsFieldFree(newX, newY) &&
+                    !IsWallOnTheRoute(currentX, currentY, newX, newY);
         }
 
         private bool IsInBoundaries(int x, int y)
@@ -57,8 +80,10 @@ namespace BoardGame.Managers
         private bool IsWallOnTheRoute(int currentX, int currentY, int newX, int newY)
         {
             return Walls != null && Walls.Any(wall =>
-                       wall.WallPositionField1.Item1 == currentX && wall.WallPositionField1.Item2 == currentY &&
-                       wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY);
+                (wall.WallPositionField1.Item1 == currentX && wall.WallPositionField1.Item2 == currentY &&
+                 wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY) ||
+                (wall.WallPositionField1.Item1 == newX && wall.WallPositionField1.Item2 == newY &&
+                 wall.WallPositionField2.Item1 == currentX && wall.WallPositionField2.Item2 == currentY));
         }
 
         private void MarkFieldAsTaken(IPiece piece)
