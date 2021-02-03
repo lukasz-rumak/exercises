@@ -1,4 +1,5 @@
-﻿using BoardGame.Interfaces;
+﻿using System.Collections.Generic;
+using BoardGame.Interfaces;
 
 namespace BoardGame.Managers
 {
@@ -20,6 +21,7 @@ namespace BoardGame.Managers
         public IGameBoard BuildBoard()
         {
             _board.Board = _board.GenerateBoard(_board.WithSize);
+            _board.Walls = new List<Wall>();
             return _board;
         }
     }

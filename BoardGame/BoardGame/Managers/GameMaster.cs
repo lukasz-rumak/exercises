@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
 
@@ -27,10 +29,69 @@ namespace BoardGame.Managers
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
             
+            AddWallsToBoard(instructions);
+            instructions = RemoveWallsFromTheInstructions(instructions);
             var pieces = CreatePieces(instructions);
             ExecuteValidation(pieces, instructions);
             ExecuteTheInstructions(pieces, instructions);
             return GetResult(pieces);
+        }
+
+        private void AddWallsToBoard(string[] instructions)
+        {
+            if (string.IsNullOrWhiteSpace(instructions[0]))
+                return;
+            if (instructions[0][0] != 'W')
+                return;
+            if (!ValidateTheWallCoordinates(instructions[0]))
+            {
+                _present.GenerateWallCreationError();
+                return;
+            }
+
+            var stringBuilder = new StringBuilder();
+            foreach (var c in instructions[0].Where(c => c != ' '))
+                stringBuilder.Append(c);
+            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
+            foreach (var coordinates in wallsToBuild)
+                CreateWall(coordinates);
+        }
+
+        private bool ValidateTheWallCoordinates(string instruction)
+        {
+            var counter = 0;
+            foreach (var c in instruction)
+            {
+                if (counter == 0 && c != 'W')
+                    return false;
+                if ((counter == 1 || counter == 3 || counter == 5 || counter == 7) && c != ' ')
+                    return false;
+                if ((counter == 2 || counter == 4 || counter == 6 || counter == 8) &&
+                    !int.TryParse(c.ToString(), out var r))
+                    return false;
+                counter += 1;
+                if (counter == 9) counter = 0;
+            }
+
+            return true;
+        }
+
+        private void CreateWall(string coordinates)
+        {
+            _board.Walls.Add(
+                new Wall
+                {
+                    WallPositionField1 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
+                    WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
+                }
+            );
+        }
+        
+        private string[] RemoveWallsFromTheInstructions(string[] instructions)
+        {
+            if (!string.IsNullOrWhiteSpace(instructions[0]) && instructions[0][0] == 'W')
+                return instructions.Where((source, index) => index != 0).ToArray();
+            return instructions;
         }
         
         private List<IPiece> CreatePieces(IReadOnlyList<string> instructions)

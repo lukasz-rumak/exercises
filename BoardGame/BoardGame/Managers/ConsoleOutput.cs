@@ -25,5 +25,10 @@ namespace BoardGame.Managers
                 Console.WriteLine(str.ToString());
             }
         }
+
+        public void GenerateWallCreationError()
+        {
+            Console.WriteLine("WARNING! The wall(s) coordinates are incorrect!");
+        }
     }
 }

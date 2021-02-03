@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 
@@ -19,32 +20,6 @@ namespace BoardGame.Managers
             return board;
         }
 
-        public List<Wall> AddWallsToBoardTmp(int size)
-        {
-            return new List<Wall>
-            {
-                new Wall
-                {
-                    WallPositionX = (0, 1),
-                    WallPositionY = (1, 2)
-                }
-            };
-        }
-
-        public bool WatchOutForWallsTmp(Direction direction, int x, int y)
-        {
-            if (direction == Direction.North)
-            {
-                for (int i = 0; i < Walls.Count; i++)
-                {
-                    if ((y, y + 1) == Walls[i].WallPositionY)
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)
         {
             if (instruction == 'M')
@@ -58,15 +33,15 @@ namespace BoardGame.Managers
         private void MovePiece(IPiece piece)
         {
             var (newX, newY) = piece.CalculatePieceNewPosition();
-            if (!IsMovePossible(newX, newY)) return;
+            if (!IsMovePossible(piece.Position.X, piece.Position.Y, newX, newY)) return;
             MarkFieldAsNotTaken(piece.Position.X, piece.Position.Y);
             piece.ChangePiecePosition(newX, newY);
             MarkFieldAsTaken(piece);
         }
 
-        private bool IsMovePossible(int x, int y)
+        private bool IsMovePossible(int currentX, int currentY, int newX, int newY)
         {
-            return IsInBoundaries(x, y) && IsFieldFree(x, y);
+            return IsInBoundaries(newX, newY) && IsFieldFree(newX, newY) && !IsWallOnTheRoute(currentX, currentY, newX, newY);
         }
 
         private bool IsInBoundaries(int x, int y)
@@ -77,6 +52,13 @@ namespace BoardGame.Managers
         private bool IsFieldFree(int x, int y)
         {
             return !Board[x, y].IsTaken;
+        }
+
+        private bool IsWallOnTheRoute(int currentX, int currentY, int newX, int newY)
+        {
+            return Walls != null && Walls.Any(wall =>
+                       wall.WallPositionField1.Item1 == currentX && wall.WallPositionField1.Item2 == currentY &&
+                       wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY);
         }
 
         private void MarkFieldAsTaken(IPiece piece)
