@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BoardGame.Models;
 
 namespace BoardGame.Interfaces
@@ -6,6 +7,6 @@ namespace BoardGame.Interfaces
     public interface IPresentation
     {
         void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pieces);
-        void GenerateWallCreationErrorOutput();
+        Dictionary<EventType, Action<string>> EventsOutput { get; set; }
     }
 }

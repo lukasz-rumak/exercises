@@ -9,7 +9,7 @@ namespace BoardGame.Managers
         
         public BoardBuilder()
         {
-            _board = new GameBoard();
+            _board = new GameBoard(new EventHandler(new ConsoleOutput()));
         }
 
         public IBoardBuilder WithSize(int size)

@@ -22,6 +22,8 @@ namespace BoardGameTests
         [InlineData(new []{"W 0 0 1 1", "KMMMMM", "KMMMMM"}, new []{"0 0 NorthEast", "4 4 NorthEast"})]
         [InlineData(new []{"W 0 0 1 1 W 3 3 4 4", "KMMMMM", "KMMMMM"}, new []{"0 0 NorthEast", "3 3 NorthEast"})]
         [InlineData(new []{"W 1 1 2 2", "KMMMMM", "KMMMMM"}, new []{"0 0 NorthEast", "1 1 NorthEast"})]
+        [InlineData(new []{"W 1 1 2 1", "PRMMMLMLMMMM"}, new []{"2 1 West"})]
+        [InlineData(new []{"W 1 1 2 1 W 3 4 4 4" , "PRMMMLMLMMMM", "PMRMMMLMMMLMMMMM"}, new []{"2 1 West", "4 4 West"})]
         [InlineData(new []{"PRMMMLMM"}, new []{"3 2 North"})]
         [InlineData(new []{"PRMMMLMM", "PMRMLMRM"}, new []{"3 2 North", "3 3 East"})]
         [InlineData(new []{"PMMMMM"}, new []{"0 4 North"})]

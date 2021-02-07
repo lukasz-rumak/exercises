@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -9,15 +10,15 @@ namespace BoardGame.Managers
     {
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
-        private readonly IPresentation _present;
+        private readonly IPresentation _presentation;
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster(IValidator validator, IGameBoard board, IPresentation present)
+        public GameMaster(IValidator validator, IGameBoard board, IPresentation presentation)
         {
             _validator = validator;
             _board = board;
-            _present = present;
+            _presentation = presentation;
             _pieceFactory = new PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
@@ -47,7 +48,7 @@ namespace BoardGame.Managers
                 return;
             if (!_validator.ValidateWallsInput(instructions[0]))
             {
-                _present.GenerateWallCreationErrorOutput();
+                new EventHandler(new ConsoleOutput()).Events[EventType.WallCreationError]("");
                 _gameResult.Add("The wall(s) coordinates were incorrect!");
                 return;
             }
@@ -93,7 +94,7 @@ namespace BoardGame.Managers
                         if (instructions[j].Length > i)
                         {
                             _board.ExecuteThePlayerInstruction(pieces[j], instructions[j][i]);
-                            _present.GenerateOutput(_board, pieces);
+                            _presentation.GenerateOutput(_board, pieces);
                         }
         }
 

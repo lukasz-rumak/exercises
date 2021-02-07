@@ -8,6 +8,13 @@ namespace BoardGame.Managers
 {
     public class ConsoleOutput : IPresentation
     {
+        public Dictionary<EventType, Action<string>> EventsOutput { get; set; }
+
+        public ConsoleOutput()
+        {
+            EventsOutput = CreateEventsOutput();
+        }
+        
         public void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pieces)
         {
             Console.WriteLine("=====");
@@ -27,9 +34,20 @@ namespace BoardGame.Managers
             }
         }
 
-        public void GenerateWallCreationErrorOutput()
+        private Dictionary<EventType, Action<string>> CreateEventsOutput()
         {
-            Console.WriteLine("WARNING! The wall(s) coordinates were incorrect!");
+            return new Dictionary<EventType, Action<string>>
+            {
+                [EventType.WallCreationError] = description =>
+                    Console.WriteLine($"Event: The wall(s) were not created! {description}"),
+                [EventType.OutsideBoundaries] = description =>
+                    Console.WriteLine($"Event: move not possible (outside of the boundaries)! {description}"),
+                [EventType.FieldTaken] = description =>
+                    Console.WriteLine($"Event: move not possible (field already taken)! {description}"),
+                [EventType.WallOnTheRoute] = description =>
+                    Console.WriteLine($"Event: move not possible (wall on the route)! {description}"),
+                [EventType.None] = description => Console.WriteLine($"Event: none! {description}")
+            };
         }
     }
 }

@@ -11,7 +11,14 @@ namespace BoardGame.Managers
         public Field[,] Board { get; set; }
         public int WithSize { get; set; }
         public List<Wall> Walls { get; set; }
+        
+        private readonly IEvent _eventHandler;
 
+        public GameBoard(IEvent eventHandler)
+        {
+            _eventHandler = eventHandler;
+        }
+        
         public Field[,] GenerateBoard(int size)
         {
             var board = new Field[size, size];
@@ -55,35 +62,44 @@ namespace BoardGame.Managers
         private void MovePiece(IPiece piece)
         {
             var (newX, newY) = piece.CalculatePieceNewPosition();
-            if (!IsMovePossible(piece.Position.X, piece.Position.Y, newX, newY)) return;
+            if (!IsMovePossible(piece, newX, newY)) return;
             MarkFieldAsNotTaken(piece.Position.X, piece.Position.Y);
             piece.ChangePiecePosition(newX, newY);
             MarkFieldAsTaken(piece);
         }
 
-        private bool IsMovePossible(int currentX, int currentY, int newX, int newY)
+        private bool IsMovePossible(IPiece piece, int newX, int newY)
         {
             return IsInBoundaries(newX, newY) && IsFieldFree(newX, newY) &&
-                    !IsWallOnTheRoute(currentX, currentY, newX, newY);
+                    IsNoWallOnTheRoute(piece, newX, newY);
         }
 
         private bool IsInBoundaries(int x, int y)
         {
-            return x < WithSize && y < WithSize && x >= 0 && y >= 0;
+            if (x < WithSize && y < WithSize && x >= 0 && y >= 0)
+                return true;
+            _eventHandler.Events[EventType.OutsideBoundaries]($"({x}, {y})");
+            return false;
         }
 
         private bool IsFieldFree(int x, int y)
         {
-            return !Board[x, y].IsTaken;
+            if (!Board[x, y].IsTaken)
+                return true;
+            _eventHandler.Events[EventType.FieldTaken]($"Field taken: ({x}, {y})");
+            return false;
         }
 
-        private bool IsWallOnTheRoute(int currentX, int currentY, int newX, int newY)
+        private bool IsNoWallOnTheRoute(IPiece piece, int newX, int newY)
         {
-            return Walls != null && Walls.Any(wall =>
-                (wall.WallPositionField1.Item1 == currentX && wall.WallPositionField1.Item2 == currentY &&
+            if (Walls != null && !Walls.Any(wall =>
+                (wall.WallPositionField1.Item1 == piece.Position.X && wall.WallPositionField1.Item2 == piece.Position.Y &&
                  wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY) ||
                 (wall.WallPositionField1.Item1 == newX && wall.WallPositionField1.Item2 == newY &&
-                 wall.WallPositionField2.Item1 == currentX && wall.WallPositionField2.Item2 == currentY));
+                 wall.WallPositionField2.Item1 == piece.Position.X && wall.WallPositionField2.Item2 == piece.Position.Y)))
+            return true;
+            _eventHandler.Events[EventType.WallOnTheRoute]($"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX}, {newY})");
+            return false;
         }
 
         private void MarkFieldAsTaken(IPiece piece)
