@@ -8,6 +8,7 @@ namespace BoardGame.Managers
     public class EventHandler : IEvent
     {
         public IDictionary<EventType, Action<string>> Events { get; set; }
+        public List<string> EventLog { get; set; }
         
         private readonly IPresentation _presentation;
                 
