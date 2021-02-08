@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
-using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -31,36 +29,11 @@ namespace BoardGame.Managers
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
             
-            CreateWallsIfAny(instructions);
-            instructions = RemoveWallsFromTheInstructionsIfAny(instructions);
             var pieces = CreatePieces(instructions);
             ExecuteValidation(pieces, instructions);
             ExecuteTheInstructions(pieces, instructions);
             CollectResult(pieces);
             return _gameResult.ToArray();
-        }
-
-        private void CreateWallsIfAny(string[] instructions)
-        {
-            if (string.IsNullOrWhiteSpace(instructions[0]))
-                return;
-            if (instructions[0][0] != 'W')
-                return;
-            if (!_validator.ValidateWallsInput(instructions[0]))
-            {
-                new EventHandler(new ConsoleOutput()).Events[EventType.WallCreationError]("");
-                _gameResult.Add("The wall(s) coordinates were incorrect!");
-                return;
-            }
-
-            _board.GenerateWalls(instructions[0]);
-        }
-
-        private string[] RemoveWallsFromTheInstructionsIfAny(string[] instructions)
-        {
-            if (!string.IsNullOrWhiteSpace(instructions[0]) && instructions[0][0] == 'W')
-                return instructions.Where((source, index) => index != 0).ToArray();
-            return instructions;
         }
         
         private List<IPiece> CreatePieces(IReadOnlyList<string> instructions)

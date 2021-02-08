@@ -22,6 +22,7 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
+                [EventType.PieceMove] = _presentation.EventsOutput[EventType.PieceMove],
                 [EventType.WallCreationError] = _presentation.EventsOutput[EventType.WallCreationError],
                 [EventType.OutsideBoundaries] = _presentation.EventsOutput[EventType.OutsideBoundaries],
                 [EventType.FieldTaken] = _presentation.EventsOutput[EventType.FieldTaken],

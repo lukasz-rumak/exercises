@@ -38,6 +38,8 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
+                [EventType.PieceMove] = description => 
+                    Console.WriteLine($"Event: {description}!"),
                 [EventType.WallCreationError] = description =>
                     Console.WriteLine($"Event: The wall(s) were not created! {description}"),
                 [EventType.OutsideBoundaries] = description =>

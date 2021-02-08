@@ -18,10 +18,15 @@ namespace BoardGame.Managers
             return this;
         }
 
+        public IBoardBuilder AddWall(string instruction)
+        {
+            _board.AddWallsToBoard(instruction);
+            return this;
+        }
+
         public IGameBoard BuildBoard()
         {
             _board.Board = _board.GenerateBoard(_board.WithSize);
-            _board.Walls = new List<Wall>();
             return _board;
         }
     }

@@ -17,6 +17,7 @@ namespace BoardGame.Managers
         public GameBoard(IEvent eventHandler)
         {
             _eventHandler = eventHandler;
+            Walls = new List<Wall>();
         }
         
         public Field[,] GenerateBoard(int size)
@@ -27,9 +28,12 @@ namespace BoardGame.Managers
                 board[i, j] = new Field(i, j);
             return board;
         }
-
-        public void GenerateWalls(string instruction)
+        
+        public void AddWallsToBoard(string instruction)
         {
+            //if (!_validator.ValidateWallsInput(instructions[0]))
+            //    new EventHandler(new ConsoleOutput()).Events[EventType.WallCreationError]("");
+
             var stringBuilder = new StringBuilder();
             foreach (var c in instruction.Where(c => c != ' '))
                 stringBuilder.Append(c);
@@ -37,7 +41,7 @@ namespace BoardGame.Managers
             foreach (var coordinates in wallsToBuild)
                 CreateWall(coordinates);
         }
-        
+
         private void CreateWall(string coordinates)
         {
             Walls.Add(
@@ -47,6 +51,11 @@ namespace BoardGame.Managers
                     WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
                 }
             );
+            Walls.Add(new Wall
+            {
+                WallPositionField1 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString())),
+                WallPositionField2 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString()))
+            });
         }
 
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)
@@ -71,7 +80,7 @@ namespace BoardGame.Managers
         private bool IsMovePossible(IPiece piece, int newX, int newY)
         {
             return IsInBoundaries(newX, newY) && IsFieldFree(newX, newY) &&
-                    IsNoWallOnTheRoute(piece, newX, newY);
+                    IsRouteEmpty(piece, newX, newY);
         }
 
         private bool IsInBoundaries(int x, int y)
@@ -90,21 +99,23 @@ namespace BoardGame.Managers
             return false;
         }
 
-        private bool IsNoWallOnTheRoute(IPiece piece, int newX, int newY)
+        private bool IsRouteEmpty(IPiece piece, int newX, int newY)
         {
-            if (Walls != null && !Walls.Any(wall =>
-                (wall.WallPositionField1.Item1 == piece.Position.X && wall.WallPositionField1.Item2 == piece.Position.Y &&
-                 wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY) ||
-                (wall.WallPositionField1.Item1 == newX && wall.WallPositionField1.Item2 == newY &&
-                 wall.WallPositionField2.Item1 == piece.Position.X && wall.WallPositionField2.Item2 == piece.Position.Y)))
-            return true;
-            _eventHandler.Events[EventType.WallOnTheRoute]($"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX}, {newY})");
+            if (Walls == null) return true;
+            if (!Walls.Any(wall =>
+                wall.WallPositionField1.Item1 == piece.Position.X &&
+                wall.WallPositionField1.Item2 == piece.Position.Y &&
+                wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY))
+                return true;
+            _eventHandler.Events[EventType.WallOnTheRoute](
+                $"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX}, {newY})");
             return false;
         }
 
         private void MarkFieldAsTaken(IPiece piece)
         {
             Board[piece.Position.X, piece.Position.Y].TakenBy = piece;
+            _eventHandler.Events[EventType.PieceMove]($"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
         }
         
         private void MarkFieldAsNotTaken(int x, int y)
