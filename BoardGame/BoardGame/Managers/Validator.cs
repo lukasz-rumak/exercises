@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BoardGame.Interfaces;
 
@@ -16,25 +18,30 @@ namespace BoardGame.Managers
             return input.All(c => IsPieceType(c) || IsMovementType(c));
         }
 
-        public bool ValidateWallsInput(string input)
+        public bool ValidateWallsInput(string input, int boardSize)
         {
-            var counter = 0;
-            foreach (var c in input)
+            if (input[0] != 'W')
+                return false;
+            var afterSplits = input.Split('W', StringSplitOptions.RemoveEmptyEntries)[0]
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (afterSplits.Length != 4)
+                return false;
+            var afterSplitsInts = new int[4];
+            for (int i = 0; i < afterSplits.Length; i++)
             {
-                if (counter == 0 && c != 'W')
+                if (int.TryParse(afterSplits[i], out var result))
+                    afterSplitsInts[i] = result;
+                else
                     return false;
-                if ((counter == 1 || counter == 3 || counter == 5 || counter == 7) && c != ' ')
-                    return false;
-                if ((counter == 2 || counter == 4 || counter == 6 || counter == 8) &&
-                    !int.TryParse(c.ToString(), out var r))
-                    return false;
-                counter += 1;
-                if (counter == 10) counter = 0;
             }
 
-            return true;
+            if (!new[] {0, 1}.Contains(Math.Abs(afterSplitsInts[0] - afterSplitsInts[2])))
+                return false;
+            if (!new[] {0, 1}.Contains(Math.Abs(afterSplitsInts[1] - afterSplitsInts[3])))
+                return false;
+            return afterSplitsInts.All(t => t >= 0 && t < boardSize);
         }
-
+        
         private bool IsPieceType(char c)
         {
             return AllowedPieceTypes.Contains(c.ToString());

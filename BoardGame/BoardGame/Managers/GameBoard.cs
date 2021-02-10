@@ -13,10 +13,12 @@ namespace BoardGame.Managers
         public List<Wall> Walls { get; set; }
         
         private readonly IEvent _eventHandler;
+        private readonly IValidator _validator;
 
-        public GameBoard(IEvent eventHandler)
+        public GameBoard(IEvent eventHandler, IValidator validator)
         {
             _eventHandler = eventHandler;
+            _validator = validator;
             Walls = new List<Wall>();
         }
         
@@ -31,8 +33,11 @@ namespace BoardGame.Managers
         
         public void AddWallsToBoard(string instruction)
         {
-            //if (!_validator.ValidateWallsInput(instructions[0]))
-            //    new EventHandler(new ConsoleOutput()).Events[EventType.WallCreationError]("");
+            if (!_validator.ValidateWallsInput(instruction, WithSize))
+            {
+                _eventHandler.Events[EventType.WallCreationError]("");
+                return;
+            }
 
             var stringBuilder = new StringBuilder();
             foreach (var c in instruction.Where(c => c != ' '))

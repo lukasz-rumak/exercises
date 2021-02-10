@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BoardGame.Interfaces;
+﻿using BoardGame.Interfaces;
 
 namespace BoardGame.Managers
 {
@@ -9,7 +8,7 @@ namespace BoardGame.Managers
         
         public BoardBuilder()
         {
-            _board = new GameBoard(new EventHandler(new ConsoleOutput()));
+            _board = new GameBoard(new EventHandler(new ConsoleOutput()), new Validator());
         }
 
         public IBoardBuilder WithSize(int size)
