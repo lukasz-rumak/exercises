@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using BoardGame.Interfaces;
 
@@ -20,26 +19,47 @@ namespace BoardGame.Managers
 
         public bool ValidateWallsInput(string input, int boardSize)
         {
-            if (input[0] != 'W')
-                return false;
-            var afterSplits = input.Split('W', StringSplitOptions.RemoveEmptyEntries)[0]
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (afterSplits.Length != 4)
-                return false;
-            var afterSplitsInts = new int[4];
-            for (int i = 0; i < afterSplits.Length; i++)
+            if (input[0] != 'W') return false;
+            var inputSplited = input.Split('W')[1].Split(' ');
+            if (!ValidateWallAgainstLength(inputSplited)) return false;
+            inputSplited = inputSplited.Skip(1).ToArray();
+            var inputConverted = ValidateWallAgainstNonIntAndConvert(inputSplited);
+            if (inputConverted == null) return false;
+            if (!ValidateWallAgainstPositionDifference(inputConverted)) return false;
+            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) return false;
+
+            return true;
+        }
+
+        private bool ValidateWallAgainstLength(IReadOnlyList<string> input)
+        {
+            return input.Count == 5;
+        }
+        
+        private int[] ValidateWallAgainstNonIntAndConvert(IReadOnlyList<string> input)
+        {
+            var inputConverted = new int[4];
+            for (int i = 0; i < input.Count; i++)
             {
-                if (int.TryParse(afterSplits[i], out var result))
-                    afterSplitsInts[i] = result;
+                if (int.TryParse(input[i], out var result))
+                    inputConverted[i] = result;
                 else
-                    return false;
+                    return null;
             }
 
-            if (!new[] {0, 1}.Contains(Math.Abs(afterSplitsInts[0] - afterSplitsInts[2])))
-                return false;
-            if (!new[] {0, 1}.Contains(Math.Abs(afterSplitsInts[1] - afterSplitsInts[3])))
-                return false;
-            return afterSplitsInts.All(t => t >= 0 && t < boardSize);
+            return inputConverted;
+        }
+
+        private bool ValidateWallAgainstPositionDifference(IReadOnlyList<int> input)
+        {
+            if (!new[] {0, 1}.Contains(Math.Abs(input[0] - input[2]))) return false;
+            if (!new[] {0, 1}.Contains(Math.Abs(input[1] - input[3]))) return false;
+            return true;
+        }
+
+        private bool ValidateWallAgainstBoardSize(IReadOnlyList<int> input, int boardSize)
+        {
+            return input.All(t => t >= 0 && t < boardSize);
         }
         
         private bool IsPieceType(char c)
