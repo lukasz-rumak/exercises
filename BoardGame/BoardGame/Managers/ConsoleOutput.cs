@@ -34,9 +34,9 @@ namespace BoardGame.Managers
             }
         }
 
-        public void PrintEventOutput(EventType eventType, string description)
+        public void PrintEventOutput(EventType eventType, string eventMsg)
         {
-            _eventsOutput[eventType](description);
+            _eventsOutput[eventType](eventMsg);
         }
         
         private Dictionary<EventType, Action<string>> CreateEventsOutput()
