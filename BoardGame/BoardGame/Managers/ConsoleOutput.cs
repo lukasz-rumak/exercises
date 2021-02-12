@@ -8,11 +8,11 @@ namespace BoardGame.Managers
 {
     public class ConsoleOutput : IPresentation
     {
-        public Dictionary<EventType, Action<string>> EventsOutput { get; set; }
+        private readonly Dictionary<EventType, Action<string>> _eventsOutput;
 
         public ConsoleOutput()
         {
-            EventsOutput = CreateEventsOutput();
+            _eventsOutput = CreateEventsOutput();
         }
         
         public void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pieces)
@@ -34,21 +34,27 @@ namespace BoardGame.Managers
             }
         }
 
+        public void PrintEventOutput(EventType eventType, string description)
+        {
+            _eventsOutput[eventType](description);
+        }
+        
         private Dictionary<EventType, Action<string>> CreateEventsOutput()
         {
             return new Dictionary<EventType, Action<string>>
             {
-                [EventType.PieceMove] = description => 
-                    Console.WriteLine($"Event: {description}!"),
-                [EventType.WallCreationError] = description =>
-                    Console.WriteLine($"Event: The wall(s) were not created! {description}"),
-                [EventType.OutsideBoundaries] = description =>
-                    Console.WriteLine($"Event: move not possible (outside of the boundaries)! {description}"),
-                [EventType.FieldTaken] = description =>
-                    Console.WriteLine($"Event: move not possible (field already taken)! {description}"),
-                [EventType.WallOnTheRoute] = description =>
-                    Console.WriteLine($"Event: move not possible (wall on the route)! {description}"),
-                [EventType.None] = description => Console.WriteLine($"Event: none! {description}")
+                [EventType.PieceMove] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.WallCreationError] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.OutsideBoundaries] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.FieldTaken] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.WallOnTheRoute] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.None] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}")
             };
         }
     }
