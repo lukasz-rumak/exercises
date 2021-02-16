@@ -56,11 +56,17 @@ namespace BoardGame.Managers
                     WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
                 }
             );
-            Walls.Add(new Wall
-            {
-                WallPositionField1 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString())),
-                WallPositionField2 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString()))
-            });
+//            Walls.Add(new Wall
+//            {
+//                WallPositionField1 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString())),
+//                WallPositionField2 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString()))
+//            });
+        }
+        
+        public void NewCreateWall(Wall wallToAdd) // zmien tez nazwe metody
+        {
+            Walls.Add(wallToAdd);
+            Walls.Add(wallToAdd.ReversedWall());
         }
 
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
@@ -19,7 +20,7 @@ namespace BoardGame.Managers
 
         public bool ValidateWallsInput(string input, int boardSize)
         {
-            if (input[0] != 'W') return false;
+            if (string.IsNullOrWhiteSpace(input) || !input.StartsWith('W')) return false;
             var inputSplited = input.Split('W')[1].Split(' ');
             if (!ValidateWallAgainstLength(inputSplited)) return false;
             inputSplited = inputSplited.Skip(1).ToArray();
@@ -29,6 +30,23 @@ namespace BoardGame.Managers
             if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) return false;
 
             return true;
+        }
+
+        public ValidationResult ValidateWallInputWithReason(string input, in int boardSize)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
+            if (!input.StartsWith('W'))
+                return new ValidationResult {IsValid = false, Reason = "Input should start with 'W'"};
+            var inputSplited = input.Split('W')[1].Split(' ');
+            if (!ValidateWallAgainstLength(inputSplited)) return new ValidationResult {IsValid = false};
+            inputSplited = inputSplited.Skip(1).ToArray();
+            var inputConverted = ValidateWallAgainstNonIntAndConvert(inputSplited);
+            if (inputConverted == null) return new ValidationResult {IsValid = false};
+            if (!ValidateWallAgainstPositionDifference(inputConverted)) return new ValidationResult {IsValid = false};
+            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) return new ValidationResult {IsValid = false};
+
+            return new ValidationResult {IsValid = true, Reason = ""};
         }
 
         private bool ValidateWallAgainstLength(IReadOnlyList<string> input)

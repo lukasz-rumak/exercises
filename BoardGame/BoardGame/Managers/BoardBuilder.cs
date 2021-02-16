@@ -28,5 +28,10 @@ namespace BoardGame.Managers
             _board.Board = _board.GenerateBoard(_board.WithSize);
             return _board;
         }
+
+        private string[] AddWallToBoard()
+        {
+            return null;
+        }
     }
 }
