@@ -8,9 +8,8 @@ namespace BoardGame.Interfaces
     {
         Field[,] Board { get; set; }
         int WithSize { get; set; }
-        List<Wall> Walls { get; set; }
         Field[,] GenerateBoard(int size);
-        void AddWallsToBoard(string instruction);
+        void CreateWallOnBoard(Wall wallToAdd);
         void ExecuteThePlayerInstruction(IPiece piece, char instruction);
     }
 }

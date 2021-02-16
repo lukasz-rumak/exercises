@@ -1,14 +1,21 @@
-﻿using BoardGame.Interfaces;
+﻿using System.Linq;
+using System.Text;
+using BoardGame.Interfaces;
+using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
     public class BoardBuilder : IBoardBuilder
     {
-        private IGameBoard _board;
-        
+        private readonly IGameBoard _board;
+        private readonly IValidator _validator;
+        private readonly IEvent _eventHandler;
+
         public BoardBuilder()
         {
-            _board = new GameBoard(new EventHandler(new ConsoleOutput()), new Validator());
+            _eventHandler = new EventHandler(new ConsoleOutput());
+            _validator = new Validator();
+            _board = new GameBoard(_eventHandler);
         }
 
         public IBoardBuilder WithSize(int size)
@@ -19,7 +26,7 @@ namespace BoardGame.Managers
 
         public IBoardBuilder AddWall(string instruction)
         {
-            _board.AddWallsToBoard(instruction);
+            AddWallToBoard(instruction, _board.WithSize);
             return this;
         }
 
@@ -29,9 +36,32 @@ namespace BoardGame.Managers
             return _board;
         }
 
-        private string[] AddWallToBoard()
+        private void AddWallToBoard(string instruction, int boardSize)
         {
-            return null;
+            var validationResult = _validator.ValidateWallInputWithReason(instruction, boardSize);
+            if (!validationResult.IsValid)
+            {
+                _eventHandler.Events[EventType.WallCreationError]($"{validationResult.Reason}");
+                return;
+            }
+
+            var stringBuilder = new StringBuilder();
+            foreach (var c in instruction.Where(c => c != ' '))
+                stringBuilder.Append(c);
+            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
+            foreach (var coordinates in wallsToBuild)
+            {
+                _board.CreateWallOnBoard(CreateWall(coordinates));
+            }
+        }
+
+        private Wall CreateWall(string coordinates)
+        {
+            return new Wall
+            {
+                WallPositionField1 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
+                WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
+            };
         }
     }
 }

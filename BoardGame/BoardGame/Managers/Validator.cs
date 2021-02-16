@@ -18,33 +18,23 @@ namespace BoardGame.Managers
             return input.All(c => IsPieceType(c) || IsMovementType(c));
         }
 
-        public bool ValidateWallsInput(string input, int boardSize)
-        {
-            if (string.IsNullOrWhiteSpace(input) || !input.StartsWith('W')) return false;
-            var inputSplited = input.Split('W')[1].Split(' ');
-            if (!ValidateWallAgainstLength(inputSplited)) return false;
-            inputSplited = inputSplited.Skip(1).ToArray();
-            var inputConverted = ValidateWallAgainstNonIntAndConvert(inputSplited);
-            if (inputConverted == null) return false;
-            if (!ValidateWallAgainstPositionDifference(inputConverted)) return false;
-            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) return false;
-
-            return true;
-        }
-
-        public ValidationResult ValidateWallInputWithReason(string input, in int boardSize)
+        public ValidationResult ValidateWallInputWithReason(string input, int boardSize)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
             if (!input.StartsWith('W'))
                 return new ValidationResult {IsValid = false, Reason = "Input should start with 'W'"};
             var inputSplited = input.Split('W')[1].Split(' ');
-            if (!ValidateWallAgainstLength(inputSplited)) return new ValidationResult {IsValid = false};
+            if (!ValidateWallAgainstLength(inputSplited)) 
+                return new ValidationResult {IsValid = false, Reason = "Input wall position should contain four chars divided by whitespace"};
             inputSplited = inputSplited.Skip(1).ToArray();
             var inputConverted = ValidateWallAgainstNonIntAndConvert(inputSplited);
-            if (inputConverted == null) return new ValidationResult {IsValid = false};
-            if (!ValidateWallAgainstPositionDifference(inputConverted)) return new ValidationResult {IsValid = false};
-            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) return new ValidationResult {IsValid = false};
+            if (inputConverted == null) 
+                return new ValidationResult {IsValid = false, Reason = "Input wall position should be integers"};
+            if (!ValidateWallAgainstPositionDifference(inputConverted)) 
+                return new ValidationResult {IsValid = false, Reason = "Input wall position difference should be 0 or 1"};
+            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) 
+                return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
         }
