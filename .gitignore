@@ -39,3 +39,13 @@ TicTacToe/TicTacToe/bin/Debug/netcoreapp3.1/TicTacToe.runtimeconfig.dev.json
 TicTacToe/TicTacToe/bin/Debug/netcoreapp3.1/TicTacToe.deps.json
 BoardGame/BoardGameTests/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
 BoardGame/BoardGame/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
+BoardGame/BoardGameApi/obj/Debug/netcoreapp3.1/BoardGameApi.AssemblyInfo.cs
+BoardGame/BoardGameApi/obj/BoardGameApi.csproj.nuget.dgspec.json
+BoardGame/BoardGameApi/obj/project.packagespec.json
+BoardGame/BoardGameApi/obj/project.assets.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/Properties/launchSettings.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/BoardGameApi.runtimeconfig.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/BoardGameApi.runtimeconfig.dev.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/BoardGameApi.deps.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/appsettings.json
+BoardGame/BoardGameApi/bin/Debug/netcoreapp3.1/appsettings.Development.json
