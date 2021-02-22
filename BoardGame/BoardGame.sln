@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameTests", "BoardGame
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameApi", "BoardGameApi\BoardGameApi.csproj", "{569A88DC-9AAB-4697-8817-E193EAED3EE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameApiTests", "BoardGameApiTests\BoardGameApiTests.csproj", "{703B26E2-314D-49CD-97BC-C2B8B6205CB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{569A88DC-9AAB-4697-8817-E193EAED3EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{569A88DC-9AAB-4697-8817-E193EAED3EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{569A88DC-9AAB-4697-8817-E193EAED3EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{703B26E2-314D-49CD-97BC-C2B8B6205CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{703B26E2-314D-49CD-97BC-C2B8B6205CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{703B26E2-314D-49CD-97BC-C2B8B6205CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{703B26E2-314D-49CD-97BC-C2B8B6205CB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

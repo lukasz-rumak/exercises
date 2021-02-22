@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using BoardGameApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoardGameApi.Controllers
@@ -31,6 +32,42 @@ namespace BoardGameApi.Controllers
         public string Post([FromBody] string str)
         {
             return str;
+        }
+        
+        [HttpPost("gameInit")]
+        public ActionResult<GameInit> PostGameInit([FromBody] GameInit gameInit)
+        {
+            return null;
+        }
+
+        [HttpPut("newWall")]
+        public ActionResult<Wall> PutNewWall([FromBody] Wall newWall)
+        {
+            return null;
+        }
+        
+        [HttpPost("buildBoard")]
+        public ActionResult PostBuildBoard([FromBody] bool buildBoard)
+        {
+            return Ok();
+        }
+        
+        [HttpPost("addPlayer")]
+        public ActionResult PostAddPlayer([FromBody] AddPlayer addPlayer)
+        {
+            return Ok();
+        }
+        
+        [HttpPut("movePlayer")]
+        public ActionResult PutMovePlayer([FromBody] MovePlayer movePlayer)
+        {
+            return null;
+        }
+
+        [HttpGet("seeBoard")]
+        public string SeeBoard()
+        {
+            return null;
         }
     }
 }

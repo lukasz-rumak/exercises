@@ -8,5 +8,9 @@
       <Folder Include="Managers" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BoardGame\BoardGame.csproj" />
+    </ItemGroup>
+
 
 </Project>
