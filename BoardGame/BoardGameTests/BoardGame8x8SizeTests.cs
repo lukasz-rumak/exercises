@@ -7,10 +7,12 @@ namespace BoardGameTests
     public class BoardGame8x8SizeTests
     {
         private readonly IGame _game;
-        
+
         public BoardGame8x8SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(8).BuildBoard(), new ConsoleOutput());
+            _game = new GameMaster(new Validator(),
+                new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(8).BuildBoard(),
+                new ConsoleOutput());
         }
 
         [Theory]

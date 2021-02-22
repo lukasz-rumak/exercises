@@ -8,13 +8,13 @@ namespace BoardGame.Managers
     public class BoardBuilder : IBoardBuilder
     {
         private readonly IGameBoard _board;
-        private readonly IValidator _validator;
+        private readonly IValidatorWall _validator;
         private readonly IEvent _eventHandler;
 
-        public BoardBuilder()
+        public BoardBuilder(IEvent eventHandler, IValidatorWall validatorWall)
         {
-            _eventHandler = new EventHandler(new ConsoleOutput());
-            _validator = new Validator();
+            _eventHandler = eventHandler;
+            _validator = validatorWall;
             _board = new GameBoard(_eventHandler);
         }
 

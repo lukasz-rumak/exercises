@@ -7,6 +7,5 @@ namespace BoardGame.Interfaces
     {
         List<string> AllowedPieceTypes { get; set; }
         bool ValidateInstructionsInput(string input);
-        ValidationResult ValidateWallInputWithReason(string input, int boardSize);
     }
 }

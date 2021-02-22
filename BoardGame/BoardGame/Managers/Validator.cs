@@ -6,7 +6,7 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class Validator : IValidator
+    public class Validator : IValidator, IValidatorWall
     {
         public List<string> AllowedPieceTypes { get; set; }
 

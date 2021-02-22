@@ -7,10 +7,12 @@ namespace BoardGameTests
     public class BoardGame3x3SizeTests
     {
         private readonly IGame _game;
-        
+
         public BoardGame3x3SizeTests()
         {
-            _game = new GameMaster(new Validator(), new BoardBuilder().WithSize(3).BuildBoard(), new ConsoleOutput());
+            _game = new GameMaster(new Validator(),
+                new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(3).BuildBoard(),
+                new ConsoleOutput());
         }
 
         [Theory]

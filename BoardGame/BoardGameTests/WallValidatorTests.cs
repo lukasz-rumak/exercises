@@ -6,7 +6,7 @@ namespace BoardGameTests
 {
     public class WallValidatorTests
     {
-        private readonly IValidator _validator;
+        private readonly IValidatorWall _validator;
         
         public WallValidatorTests()
         {

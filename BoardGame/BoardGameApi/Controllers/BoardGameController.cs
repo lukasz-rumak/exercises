@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 using BoardGameApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BoardGameApi.Controllers
 {
@@ -29,45 +31,45 @@ namespace BoardGameApi.Controllers
         }
         
         [HttpPost("doPost")]
-        public string Post([FromBody] string str)
+        public string Post([FromBody] Dummy dummy)
         {
-            return str;
+            return JsonConvert.SerializeObject(dummy);
         }
         
         [HttpPost("gameInit")]
         public ActionResult<GameInit> PostGameInit([FromBody] GameInit gameInit)
         {
-            return null;
+            return StatusCode(500);
         }
 
         [HttpPut("newWall")]
         public ActionResult<Wall> PutNewWall([FromBody] Wall newWall)
         {
-            return null;
+            return StatusCode(500);
         }
         
         [HttpPost("buildBoard")]
-        public ActionResult PostBuildBoard([FromBody] bool buildBoard)
+        public ActionResult PostBuildBoard([FromBody] Session session)
         {
-            return Ok();
+            return StatusCode(500);
         }
         
         [HttpPost("addPlayer")]
         public ActionResult PostAddPlayer([FromBody] AddPlayer addPlayer)
         {
-            return Ok();
+            return StatusCode(500);
         }
         
         [HttpPut("movePlayer")]
         public ActionResult PutMovePlayer([FromBody] MovePlayer movePlayer)
         {
-            return null;
+            return StatusCode(500);
         }
 
         [HttpGet("seeBoard")]
-        public string SeeBoard()
+        public ActionResult SeeBoard()
         {
-            return null;
+            return StatusCode(500);
         }
     }
 }
