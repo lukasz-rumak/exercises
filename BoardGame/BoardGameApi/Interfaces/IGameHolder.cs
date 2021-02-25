@@ -4,8 +4,8 @@ using BoardGame.Managers;
 
 namespace BoardGameApi.Interfaces
 {
-    public class IGameHolder
+    public interface IGameHolder
     {
-        public Dictionary<Guid, GameMaster> SessionsHolder { get; set; }
+        Dictionary<Guid, GameMaster> SessionsHolder { get; set; }
     }
 }

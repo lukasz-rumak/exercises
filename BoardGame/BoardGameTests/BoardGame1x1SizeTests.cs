@@ -12,7 +12,7 @@ namespace BoardGameTests
         {
             _game = new GameMaster(new Validator(),
                 new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(1).BuildBoard(),
-                new ConsoleOutput());
+                new Player(), new ConsoleOutput());
         }
 
         [Theory]

@@ -57,7 +57,7 @@ namespace BoardGameApiTests
                     WithSize = 5
                 }
             };
-            var stringContent = new StringContent(await JsonConvert.SerializeObjectAsync(model), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("/boardgame/gameInit", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -72,7 +72,7 @@ namespace BoardGameApiTests
                 SessionId = new Guid(),
                 WallCoordinates = "dummy string"
             };
-            var stringContent = new StringContent(await JsonConvert.SerializeObjectAsync(model), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _client.PutAsync("/boardgame/newWall", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -86,7 +86,7 @@ namespace BoardGameApiTests
             {
                 SessionId = new Guid()
             };
-            var stringContent = new StringContent(await JsonConvert.SerializeObjectAsync(model), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("/boardgame/buildBoard", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -103,7 +103,7 @@ namespace BoardGameApiTests
                 PlayerType = "something",
                 StartPosition = "something"
             };
-            var stringContent = new StringContent(await JsonConvert.SerializeObjectAsync(model), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("/boardgame/AddPlayer", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -119,7 +119,7 @@ namespace BoardGameApiTests
                 PlayerId = 0,
                 Move = "something"
             };
-            var stringContent = new StringContent(await JsonConvert.SerializeObjectAsync(model), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _client.PutAsync("/boardgame/movePlayer", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();

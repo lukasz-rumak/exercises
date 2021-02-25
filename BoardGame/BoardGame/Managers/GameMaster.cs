@@ -8,14 +8,16 @@ namespace BoardGame.Managers
     {
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
+        private readonly IPlayer _player;
         private readonly IPresentation _presentation;
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster(IValidator validator, IGameBoard board, IPresentation presentation)
+        public GameMaster(IValidator validator, IGameBoard board, IPlayer player, IPresentation presentation)
         {
             _validator = validator;
             _board = board;
+            _player = player;
             _presentation = presentation;
             _pieceFactory = new PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
@@ -28,28 +30,19 @@ namespace BoardGame.Managers
         {
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
-            
-            var pieces = CreatePieces(instructions);
-            ExecuteValidation(pieces, instructions);
-            ExecuteTheInstructions(pieces, instructions);
-            CollectResult(pieces);
+
+            CreatePlayers(instructions);
+            ExecuteValidation(_player.Players, instructions);
+            ExecuteTheInstructions(_player.Players, instructions);
+            CollectResult(_player.Players);
             return _gameResult.ToArray();
         }
-        
-        private List<IPiece> CreatePieces(IReadOnlyList<string> instructions)
-        {
-            var pieces = new List<IPiece>();
-            for (var i = 0; i < instructions.Count; i++)
-            {
-                if (_board.WithSize > i)
-                {
-                    pieces.Add(_pieceFactory.GetPiece(instructions[i].Length > 0 ? instructions[i][0].ToString() : string.Empty, i));
-                    _board.Board[i, i].TakenBy = pieces[i];
-                }
-            }
-            return pieces;
-        }
 
+        public void CreatePlayers(IReadOnlyList<string> instructions)
+        {
+            _player.CreatePlayers(_board, _pieceFactory, instructions);
+        }
+        
         private void ExecuteValidation(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
         {
             for (var i = 0; i < pieces.Count; i++)
