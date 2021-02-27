@@ -129,7 +129,17 @@ namespace BoardGameApiTests
         [Fact]
         public async Task Get_SeeBoard_Should_Return_Board()
         {
-            var response = await _client.GetAsync("/boardgame/seeBoard");
+            var model = new Session
+            {
+                SessionId = new Guid()
+            };
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("/boardgame/seeBoard"),
+                Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"),
+            };
+            var response = await _client.SendAsync(request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
             responseContent.Should().Be("something");

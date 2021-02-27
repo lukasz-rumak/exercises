@@ -57,11 +57,14 @@ namespace BoardGameApi.Controllers
         [HttpPost("gameInit")]
         public ActionResult<GameInit> PostGameInit([FromBody] GameInit gameInit)
         {
+            if (string.IsNullOrWhiteSpace(gameInit.ToString()))
+                return StatusCode(500);
+            
             var sessionId = Guid.NewGuid();
             var newGameBoard = new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator())
                 .WithSize(gameInit.Board.WithSize).AddWall(gameInit.Board.Wall.WallCoordinates).BuildBoard();
             var newGame = new GameMaster(_validator, newGameBoard, _player, _presentation);
-            var dict = new Dictionary<Guid, GameMaster> {{sessionId, newGame}};
+            _gameHolder.SessionsHolder.Add(sessionId, newGame);
 
             return Ok(new GameInit
             {
@@ -80,7 +83,18 @@ namespace BoardGameApi.Controllers
         [HttpPut("newWall")]
         public ActionResult<Wall> PutNewWall([FromBody] Wall newWall)
         {
-            return StatusCode(500);
+            if (string.IsNullOrWhiteSpace(newWall.ToString()))
+                return StatusCode(500);
+
+            var sth = new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).AddWall(newWall.WallCoordinates);
+            // TODO _gameHolder.SessionsHolder[newWall.SessionId]
+            
+
+            return Ok(new ResponseStatus
+            {
+                SessionId = newWall.SessionId,
+                Status = "Created"
+            });
         }
         
         [HttpPost("buildBoard")]
@@ -110,8 +124,9 @@ namespace BoardGameApi.Controllers
         }
 
         [HttpGet("seeBoard")]
-        public ActionResult SeeBoard()
+        public ActionResult SeeBoard(Session session)
         {
+            // TODO
             return StatusCode(500);
         }
     }
