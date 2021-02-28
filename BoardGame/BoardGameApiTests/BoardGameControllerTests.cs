@@ -19,32 +19,9 @@ namespace BoardGameApiTests
         {
             _client = fixture.CreateClient();
         }
-
-        [Fact]
-        public async Task Get_Should_Be_Okay()
-        {
-            var response = await _client.GetAsync("/boardgame/doGet");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("something 1, something 2, something 3, ");
-        }
         
         [Fact]
-        public async Task Post_Should_Be_Okay()
-        {
-            var model = new Dummy
-            {
-                Something = "something"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/boardgame/doPost", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"Something\":\"something\"}");
-        }
-        
-        [Fact]
-        public async Task Post_GameInit_Should_Return_SessionId()
+        public async Task Post_GameInit_Should_Return_SessionId_And_Status()
         {
             var model = new GameInit
             {
@@ -52,7 +29,7 @@ namespace BoardGameApiTests
                 {
                     Wall = new Wall
                     {
-                        WallCoordinates = "dummy string"
+                        WallCoordinates = "W 1 1 2 2"
                     },
                     WithSize = 5
                 }
@@ -61,7 +38,7 @@ namespace BoardGameApiTests
             var response = await _client.PostAsync("/boardgame/gameInit", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"SessionId\":\"something\"}");
+            responseContent.Should().Contain("\"status\":\"Game started\"}");
         }
 
         [Fact]
@@ -76,7 +53,7 @@ namespace BoardGameApiTests
             var response = await _client.PutAsync("/boardgame/newWall", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"SessionId\":\"something\", \"Status\":\"created\"}");
+            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"created\"}");
         }
 
         [Fact]
@@ -90,7 +67,7 @@ namespace BoardGameApiTests
             var response = await _client.PostAsync("/boardgame/buildBoard", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"SessionId\":\"something\", \"Status\":\"created\"}");
+            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"created\"}");
         }
         
         [Fact]
@@ -107,7 +84,7 @@ namespace BoardGameApiTests
             var response = await _client.PostAsync("/boardgame/AddPlayer", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"SessionId\":\"something\", \"Status\":\"added\"}");
+            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"added\"}");
         }
         
         [Fact]
@@ -123,7 +100,7 @@ namespace BoardGameApiTests
             var response = await _client.PutAsync("/boardgame/movePlayer", stringContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"SessionId\":\"something\", \"Status\":\"moved\"}");
+            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"moved\"}");
         }
         
         [Fact]

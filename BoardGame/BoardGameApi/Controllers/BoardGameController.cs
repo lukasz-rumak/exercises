@@ -17,15 +17,16 @@ namespace BoardGameApi.Controllers
     [Route("[controller]")]
     public class BoardGameController : ControllerBase
     {
-        private readonly IEnumerable<string> _something;
         private readonly IGameHolder _gameHolder;
+        private readonly IBoardBuilderHolder _boardBuilderHolder;
         private readonly IPlayer _player;
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
+        private readonly IValidatorWall _validatorWall;
         private readonly IEvent _eventHandler;
         private readonly IGameBoard _gameBoard;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer player, IPresentation presentation, IValidator validator, IEvent eventHandler, IGameBoard gameBoard) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer player, IPresentation presentation, IValidator validator, IEvent eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
         {
             _gameHolder = gameHolder;
             _player = player;
@@ -33,25 +34,8 @@ namespace BoardGameApi.Controllers
             _validator = validator;
             _eventHandler = eventHandler;
             _gameBoard = gameBoard;
-            _something = new List<string> { "something 1", "something 2", "something 3" };
-        }
-
-        [HttpGet("doGet")]
-        public string Get()
-        {
-            var strBuilder = new StringBuilder();
-            foreach (var val in _something)
-            {
-                strBuilder.Append(val);
-                strBuilder.Append(", ");
-            }
-            return strBuilder.ToString();
-        }
-        
-        [HttpPost("doPost")]
-        public string Post([FromBody] Dummy dummy)
-        {
-            return JsonConvert.SerializeObject(dummy);
+            _boardBuilderHolder = boardBuilderHolder;
+            _validatorWall = validatorWall;
         }
         
         [HttpPost("gameInit")]
@@ -59,24 +43,34 @@ namespace BoardGameApi.Controllers
         {
             if (string.IsNullOrWhiteSpace(gameInit.ToString()))
                 return StatusCode(500);
-            
-            var sessionId = Guid.NewGuid();
-            var newGameBoard = new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator())
-                .WithSize(gameInit.Board.WithSize).AddWall(gameInit.Board.Wall.WallCoordinates).BuildBoard();
-            var newGame = new GameMaster(_validator, newGameBoard, _player, _presentation);
-            _gameHolder.SessionsHolder.Add(sessionId, newGame);
 
-            return Ok(new GameInit
+            var status = false;
+            var sessionId = Guid.NewGuid();
+            try
+            {
+                var board = new BoardBuilder(new EventHandler(_presentation), _validatorWall)
+                    .WithSize(gameInit.Board.WithSize).AddWall(gameInit.Board.Wall.WallCoordinates);
+                _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
+                status = true;
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            if (status)
+            {
+                return Ok(new ResponseStatus
+                {
+                    SessionId = sessionId,
+                    Status = "Game started"
+                });
+            }
+
+            return StatusCode(400, new ResponseStatus
             {
                 SessionId = sessionId,
-                Board = new Board
-                {
-                    Wall = new Wall
-                    {
-                        WallCoordinates = gameInit.Board.Wall.WallCoordinates
-                    },
-                    WithSize = gameInit.Board.WithSize
-                }
+                Status = "The provided parameters are invalid"
             });
         }
 
@@ -86,48 +80,104 @@ namespace BoardGameApi.Controllers
             if (string.IsNullOrWhiteSpace(newWall.ToString()))
                 return StatusCode(500);
 
-            var sth = new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).AddWall(newWall.WallCoordinates);
-            // TODO _gameHolder.SessionsHolder[newWall.SessionId]
-            
-
-            return Ok(new ResponseStatus
+            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(newWall.SessionId))
+            {
+                _boardBuilderHolder.BuilderSessionHolder[newWall.SessionId].AddWall(newWall.WallCoordinates);
+                return Ok(new ResponseStatus
+                {
+                    SessionId = newWall.SessionId,
+                    Status = "Created"
+                });
+            }
+            return StatusCode(400, new ResponseStatus
             {
                 SessionId = newWall.SessionId,
-                Status = "Created"
+                Status = "The provided sessionId is invalid"
             });
         }
         
         [HttpPost("buildBoard")]
         public ActionResult PostBuildBoard([FromBody] Session session)
         {
-            return StatusCode(500);
+            if (string.IsNullOrWhiteSpace(session.ToString()))
+                return StatusCode(500);
+
+            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(session.SessionId))
+            {
+                var board = _boardBuilderHolder.BuilderSessionHolder[session.SessionId].BuildBoard();
+                var game = new GameMaster(_validator, board, _player, _presentation);
+                _gameHolder.SessionsHolder.Add(session.SessionId, game);
+                _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
+                return Ok(new ResponseStatus
+                {
+                    SessionId = session.SessionId,
+                    Status = "Created"
+                });
+            }
+            return StatusCode(400, new ResponseStatus
+            {
+                SessionId = session.SessionId,
+                Status = "The provided sessionId is invalid"
+            });
         }
         
         [HttpPost("addPlayer")]
         public ActionResult PostAddPlayer([FromBody] AddPlayer addPlayer)
         {
-            if (string.IsNullOrWhiteSpace(addPlayer.SessionId.ToString()))
+            if (string.IsNullOrWhiteSpace(addPlayer.ToString()))
                 return StatusCode(500);
-            
-            _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string>{addPlayer.PlayerType});
-            return Ok(new ResponseStatus
+
+            if (_gameHolder.SessionsHolder.ContainsKey(addPlayer.SessionId))
+            {
+                _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string>{addPlayer.PlayerType});
+                return Ok(new ResponseStatus
+                {
+                    SessionId = addPlayer.SessionId,
+                    Status = "Created"
+                });
+            }
+            return StatusCode(400, new ResponseStatus
             {
                 SessionId = addPlayer.SessionId,
-                Status = "Created"
+                Status = "The provided sessionId is invalid"
             });
         }
         
         [HttpPut("movePlayer")]
         public ActionResult PutMovePlayer([FromBody] MovePlayer movePlayer)
         {
-            return StatusCode(500);
+            if (string.IsNullOrWhiteSpace(movePlayer.ToString()))
+                return StatusCode(500);
+
+            if (_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
+            {
+                _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.Move}, movePlayer.PlayerId);
+                return Ok(new ResponseStatus
+                {
+                    SessionId = movePlayer.SessionId,
+                    Status = $"Moved to {_gameHolder.SessionsHolder[movePlayer.SessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}"
+                });
+            }
+            return StatusCode(400, new ResponseStatus
+            {
+                SessionId = movePlayer.SessionId,
+                Status = "The provided sessionId is invalid"
+            });
         }
 
         [HttpGet("seeBoard")]
         public ActionResult SeeBoard(Session session)
         {
-            // TODO
-            return StatusCode(500);
+            if (string.IsNullOrWhiteSpace(session.ToString()))
+                return StatusCode(500);
+            
+            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+                return Ok(_gameHolder.SessionsHolder[session.SessionId].GenerateOutputApi());
+            return StatusCode(400, new ResponseStatus
+            {
+                SessionId = session.SessionId,
+                Status = "The provided sessionId is invalid"
+            });
         }
     }
 }

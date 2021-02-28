@@ -33,6 +33,27 @@ namespace BoardGame.Managers
                 Console.WriteLine(str.ToString());
             }
         }
+        
+        public string GenerateOutputApi(IGameBoard board, IReadOnlyList<IPiece> pieces)
+        {
+            var result = new StringBuilder();
+            result.Append($"Player(s): {pieces.Count}");
+            for (int i = board.WithSize - 1; i >= 0; i--)
+            {
+                var str = new StringBuilder();
+                for (int j = 0; j < board.WithSize; j++)
+                {
+                    if (board.Board[j, i].IsTaken)
+                        str.Append(board.Board[j, i].TakenBy.PieceId);
+                    else
+                        str.Append("-");
+                }
+                result.Append("|");
+                result.Append(str);
+            }
+
+            return result.ToString();
+        }
 
         public void PrintEventOutput(EventType eventType, string eventMsg)
         {
