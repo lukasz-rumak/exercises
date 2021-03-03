@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using BoardGameApi.Models;
+using BoardGameApiTests.Helpers;
 using FluentAssertions;
 using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -14,93 +15,42 @@ namespace BoardGameApiTests
     public class BoardGameControllerTests : IClassFixture<WebApplicationFactory<BoardGameApi.Startup>>
     {
         private readonly HttpClient _client;
+        private readonly TestHelper _testHelper;
 
         public BoardGameControllerTests(WebApplicationFactory<BoardGameApi.Startup> fixture)
         {
             _client = fixture.CreateClient();
+            _testHelper = new TestHelper();
         }
         
         [Fact]
-        public async Task Post_GameInit_Should_Return_SessionId_And_Status()
+        public async Task Post_GameInit_Should_Return_SessionId_And_Response()
         {
-            var model = new GameInit
-            {
-                Board = new Board
-                {
-                    Wall = new Wall
-                    {
-                        WallCoordinates = "W 1 1 2 2"
-                    },
-                    WithSize = 5
-                }
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/boardgame/gameInit", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Contain("\"status\":\"Game started\"}");
+            await _testHelper.TestGameInitEndpointAndReturnSessionId(_client);
         }
 
         [Fact]
-        public async Task Put_NewWall_Should_Return_SessionId_And_Status()
+        public async Task Put_NewWall_Should_Return_SessionId_And_Response()
         {
-            var model = new Wall
-            {
-                SessionId = new Guid(),
-                WallCoordinates = "dummy string"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync("/boardgame/newWall", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"created\"}");
+            await _testHelper.TestNewWallEndpoint(_client, Guid.Empty);
         }
 
         [Fact]
-        public async Task Post_BuildBoard_Should_Return_SessionId_And_Status()
+        public async Task Post_BuildBoard_Should_Return_SessionId_And_Response()
         {
-            var model = new Session
-            {
-                SessionId = new Guid()
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/boardgame/buildBoard", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"created\"}");
+            await _testHelper.TestBuildBoardEndpoint(_client, Guid.Empty);
         }
         
         [Fact]
-        public async Task Post_AddPlayer_Should_Return_SessionId_And_Status()
+        public async Task Post_AddPlayer_Should_Return_SessionId_And_Response()
         {
-            var model = new AddPlayer
-            {
-                SessionId = new Guid(),
-                PlayerId = 0,
-                PlayerType = "something",
-                StartPosition = "something"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/boardgame/AddPlayer", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"added\"}");
+            await _testHelper.TestAddPlayerEndpoint(_client, Guid.Empty);
         }
         
         [Fact]
-        public async Task Put_MovePlayer_Should_Return_SessionId_And_Status()
+        public async Task Put_MovePlayer_Should_Return_SessionId_And_Response()
         {
-            var model = new MovePlayer
-            {
-                SessionId = new Guid(),
-                PlayerId = 0,
-                Move = "something"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync("/boardgame/movePlayer", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("{\"sessionId\":\"something\",\"status\":\"moved\"}");
+            await _testHelper.TestMovePlayerEndpoint(_client, Guid.Empty);
         }
         
         [Fact]

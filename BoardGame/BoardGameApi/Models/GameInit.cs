@@ -1,10 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BoardGameApi.Models
 {
     public class GameInit
     {
-        public Guid SessionId { get; set; }
+        [Required]
         public Board Board { get; set; }
     }
 }
