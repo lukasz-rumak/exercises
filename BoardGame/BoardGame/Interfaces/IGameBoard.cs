@@ -6,10 +6,13 @@ namespace BoardGame.Interfaces
 {
     public interface IGameBoard
     {
-        Field[,] Board { get; set; }
         int WithSize { get; set; }
-        Field[,] GenerateBoard(int size);
+        IEvent GetEventHandler();
+        void GenerateBoard(int size);
         void CreateWallOnBoard(Wall wallToAdd);
+        bool IsFieldTaken(int x, int y);
+        int ReturnPieceIdFromTakenField(int x, int y);
+        void MarkFieldAsTakenByNewPiece(IPiece piece);
         void ExecuteThePlayerInstruction(IPiece piece, char instruction);
     }
 }

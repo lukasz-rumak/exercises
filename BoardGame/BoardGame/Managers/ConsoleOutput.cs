@@ -25,8 +25,8 @@ namespace BoardGame.Managers
                 var str = new StringBuilder();
                 for (int j = 0; j < board.WithSize; j++)
                 {
-                    if (board.Board[j, i].IsTaken)
-                        str.Append(board.Board[j, i].TakenBy.PieceId);
+                    if (board.IsFieldTaken(j, i))
+                        str.Append(board.ReturnPieceIdFromTakenField(j, i));
                     else
                         str.Append("-");
                 }
@@ -43,8 +43,8 @@ namespace BoardGame.Managers
                 var str = new StringBuilder();
                 for (int j = 0; j < board.WithSize; j++)
                 {
-                    if (board.Board[j, i].IsTaken)
-                        str.Append(board.Board[j, i].TakenBy.PieceId);
+                    if (board.IsFieldTaken(j, i))
+                        str.Append(board.ReturnPieceIdFromTakenField(j, i));
                     else
                         str.Append("-");
                 }

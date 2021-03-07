@@ -11,86 +11,82 @@ namespace BoardGameApiTests.Helpers
 {
     public class TestHelper
     {
-        public async Task<Guid> TestGameInitEndpointAndReturnSessionId(HttpClient client)
+        public async Task<Guid> TestGameInitEndpointAndReturnSessionId(HttpClient client, GameInit requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var gameInit = new GameInit
-            {
-                Board = new Board
-                {
-                    Wall = new Wall { WallCoordinates = "W 1 1 2 2" },
-                    WithSize = 5
-                }
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(gameInit), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/gameInit", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = JsonConvert.DeserializeObject<GenericResponse>(await response.Content.ReadAsStringAsync());
-            responseContent.Response.Should().Be("Game started");
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, responseContent.SessionId, responseShouldBe);
 
             var sessionId = new Guid();
             return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : sessionId;
         }
 
-        public async Task TestNewWallEndpoint(HttpClient client, Guid sessionId)
+        public async Task TestNewWallEndpoint(HttpClient client, Wall requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var wall = new Wall
-            {
-                SessionId = sessionId,
-                WallCoordinates = "W 0 3 0 4"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(wall), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("/boardgame/newWall", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var responseContent = JsonConvert.DeserializeObject<GenericResponse>(await response.Content.ReadAsStringAsync());
-            responseContent.SessionId.Should().Be(sessionId);
-            responseContent.Response.Should().Be("Created");
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
         
-        public async Task TestBuildBoardEndpoint(HttpClient client, Guid sessionId)
+        public async Task TestBuildBoardEndpoint(HttpClient client, Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var session = new Session
-            {
-                SessionId = sessionId
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(session), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/buildBoard", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var responseContent = JsonConvert.DeserializeObject<GenericResponse>(await response.Content.ReadAsStringAsync());
-            responseContent.SessionId.Should().Be(sessionId);
-            responseContent.Response.Should().Be("Created");
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
         
-        public async Task TestAddPlayerEndpoint(HttpClient client, Guid sessionId)
+        public async Task TestAddPlayerEndpoint(HttpClient client, AddPlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var addPlayer = new AddPlayer
-            {
-                SessionId = sessionId,
-                PlayerId = 0, // TODO to raczej powinno mi zwracac PlayerId
-                PlayerType = "P",
-                StartPosition = "0 0" // TODO to raczej powinno mi zwracac StartPosition
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(addPlayer), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/AddPlayer", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var responseContent = JsonConvert.DeserializeObject<GenericResponse>(await response.Content.ReadAsStringAsync());
-            responseContent.SessionId.Should().Be(sessionId);
-            responseContent.Response.Should().Be("Created");
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
 
-        public async Task TestMovePlayerEndpoint(HttpClient client, Guid sessionId)
+        public async Task TestMovePlayerEndpoint(HttpClient client, MovePlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var movePlayer = new MovePlayer
-            {
-                SessionId = sessionId,
-                PlayerId = 0,
-                Move = "MMMMMMMM"
-            };
-            var stringContent = new StringContent(JsonConvert.SerializeObject(movePlayer), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("/boardgame/movePlayer", stringContent);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = JsonConvert.DeserializeObject<GenericResponse>(await response.Content.ReadAsStringAsync());
-            responseContent.SessionId.Should().Be(sessionId);
-            responseContent.Response.Should().Be("Moved to 0 3 North");
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
+        }
+        
+        public async Task TestGetLastEventEndpoint(HttpClient client, Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{client.BaseAddress}boardgame/getLastEvent"),
+                Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json"),
+            };
+            var response = await client.SendAsync(request);
+            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
+        }
+
+        private async Task<GenericResponse> DeserializeContentFromApiResponseToGenericResponseObject(HttpResponseMessage responseMessage)
+        {
+            return JsonConvert.DeserializeObject<GenericResponse>(await responseMessage.Content.ReadAsStringAsync());
+        }
+
+        private void AssertStatusCode(HttpResponseMessage responseMessage, HttpStatusCode statusCodeShouldBe)
+        {
+            responseMessage.StatusCode.Should().Be(statusCodeShouldBe);
+        }
+
+        private void AssertResponseContent(GenericResponse responseContent, Guid sessionIdShouldBe, string responseShouldBe)
+        {
+            responseContent.SessionId.Should().Be(sessionIdShouldBe);
+            responseContent.Response.Should().Be(responseShouldBe);
         }
     }
 }

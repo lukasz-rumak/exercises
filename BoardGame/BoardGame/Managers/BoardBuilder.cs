@@ -32,7 +32,7 @@ namespace BoardGame.Managers
 
         public IGameBoard BuildBoard()
         {
-            _board.Board = _board.GenerateBoard(_board.WithSize);
+            _board.GenerateBoard(_board.WithSize);
             return _board;
         }
 

@@ -10,6 +10,7 @@ namespace BoardGame.Interfaces
         void CreatePlayers(IReadOnlyList<string> instructions);
         void MovePlayer(IReadOnlyList<string> instructions, int playerId);
         void MovePlayers(IReadOnlyList<string> instructions);
+        string GetLastEvent();
         string GenerateOutputApi();
     }
 }

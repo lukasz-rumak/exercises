@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
@@ -8,7 +9,8 @@ namespace BoardGame.Managers
     public class GameMaster : IGame
     {
         public GameStatus GameStatus { get; set; }
-        
+
+        private readonly IEvent _eventHandler;
         private readonly IValidator _validator;
         private readonly IGameBoard _board;
         private readonly IPlayer _player;
@@ -16,12 +18,13 @@ namespace BoardGame.Managers
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster(IValidator validator, IGameBoard board, IPlayer player, IPresentation presentation)
+        public GameMaster(IGameBoard board, IValidator validator, IPlayer player, IPresentation presentation)
         {
             _validator = validator;
             _board = board;
             _player = player;
             _presentation = presentation;
+            _eventHandler = _board.GetEventHandler();
             _pieceFactory = new PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
@@ -58,7 +61,12 @@ namespace BoardGame.Managers
             ExecuteValidation(_player.Players, instructions);
             ExecuteTheInstructions(_player.Players, instructions);
         }
-        
+
+        public string GetLastEvent()
+        {
+            return _eventHandler.EventLog.LastOrDefault();
+        }
+
         public string GenerateOutputApi()
         {
             return _presentation.GenerateOutputApi(_board, _player.Players);

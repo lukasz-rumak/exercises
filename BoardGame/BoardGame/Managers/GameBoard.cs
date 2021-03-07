@@ -7,31 +7,51 @@ namespace BoardGame.Managers
 {
     public class GameBoard : IGameBoard
     {
-        public Field[,] Board { get; set; }
         public int WithSize { get; set; }
-        
+
         private readonly IEvent _eventHandler;
+        private Field[,] _board;
         private readonly List<Wall> _walls;
-        
+
         public GameBoard(IEvent eventHandler)
         {
             _eventHandler = eventHandler;
             _walls = new List<Wall>();
         }
-        
-        public Field[,] GenerateBoard(int size)
+
+        public IEvent GetEventHandler()
         {
-            var board = new Field[size, size];
+            return _eventHandler;
+        }
+
+        public void GenerateBoard(int size)
+        {
+            _board = new Field[size, size];
             for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                board[i, j] = new Field(i, j);
-            return board;
+                _board[i, j] = new Field(i, j);
         }
-        
+
         public void CreateWallOnBoard(Wall wallToAdd)
         {
             _walls.Add(wallToAdd);
             _walls.Add(wallToAdd.ReversedWall());
+        }
+
+        public bool IsFieldTaken(int x, int y)
+        {
+            return _board[x, y].IsTaken;
+        }
+
+        public int ReturnPieceIdFromTakenField(int x, int y)
+        {
+            return _board[x, y].TakenBy.PieceId;
+        }
+
+        public void MarkFieldAsTakenByNewPiece(IPiece piece)
+        {
+            if (IsInBoundaries(piece.Position.X, piece.Position.Y))
+                _board[piece.Position.X, piece.Position.Y].TakenBy = piece;
         }
 
         public void ExecuteThePlayerInstruction(IPiece piece, char instruction)
@@ -69,7 +89,7 @@ namespace BoardGame.Managers
 
         private bool IsFieldFree(int x, int y)
         {
-            if (!Board[x, y].IsTaken)
+            if (!_board[x, y].IsTaken)
                 return true;
             _eventHandler.Events[EventType.FieldTaken]($"Field taken: ({x}, {y})");
             return false;
@@ -90,13 +110,13 @@ namespace BoardGame.Managers
 
         private void MarkFieldAsTaken(IPiece piece)
         {
-            Board[piece.Position.X, piece.Position.Y].TakenBy = piece;
+            _board[piece.Position.X, piece.Position.Y].TakenBy = piece;
             _eventHandler.Events[EventType.PieceMove]($"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
         }
         
         private void MarkFieldAsNotTaken(int x, int y)
         {
-            Board[x, y].TakenBy = null;
+            _board[x, y].TakenBy = null;
         }
     }
 }

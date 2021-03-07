@@ -19,7 +19,7 @@ namespace BoardGame.Managers
                 if (board.WithSize > i)
                 {
                     Players.Add(pieceFactory.GetPiece(instructions[i].Length > 0 ? instructions[i][0].ToString() : string.Empty, i));
-                    board.Board[i, i].TakenBy = Players[i];
+                    board.MarkFieldAsTakenByNewPiece(Players[i]);
                 }
             }
         }

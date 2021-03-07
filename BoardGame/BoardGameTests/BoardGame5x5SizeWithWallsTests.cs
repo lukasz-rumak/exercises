@@ -10,11 +10,9 @@ namespace BoardGameTests
 
         public BoardGame5x5SizeWithWallsTests()
         {
-            _game = new GameMaster(new Validator(),
-                new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(5)
+            _game = new GameMaster(new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(5)
                     .AddWall("W 0 0 1 1").AddWall("W 3 3 4 4").AddWall("W 2 2 3 3")
-                    .AddWall("W 1 1 1 2").AddWall("W 0 3 0 4").AddWall("W 3 4 4 4").BuildBoard(), 
-                new Player(), new ConsoleOutput());
+                    .AddWall("W 1 1 1 2").AddWall("W 0 3 0 4").AddWall("W 3 4 4 4").BuildBoard(), new Validator(), new Player(), new ConsoleOutput());
         }
 
         [Theory]

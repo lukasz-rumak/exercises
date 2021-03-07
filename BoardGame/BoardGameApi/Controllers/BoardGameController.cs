@@ -85,7 +85,7 @@ namespace BoardGameApi.Controllers
             if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(session.SessionId))
             {
                 var board = _boardBuilderHolder.BuilderSessionHolder[session.SessionId].BuildBoard();
-                var game = new GameMaster(_validator, board, _player, _presentation);
+                var game = new GameMaster(board, _validator, _player, _presentation);
                 _gameHolder.SessionsHolder.Add(session.SessionId, game);
                 _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
                 return ReturnStatusCodeWithResponse(201, session.SessionId, "Created");
@@ -124,9 +124,27 @@ namespace BoardGameApi.Controllers
 
             return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
         }
+        
+        [HttpGet("getLastEvent")]
+        public ActionResult<GenericResponse> GetLastEvent(Session session)
+        {
+            if (string.IsNullOrWhiteSpace(session.ToString()))
+                return StatusCode(500);
+
+            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+            {
+                var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
+                return string.IsNullOrWhiteSpace(lastEvent)
+                    ? ReturnStatusCodeWithResponse(500, session.SessionId,
+                        $"Something went wrong!")
+                    : ReturnStatusCodeWithResponse(200, session.SessionId, lastEvent);
+            }
+
+            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+        }
 
         [HttpGet("seeBoard")]
-        public ActionResult SeeBoard(Session session)
+        public ActionResult GetSeeBoard(Session session)
         {
             if (string.IsNullOrWhiteSpace(session.ToString()))
                 return StatusCode(500);
