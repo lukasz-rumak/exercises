@@ -33,37 +33,37 @@ namespace BoardGameApiTests
 
         [Theory]
         [ClassData(typeof(PutNewWallTestData))]
-        public async Task Put_NewWall_Should_Return_SessionId_And_Response()
+        public async Task Put_NewWall_Should_Return_SessionId_And_Response(Wall requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            await _testHelper.TestNewWallEndpoint(_client, null, HttpStatusCode.Created, "");
+            await _testHelper.TestNewWallEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
 
         [Theory]
         [ClassData(typeof(PostBuildBoardTestData))]
-        public async Task Post_BuildBoard_Should_Return_SessionId_And_Response()
+        public async Task Post_BuildBoard_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            await _testHelper.TestBuildBoardEndpoint(_client, null, HttpStatusCode.Created, "");
+            await _testHelper.TestBuildBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
         [ClassData(typeof(PostAddPlayerTestData))]
-        public async Task Post_AddPlayer_Should_Return_SessionId_And_Response()
+        public async Task Post_AddPlayer_Should_Return_SessionId_And_Response(AddPlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            await _testHelper.TestAddPlayerEndpoint(_client, null, HttpStatusCode.Created, "");
+            await _testHelper.TestAddPlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
         [ClassData(typeof(PutMovePlayerTestData))]
-        public async Task Put_MovePlayer_Should_Return_SessionId_And_Response()
+        public async Task Put_MovePlayer_Should_Return_SessionId_And_Response(MovePlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            await _testHelper.TestMovePlayerEndpoint(_client, null, HttpStatusCode.OK, "");
+            await _testHelper.TestMovePlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
         [ClassData(typeof(GetLastEventTestData))]
-        public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response()
+        public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            await _testHelper.TestGetLastEventEndpoint(_client, null, HttpStatusCode.OK, "");
+            await _testHelper.TestGetLastEventEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]

@@ -19,7 +19,7 @@ namespace BoardGameApiTests.Helpers
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, responseContent.SessionId, responseShouldBe);
 
-            var sessionId = new Guid();
+            var sessionId = Guid.NewGuid();
             return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : sessionId;
         }
 
