@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
@@ -8,23 +9,29 @@ namespace BoardGame.Managers
 {
     public class GameMaster : IGame
     {
+        public ObjectFactory ObjectFactory { get; set; }
         public GameStatus GameStatus { get; set; }
 
         private readonly IEvent _eventHandler;
         private readonly IValidator _validator;
-        private readonly IGameBoard _board;
+        private IGameBoard _board;
         private readonly IPlayer _player;
         private readonly IPresentation _presentation;
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster(IGameBoard board, IValidator validator, IPlayer player, IPresentation presentation)
+        public GameMaster()
         {
-            _validator = validator;
-            _board = board;
-            _player = player;
-            _presentation = presentation;
-            _eventHandler = _board.GetEventHandler();
+            ObjectFactory = new ObjectFactory();
+            ObjectFactory.Register<IPresentation>(new ConsoleOutput());
+            ObjectFactory.Register<IEvent>(new EventHandler(ObjectFactory.Get<IPresentation>()));
+            ObjectFactory.Register<IValidator>(new Validator());
+            ObjectFactory.Register<IValidatorWall>(new Validator());
+            ObjectFactory.Register<IPlayer>(new Player());
+            _presentation = ObjectFactory.Get<IPresentation>();
+            _eventHandler = ObjectFactory.Get<IEvent>();
+            _validator = ObjectFactory.Get<IValidator>();
+            _player = ObjectFactory.Get<IPlayer>();
             _pieceFactory = new PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
@@ -33,8 +40,15 @@ namespace BoardGame.Managers
             GameStatus = new GameStatus{ PlayerPosition = new Dictionary<int, string>() };
         }
 
+        public void RunBoardBuilder(IGameBoard board)
+        {
+            _board = board;
+        }
+
         public string[] PlayTheGame(string[] instructions)
         {
+            if (_board is null)
+                return new[] {"Please create board first!"};
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
 

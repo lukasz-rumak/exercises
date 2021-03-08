@@ -19,11 +19,6 @@ namespace BoardGame.Managers
             _walls = new List<Wall>();
         }
 
-        public IEvent GetEventHandler()
-        {
-            return _eventHandler;
-        }
-
         public void GenerateBoard(int size)
         {
             _board = new Field[size, size];

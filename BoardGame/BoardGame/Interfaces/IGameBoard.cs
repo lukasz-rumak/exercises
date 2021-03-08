@@ -7,7 +7,6 @@ namespace BoardGame.Interfaces
     public interface IGameBoard
     {
         int WithSize { get; set; }
-        IEvent GetEventHandler();
         void GenerateBoard(int size);
         void CreateWallOnBoard(Wall wallToAdd);
         bool IsFieldTaken(int x, int y);

@@ -45,7 +45,9 @@ namespace BoardGameApi.Controllers
             var sessionId = Guid.NewGuid();
             try
             {
-                var board = new BoardBuilder(new EventHandler(_presentation), _validatorWall)
+                var game = new GameMaster();
+                _gameHolder.SessionsHolder.Add(sessionId, game);
+                var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
                     .WithSize(gameInit.Board.WithSize).AddWall(gameInit.Board.Wall.WallCoordinates);
                 _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
                 status = true;
@@ -85,8 +87,7 @@ namespace BoardGameApi.Controllers
             if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(session.SessionId))
             {
                 var board = _boardBuilderHolder.BuilderSessionHolder[session.SessionId].BuildBoard();
-                var game = new GameMaster(board, _validator, _player, _presentation);
-                _gameHolder.SessionsHolder.Add(session.SessionId, game);
+                _gameHolder.SessionsHolder[session.SessionId].RunBoardBuilder(board);
                 _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
                 return ReturnStatusCodeWithResponse(201, session.SessionId, "Created");
             }

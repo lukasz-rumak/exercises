@@ -10,8 +10,8 @@ namespace BoardGameTests
 
         public BoardGame3x3SizeTests()
         {
-            _game = new GameMaster(new BoardBuilder(new EventHandler(new ConsoleOutput()), new Validator()).WithSize(3).BuildBoard(),
-                new Validator(), new Player(), new ConsoleOutput());
+            _game = new GameMaster();
+            _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEvent>(), _game.ObjectFactory.Get<IValidatorWall>()).WithSize(3).BuildBoard());
         }
 
         [Theory]
