@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using BoardGame.Models;
 
-namespace BoardGame.Managers
+namespace BoardGame.ObjectFactory
 {
     public class ObjectFactory
     {

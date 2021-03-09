@@ -7,7 +7,7 @@ namespace BoardGame.Interfaces
 {
     public interface IGame
     {
-        ObjectFactory ObjectFactory { get; set; }
+        ObjectFactory.ObjectFactory ObjectFactory { get; set; }
         GameStatus GameStatus { get; set; }
         void RunBoardBuilder(IGameBoard gameBoard);
         string[] PlayTheGame(string[] instructions);

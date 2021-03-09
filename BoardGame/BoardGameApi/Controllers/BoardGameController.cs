@@ -45,7 +45,7 @@ namespace BoardGameApi.Controllers
             var sessionId = Guid.NewGuid();
             try
             {
-                var game = new GameMaster();
+                var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
                 _gameHolder.SessionsHolder.Add(sessionId, game);
                 var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
                     .WithSize(gameInit.Board.WithSize).AddWall(gameInit.Board.Wall.WallCoordinates);
@@ -124,6 +124,24 @@ namespace BoardGameApi.Controllers
             }
 
             return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
+        }
+        
+        [HttpGet("getEvents")]
+        public ActionResult<GenericResponse> GetEvents(Session session)
+        {
+            if (string.IsNullOrWhiteSpace(session.ToString()))
+                return StatusCode(500);
+
+            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+            {
+                var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
+                return string.IsNullOrWhiteSpace(lastEvent)
+                    ? ReturnStatusCodeWithResponse(500, session.SessionId,
+                        $"Something went wrong!")
+                    : ReturnStatusCodeWithResponse(200, session.SessionId, lastEvent);
+            }
+
+            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
         }
         
         [HttpGet("getLastEvent")]

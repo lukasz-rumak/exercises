@@ -15,7 +15,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/gameInit", stringContent);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, responseContent.SessionId, responseShouldBe);
 
@@ -27,7 +27,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("/boardgame/newWall", stringContent);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
@@ -36,7 +36,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/buildBoard", stringContent);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
@@ -45,7 +45,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/AddPlayer", stringContent);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
@@ -54,7 +54,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("/boardgame/movePlayer", stringContent);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
@@ -68,12 +68,12 @@ namespace BoardGameApiTests.Helpers
                 Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json"),
             };
             var response = await client.SendAsync(request);
-            var responseContent = await DeserializeContentFromApiResponseToGenericResponseObject(response);
+            var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
 
-        private async Task<GenericResponse> DeserializeContentFromApiResponseToGenericResponseObject(HttpResponseMessage responseMessage)
+        private async Task<GenericResponse> GetGenericResponse(HttpResponseMessage responseMessage)
         {
             return JsonConvert.DeserializeObject<GenericResponse>(await responseMessage.Content.ReadAsStringAsync());
         }

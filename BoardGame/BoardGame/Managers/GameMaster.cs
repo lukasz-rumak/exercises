@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
@@ -9,7 +8,7 @@ namespace BoardGame.Managers
 {
     public class GameMaster : IGame
     {
-        public ObjectFactory ObjectFactory { get; set; }
+        public ObjectFactory.ObjectFactory ObjectFactory { get; set; }
         public GameStatus GameStatus { get; set; }
 
         private readonly IEvent _eventHandler;
@@ -20,14 +19,14 @@ namespace BoardGame.Managers
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster()
+        public GameMaster(IPresentation presentation, IEvent eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
         {
-            ObjectFactory = new ObjectFactory();
-            ObjectFactory.Register<IPresentation>(new ConsoleOutput());
-            ObjectFactory.Register<IEvent>(new EventHandler(ObjectFactory.Get<IPresentation>()));
-            ObjectFactory.Register<IValidator>(new Validator());
-            ObjectFactory.Register<IValidatorWall>(new Validator());
-            ObjectFactory.Register<IPlayer>(new Player());
+            ObjectFactory = new ObjectFactory.ObjectFactory();
+            ObjectFactory.Register<IPresentation>(presentation);
+            ObjectFactory.Register<IEvent>(eventHandler);//(ObjectFactory.Get<IPresentation>()));
+            ObjectFactory.Register<IValidator>(validator);
+            ObjectFactory.Register<IValidatorWall>(validatorWall);
+            ObjectFactory.Register<IPlayer>(player);
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEvent>();
             _validator = ObjectFactory.Get<IValidator>();
