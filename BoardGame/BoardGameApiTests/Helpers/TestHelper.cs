@@ -18,9 +18,8 @@ namespace BoardGameApiTests.Helpers
             var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, responseContent.SessionId, responseShouldBe);
-
-            var sessionId = Guid.NewGuid();
-            return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : sessionId;
+            
+            return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : Guid.NewGuid();
         }
 
         public async Task TestNewWallEndpoint(HttpClient client, Wall requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)

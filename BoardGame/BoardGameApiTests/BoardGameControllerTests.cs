@@ -17,11 +17,13 @@ namespace BoardGameApiTests
     {
         private readonly HttpClient _client;
         private readonly TestHelper _testHelper;
+        private readonly TestsSetup _testsSetup;
 
         public BoardGameControllerTests(WebApplicationFactory<BoardGameApi.Startup> fixture)
         {
             _client = fixture.CreateClient();
             _testHelper = new TestHelper();
+            _testsSetup = new TestsSetup();
         }
         
         [Theory]
@@ -35,6 +37,8 @@ namespace BoardGameApiTests
         [ClassData(typeof(PutNewWallTestData))]
         public async Task Put_NewWall_Should_Return_SessionId_And_Response(Wall requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestNewWallEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
 
@@ -42,6 +46,8 @@ namespace BoardGameApiTests
         [ClassData(typeof(PostBuildBoardTestData))]
         public async Task Post_BuildBoard_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestBuildBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
@@ -49,6 +55,9 @@ namespace BoardGameApiTests
         [ClassData(typeof(PostAddPlayerTestData))]
         public async Task Post_AddPlayer_Should_Return_SessionId_And_Response(AddPlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            requestBody.SessionId = gameInitSetup.SessionId;
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             await _testHelper.TestAddPlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         

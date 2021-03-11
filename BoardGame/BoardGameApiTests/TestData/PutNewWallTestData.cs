@@ -11,7 +11,7 @@ namespace BoardGameApiTests.TestData
         private readonly List<object[]> _data = new List<object[]>
         {
             new object[]
-                {new Wall {SessionId = Guid.NewGuid(), WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.OK, "Created"},
+                {new Wall {SessionId = Guid.NewGuid(), WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.Created, "Created"},
             new object[]
                 {new Wall {SessionId = Guid.NewGuid(), WallCoordinates = "W 1 2 3 3"}, HttpStatusCode.InternalServerError, ""},
             new object[]
