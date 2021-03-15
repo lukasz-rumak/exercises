@@ -11,15 +11,15 @@ namespace BoardGameApiTests.TestData
         {
             new object[]
             {
-                new GameInit {Board = new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 2"}, WithSize = 5}},
+                new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 2"}, WithSize = 5},
                 HttpStatusCode.OK, "Game started"
             },
             new object[]
             {
-                new GameInit {Board = new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 6"}, WithSize = 5}},
+                new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 6"}, WithSize = 5},
                 HttpStatusCode.BadRequest, "Game started"
             },
-            new object[] {null, HttpStatusCode.InternalServerError, "Game started"}
+            new object[] {null, HttpStatusCode.BadRequest, "Game started"}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

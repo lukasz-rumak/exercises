@@ -13,15 +13,15 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North"},
             new object[]
-                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = "XXX"}, HttpStatusCode.InternalServerError, ""},
+                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = "XXX"}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = ""}, HttpStatusCode.InternalServerError, ""},
+                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = ""}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = " "}, HttpStatusCode.InternalServerError, ""},
+                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = " "}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = null}, HttpStatusCode.InternalServerError, ""},
+                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = 0, Move = null}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = -1, Move = "MMMMMMMM"}, HttpStatusCode.InternalServerError, ""},
+                {new MovePlayer {SessionId = Guid.NewGuid(), PlayerId = -1, Move = "MMMMMMMM"}, HttpStatusCode.BadRequest, ""},
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

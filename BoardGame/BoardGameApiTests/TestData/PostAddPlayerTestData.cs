@@ -15,17 +15,17 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "K"}, HttpStatusCode.Created, "Created"},
             new object[]
-                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "P"}, HttpStatusCode.InternalServerError, ""},
+                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "P"}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "P"}, HttpStatusCode.InternalServerError, ""},
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "P"}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "X"}, HttpStatusCode.InternalServerError, ""},
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "X"}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = ""}, HttpStatusCode.InternalServerError, ""},
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = ""}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = " "}, HttpStatusCode.InternalServerError, ""},
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = " "}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = null}, HttpStatusCode.InternalServerError, ""}
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = null}, HttpStatusCode.BadRequest, ""}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

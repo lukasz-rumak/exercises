@@ -18,17 +18,19 @@ namespace BoardGameApiTests
         private readonly HttpClient _client;
         private readonly TestHelper _testHelper;
         private readonly TestsSetup _testsSetup;
+        private readonly Guid _fakeValidGuid;
 
         public BoardGameControllerTests(WebApplicationFactory<BoardGameApi.Startup> fixture)
         {
             _client = fixture.CreateClient();
             _testHelper = new TestHelper();
             _testsSetup = new TestsSetup();
+            _fakeValidGuid = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb");
         }
         
         [Theory]
         [ClassData(typeof(PostGameInitTestData))]
-        public async Task Post_GameInit_Should_Return_SessionId_And_Response(GameInit requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        public async Task Post_GameInit_Should_Return_SessionId_And_Response(Board requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             await _testHelper.TestGameInitEndpointAndReturnSessionId(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
@@ -38,7 +40,8 @@ namespace BoardGameApiTests
         public async Task Put_NewWall_Should_Return_SessionId_And_Response(Wall requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
-            requestBody.SessionId = gameInitSetup.SessionId;
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestNewWallEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
 
@@ -47,7 +50,8 @@ namespace BoardGameApiTests
         public async Task Post_BuildBoard_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
-            requestBody.SessionId = gameInitSetup.SessionId;
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestBuildBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
@@ -65,6 +69,10 @@ namespace BoardGameApiTests
         [ClassData(typeof(PutMovePlayerTestData))]
         public async Task Put_MovePlayer_Should_Return_SessionId_And_Response(MovePlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            requestBody.SessionId = gameInitSetup.SessionId;
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             await _testHelper.TestMovePlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
@@ -72,6 +80,10 @@ namespace BoardGameApiTests
         [ClassData(typeof(GetLastEventTestData))]
         public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            requestBody.SessionId = gameInitSetup.SessionId;
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             await _testHelper.TestGetLastEventEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         

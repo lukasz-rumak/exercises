@@ -13,8 +13,7 @@ namespace BoardGameApiTests.Helpers
     {
         public async Task<SetupSummary> GameInitSetup(HttpClient client)
         {
-            var gameInit = new GameInit
-                {Board = new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 2"}, WithSize = 5}};
+            var gameInit = new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 2"}, WithSize = 5};
 
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(gameInit), Encoding.UTF8, "application/json");
@@ -26,7 +25,7 @@ namespace BoardGameApiTests.Helpers
             if (responseContent == null)
                 return new SetupSummary {IsOkay = false, Description = "Setup GameInit failed"};
             var sessionId = responseContent.SessionId;
-            return new SetupSummary {IsOkay = false, Description = "Setup GameInit is OK", SessionId = sessionId};
+            return new SetupSummary {IsOkay = true, Description = "Setup GameInit is OK", SessionId = sessionId};
         }
 
         public async Task<SetupSummary> BuildBoardSetup(HttpClient client, Guid sessionId)
@@ -38,8 +37,21 @@ namespace BoardGameApiTests.Helpers
             var response = await client.PostAsync("/boardgame/buildBoard", stringContent);
 
             return response.StatusCode == HttpStatusCode.Created
-                ? new SetupSummary {IsOkay = false, Description = "Setup BuildBoard is OK", SessionId = sessionId}
+                ? new SetupSummary {IsOkay = true, Description = "Setup BuildBoard is OK", SessionId = sessionId}
                 : new SetupSummary {IsOkay = false, Description = "Setup BuildBoard failed"};
+        }
+
+        public async Task<SetupSummary> BuildAddPlayerSetup(HttpClient client, Guid sessionId)
+        {
+            var addPlayer = new AddPlayer {SessionId = sessionId, PlayerType = "P"};
+            
+            var stringContent = new StringContent(JsonConvert.SerializeObject(addPlayer), Encoding.UTF8,
+                "application/json");
+            var response = await client.PostAsync("/boardgame/addPlayer", stringContent);
+
+            return response.StatusCode == HttpStatusCode.Created
+                ? new SetupSummary {IsOkay = true, Description = "Setup AddPlayer is OK", SessionId = sessionId}
+                : new SetupSummary {IsOkay = false, Description = "Setup AddPlayer failed"};
         }
     }
 }

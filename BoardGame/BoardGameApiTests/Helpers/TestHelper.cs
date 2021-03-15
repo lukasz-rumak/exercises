@@ -11,7 +11,7 @@ namespace BoardGameApiTests.Helpers
 {
     public class TestHelper
     {
-        public async Task<Guid> TestGameInitEndpointAndReturnSessionId(HttpClient client, GameInit requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        public async Task<Guid> TestGameInitEndpointAndReturnSessionId(HttpClient client, Board requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/boardgame/gameInit", stringContent);
@@ -84,7 +84,8 @@ namespace BoardGameApiTests.Helpers
 
         private void AssertResponseContent(GenericResponse responseContent, Guid sessionIdShouldBe, string responseShouldBe)
         {
-            responseContent.SessionId.Should().Be(sessionIdShouldBe);
+            if (responseContent.SessionId != Guid.Empty)
+                responseContent.SessionId.Should().Be(sessionIdShouldBe);
             responseContent.Response.Should().Be(responseShouldBe);
         }
     }

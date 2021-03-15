@@ -13,9 +13,9 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {new Session {SessionId = Guid.NewGuid()}, HttpStatusCode.OK, "Event: "},
             new object[]
-                {new Session {SessionId = Guid.Empty}, HttpStatusCode.InternalServerError, ""},
+                {new Session {SessionId = Guid.Empty}, HttpStatusCode.BadRequest, ""},
             new object[]
-                {new Session {SessionId = Guid.NewGuid()}, HttpStatusCode.InternalServerError, ""}
+                {new Session {SessionId = Guid.NewGuid()}, HttpStatusCode.BadRequest, ""}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

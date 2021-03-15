@@ -21,6 +21,7 @@ namespace BoardGameTests
         
         [Theory]
         [InlineData(EventType.PieceMove)]
+        [InlineData(EventType.WallCreationDone)]
         [InlineData(EventType.WallCreationError)]
         [InlineData(EventType.OutsideBoundaries)]
         [InlineData(EventType.FieldTaken)]
@@ -30,7 +31,7 @@ namespace BoardGameTests
         {
             _event.Events[eventType](_testDescription);
             _presentationMock.Verify(presentation => presentation.PrintEventOutput(eventType, It.Is<string>(s => s.Contains("this is only test"))), Times.Once());
-            Assert.Contains(_testDescription, _event.EventLog[0]);
+            Assert.Contains(_testDescription, _event.EventsLog[0].Description);
         }
     }
 }
