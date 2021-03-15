@@ -53,6 +53,8 @@ namespace BoardGame.Managers
             {
                 _board.CreateWallOnBoard(CreateWall(coordinates));
             }
+
+            _eventHandler.Events[EventType.WallCreationDone]("");
         }
 
         private Wall CreateWall(string coordinates)

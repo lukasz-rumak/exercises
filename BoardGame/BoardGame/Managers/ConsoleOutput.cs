@@ -66,6 +66,8 @@ namespace BoardGame.Managers
             {
                 [EventType.PieceMove] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
+                [EventType.WallCreationDone] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
                 [EventType.WallCreationError] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.OutsideBoundaries] = eventMsg =>

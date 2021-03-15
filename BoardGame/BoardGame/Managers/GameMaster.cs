@@ -75,9 +75,9 @@ namespace BoardGame.Managers
             ExecuteTheInstructions(_player.Players, instructions);
         }
 
-        public string GetLastEvent()
+        public EventLog GetLastEvent()
         {
-            return _eventHandler.EventLog.LastOrDefault();
+            return _eventHandler.EventsLog.LastOrDefault();
         }
 
         public string GenerateOutputApi()

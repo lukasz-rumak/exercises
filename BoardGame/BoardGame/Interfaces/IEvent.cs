@@ -7,6 +7,6 @@ namespace BoardGame.Interfaces
     public interface IEvent
     {
         IDictionary<EventType, Action<string>> Events { get; set; } 
-        List<string> EventLog { get; set; }
+        List<EventLog> EventsLog { get; set; }
     }
 }
