@@ -64,7 +64,11 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
-                [EventType.PieceMove] = eventMsg => 
+                [EventType.BoardBuilt] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.PlayerAdded] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.PieceMoved] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.WallCreationDone] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),

@@ -23,7 +23,9 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
-                [EventType.PieceMove] = EventPieceMove,
+                [EventType.BoardBuilt] = EventBoardBuilt,
+                [EventType.PlayerAdded] = EventPlayerAdded,
+                [EventType.PieceMoved] = EventPieceMove,
                 [EventType.WallCreationDone] = EventWallCreationDone,
                 [EventType.WallCreationError] = EventWallCreationError,
                 [EventType.OutsideBoundaries] = EventOutsideBoundaries,
@@ -32,12 +34,26 @@ namespace BoardGame.Managers
                 [EventType.None] = EventNone
             };
         }
+        
+        private void EventPlayerAdded(string description)
+        {
+            var eventMsg = $"Event: {description}!";
+            _presentation.PrintEventOutput(EventType.PlayerAdded, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.PlayerAdded, Description = eventMsg});
+        }
+        
+        private void EventBoardBuilt(string description)
+        {
+            var eventMsg = $"Event: {description}!";
+            _presentation.PrintEventOutput(EventType.BoardBuilt, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BoardBuilt, Description = eventMsg});
+        }
 
         private void EventPieceMove(string description)
         {
             var eventMsg = $"Event: {description}!";
-            _presentation.PrintEventOutput(EventType.PieceMove, eventMsg);
-            EventsLog.Add(new EventLog {Type = EventType.PieceMove, Description = eventMsg});
+            _presentation.PrintEventOutput(EventType.PieceMoved, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.PieceMoved, Description = eventMsg});
         }
         
         private void EventWallCreationDone(string description)

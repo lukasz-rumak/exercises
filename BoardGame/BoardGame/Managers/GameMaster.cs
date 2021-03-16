@@ -42,6 +42,7 @@ namespace BoardGame.Managers
         public void RunBoardBuilder(IGameBoard board)
         {
             _board = board;
+            _eventHandler.Events[EventType.BoardBuilt]("");
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -60,6 +61,7 @@ namespace BoardGame.Managers
         public void CreatePlayers(IReadOnlyList<string> instructions)
         {
             _player.CreatePlayers(_board, _pieceFactory, instructions);
+            _eventHandler.Events[EventType.PlayerAdded]("");
         }
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)

@@ -20,7 +20,8 @@ namespace BoardGameTests
         }
         
         [Theory]
-        [InlineData(EventType.PieceMove)]
+        [InlineData(EventType.BoardBuilt)]
+        [InlineData(EventType.PieceMoved)]
         [InlineData(EventType.WallCreationDone)]
         [InlineData(EventType.WallCreationError)]
         [InlineData(EventType.OutsideBoundaries)]

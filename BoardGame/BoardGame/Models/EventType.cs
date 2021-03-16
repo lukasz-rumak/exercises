@@ -2,7 +2,9 @@ namespace BoardGame.Models
 {
     public enum EventType
     {
-        PieceMove,
+        BoardBuilt,
+        PlayerAdded,
+        PieceMoved,
         WallCreationDone,
         WallCreationError,
         OutsideBoundaries,

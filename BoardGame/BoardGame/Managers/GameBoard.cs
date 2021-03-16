@@ -106,7 +106,7 @@ namespace BoardGame.Managers
         private void MarkFieldAsTaken(IPiece piece)
         {
             _board[piece.Position.X, piece.Position.Y].TakenBy = piece;
-            _eventHandler.Events[EventType.PieceMove]($"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
+            _eventHandler.Events[EventType.PieceMoved]($"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
         }
         
         private void MarkFieldAsNotTaken(int x, int y)

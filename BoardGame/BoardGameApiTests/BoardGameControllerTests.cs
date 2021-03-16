@@ -60,8 +60,9 @@ namespace BoardGameApiTests
         public async Task Post_AddPlayer_Should_Return_SessionId_And_Response(AddPlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
-            requestBody.SessionId = gameInitSetup.SessionId;
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestAddPlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         

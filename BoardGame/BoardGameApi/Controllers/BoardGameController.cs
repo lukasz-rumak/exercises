@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
 using BoardGame.Models;
@@ -83,25 +84,30 @@ namespace BoardGameApi.Controllers
             {
                 var board = _boardBuilderHolder.BuilderSessionHolder[session.SessionId].BuildBoard();
                 _gameHolder.SessionsHolder[session.SessionId].RunBoardBuilder(board);
-                _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
-                return ReturnStatusCodeWithResponse(201, session.SessionId, "Created");
+                if (GetLastEventType(session.SessionId) == EventType.BoardBuilt)
+                {
+                    _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
+                    return ReturnStatusCodeWithResponse(201, session.SessionId, "Created");
+                }
+
+                ReturnStatusCodeWithResponse(400, session.SessionId, "Board not built");
             }
 
             return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
         }
-        
+
         [HttpPost("addPlayer")]
         public ActionResult<GenericResponse> PostAddPlayer([FromBody] AddPlayer addPlayer)
         {
-            if (_gameHolder.SessionsHolder.ContainsKey(addPlayer.SessionId))
-            {
-                _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
-                return ReturnStatusCodeWithResponse(201, addPlayer.SessionId, "Created");
-            }
-
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
+            if (!_gameHolder.SessionsHolder.ContainsKey(addPlayer.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
+            
+            _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
+            return GetLastEventType(addPlayer.SessionId) == EventType.PlayerAdded
+                ? ReturnStatusCodeWithResponse(201, addPlayer.SessionId, "Created")
+                : ReturnStatusCodeWithResponse(400, addPlayer.SessionId, "Player not created");
         }
-        
+
         [HttpPut("movePlayer")]
         public ActionResult<GenericResponse> PutMovePlayer([FromBody] MovePlayer movePlayer)
         {
@@ -170,6 +176,11 @@ namespace BoardGameApi.Controllers
                 SessionId = sessionId,
                 Response = "The provided sessionId is invalid"
             });
+        }
+
+        private EventType GetLastEventType(Guid sessionId)
+        {
+            return _gameHolder.SessionsHolder[sessionId].GetLastEvent().Type;
         }
     }
 }
