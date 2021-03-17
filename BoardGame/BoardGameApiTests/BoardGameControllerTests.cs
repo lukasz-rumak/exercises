@@ -94,7 +94,7 @@ namespace BoardGameApiTests
         {
             var model = new Session
             {
-                SessionId = new Guid()
+                SessionId = Guid.NewGuid()
             };
             var request = new HttpRequestMessage
             {

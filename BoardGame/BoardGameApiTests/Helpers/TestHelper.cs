@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -70,6 +72,15 @@ namespace BoardGameApiTests.Helpers
             var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
+        }
+        
+        public List<ValidationResult> ValidateModel<T>(T model)
+        {
+            var context = new ValidationContext(model, null, null);
+            var result = new List<ValidationResult>();
+            var valid = Validator.TryValidateObject(model, context, result, true);
+
+            return result;
         }
 
         private async Task<GenericResponse> GetGenericResponse(HttpResponseMessage responseMessage)
