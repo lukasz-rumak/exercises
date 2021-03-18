@@ -16,10 +16,11 @@ namespace BoardGame.Managers
         {
             for (var i = 0; i < instructions.Count; i++)
             {
+                var counter = Players.Count;
                 if (board.WithSize > i)
                 {
-                    Players.Add(pieceFactory.GetPiece(instructions[i].Length > 0 ? instructions[i][0].ToString() : string.Empty, i));
-                    board.MarkFieldAsTakenByNewPiece(Players[i]);
+                    Players.Add(pieceFactory.GetPiece(instructions[i].Length > 0 ? instructions[i][0].ToString() : string.Empty, counter));
+                    board.MarkFieldAsTakenByNewPiece(Players[counter]);
                 }
             }
         }

@@ -71,9 +71,10 @@ namespace BoardGameApiTests
         public async Task Put_MovePlayer_Should_Return_SessionId_And_Response(MovePlayer requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
-            requestBody.SessionId = gameInitSetup.SessionId;
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestMovePlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         

@@ -66,6 +66,8 @@ namespace BoardGame.Managers
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
+            if (_player.Players.Count - 1 < playerId)
+                return;
             ExecuteValidation(new List<IPiece>{_player.Players[playerId]}, instructions);
             ExecuteTheInstructions(new List<IPiece>{_player.Players[playerId]}, instructions);
             UpdateGameStatus(playerId);

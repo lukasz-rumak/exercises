@@ -37,21 +37,21 @@ namespace BoardGame.Managers
         
         private void EventPlayerAdded(string description)
         {
-            var eventMsg = $"Event: {description}!";
+            var eventMsg = CreateEventMessage(description);
             _presentation.PrintEventOutput(EventType.PlayerAdded, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.PlayerAdded, Description = eventMsg});
         }
         
         private void EventBoardBuilt(string description)
         {
-            var eventMsg = $"Event: {description}!";
+            var eventMsg = CreateEventMessage(description);
             _presentation.PrintEventOutput(EventType.BoardBuilt, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.BoardBuilt, Description = eventMsg});
         }
 
         private void EventPieceMove(string description)
         {
-            var eventMsg = $"Event: {description}!";
+            var eventMsg = CreateEventMessage(description);
             _presentation.PrintEventOutput(EventType.PieceMoved, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.PieceMoved, Description = eventMsg});
         }
@@ -93,9 +93,17 @@ namespace BoardGame.Managers
         
         private void EventNone(string description)
         {
-            var eventMsg = $"Event: none! {description}";
+            var eventMsg = CreateEventMessage(description);
             _presentation.PrintEventOutput(EventType.None, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.None, Description = eventMsg});
+        }
+
+        private string CreateEventMessage(string description)
+        {
+            string eventMsg = null;
+            if (!string.IsNullOrWhiteSpace(description))
+                eventMsg = $"Event: {description}!";
+            return eventMsg;
         }
     }
 }

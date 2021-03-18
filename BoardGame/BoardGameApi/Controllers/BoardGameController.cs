@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
@@ -111,14 +112,18 @@ namespace BoardGameApi.Controllers
         [HttpPut("movePlayer")]
         public ActionResult<GenericResponse> PutMovePlayer([FromBody] MovePlayer movePlayer)
         {
-            if (_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
-            {
-                _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.Move}, movePlayer.PlayerId);
-                return ReturnStatusCodeWithResponse(200, movePlayer.SessionId,
-                    $"Moved to {_gameHolder.SessionsHolder[movePlayer.SessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}");
-            }
-
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
+            if (!_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
+            
+            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.Move}, movePlayer.PlayerId);
+            var lastEvent = _gameHolder.SessionsHolder[movePlayer.SessionId].GetLastEvent();
+            var result = new List<EventType>
+                    {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
+                .Any(e => e == lastEvent.Type);
+            return result
+                ? ReturnStatusCodeWithResponse(200, movePlayer.SessionId,
+                    $"Moved to {_gameHolder.SessionsHolder[movePlayer.SessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
+                : ReturnStatusCodeWithResponse(400, movePlayer.SessionId, lastEvent.Description);
         }
         
         [HttpGet("getEvents")]
