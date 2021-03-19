@@ -79,6 +79,18 @@ namespace BoardGameApiTests
         }
         
         [Theory]
+        [ClassData(typeof(GetEventsTestData))]
+        public async Task Get_GetEvents_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
+            await _testHelper.TestGetEventsEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+        }
+        
+        [Theory]
         [ClassData(typeof(GetLastEventTestData))]
         public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {

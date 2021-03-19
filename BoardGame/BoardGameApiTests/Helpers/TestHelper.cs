@@ -60,6 +60,20 @@ namespace BoardGameApiTests.Helpers
             AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
         }
         
+        public async Task TestGetEventsEndpoint(HttpClient client, Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{client.BaseAddress}boardgame/getEvents"),
+                Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json"),
+            };
+            var response = await client.SendAsync(request);
+            var responseContent = await GetGenericResponse(response);
+            AssertStatusCode(response, statusCodeShouldBe);
+            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
+        }
+        
         public async Task TestGetLastEventEndpoint(HttpClient client, Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var request = new HttpRequestMessage

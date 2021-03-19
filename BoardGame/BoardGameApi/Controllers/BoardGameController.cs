@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
 using BoardGame.Models;
@@ -114,8 +115,8 @@ namespace BoardGameApi.Controllers
         {
             if (!_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
-            
-            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.MoveTo}, movePlayer.PlayerId);
+
+            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
             var lastEvent = _gameHolder.SessionsHolder[movePlayer.SessionId].GetLastEvent();
             var result = new List<EventType>
                     {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
@@ -132,12 +133,11 @@ namespace BoardGameApi.Controllers
             if (!_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
 
-            var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
-            return lastEvent != null
-                ? !string.IsNullOrWhiteSpace(lastEvent.Description)
-                    ? ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}; {lastEvent.Description}")
-                    : ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}")
-                : ReturnStatusCodeWithResponse(200, session.SessionId, $"No event to show");
+            var events = _gameHolder.SessionsHolder[session.SessionId].GetAllEvents();
+            var eventsToString = BuildGetEventsResponse(events);
+            return !string.IsNullOrWhiteSpace(eventsToString)
+                ? ReturnStatusCodeWithResponse(200, session.SessionId, eventsToString)
+                : ReturnStatusCodeWithResponse(200, session.SessionId, "No events to show");
         }
 
         [HttpGet("getLastEvent")]
@@ -151,7 +151,7 @@ namespace BoardGameApi.Controllers
                 ? !string.IsNullOrWhiteSpace(lastEvent.Description)
                     ? ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}; {lastEvent.Description}")
                     : ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}")
-                : ReturnStatusCodeWithResponse(200, session.SessionId, $"No event to show");
+                : ReturnStatusCodeWithResponse(200, session.SessionId, "No event to show");
         }
 
         [HttpGet("seeBoard")]
@@ -184,6 +184,21 @@ namespace BoardGameApi.Controllers
         private EventType GetLastEventType(Guid sessionId)
         {
             return _gameHolder.SessionsHolder[sessionId].GetLastEvent().Type;
+        }
+
+        private string BuildGetEventsResponse(IEnumerable<EventLog> events)
+        {
+            var strBuilder = new StringBuilder();
+            var counter = 0;
+            foreach (var e in events)
+            {
+                strBuilder.Append(!string.IsNullOrWhiteSpace(e.Description)
+                    ? $"[{counter}] {e.Type}; {e.Description} "
+                    : $"[{counter}] {e.Type} ");
+                counter += 1;
+            }
+
+            return strBuilder.ToString();
         }
     }
 }

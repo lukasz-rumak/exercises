@@ -87,6 +87,11 @@ namespace BoardGame.Managers
             return _eventHandler.EventsLog.LastOrDefault();
         }
 
+        public List<EventLog> GetAllEvents()
+        {
+            return _eventHandler.EventsLog;
+        }
+
         public string GenerateOutputApi()
         {
             return _presentation.GenerateOutputApi(_board, _player.Players);

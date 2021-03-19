@@ -15,6 +15,7 @@ namespace BoardGame.Interfaces
         void MovePlayer(IReadOnlyList<string> instructions, int playerId);
         void MovePlayers(IReadOnlyList<string> instructions);
         EventLog GetLastEvent();
+        List<EventLog> GetAllEvents();
         string GenerateOutputApi();
     }
 }
