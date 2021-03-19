@@ -125,35 +125,33 @@ namespace BoardGameApi.Controllers
                     $"Moved to {_gameHolder.SessionsHolder[movePlayer.SessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
                 : ReturnStatusCodeWithResponse(400, movePlayer.SessionId, lastEvent.Description);
         }
-        
+
         [HttpGet("getEvents")]
         public ActionResult<GenericResponse> GetEvents(Session session)
         {
-            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
-            {
-                var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
-                return string.IsNullOrWhiteSpace(lastEvent.Description)
-                    ? ReturnStatusCodeWithResponse(500, session.SessionId,
-                        $"Something went wrong!")
-                    : ReturnStatusCodeWithResponse(200, session.SessionId, lastEvent.Description);
-            }
+            if (!_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
+            return lastEvent != null
+                ? !string.IsNullOrWhiteSpace(lastEvent.Description)
+                    ? ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}; {lastEvent.Description}")
+                    : ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}")
+                : ReturnStatusCodeWithResponse(200, session.SessionId, $"No event to show");
         }
-        
+
         [HttpGet("getLastEvent")]
         public ActionResult<GenericResponse> GetLastEvent(Session session)
         {
-            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
-            {
-                var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
-                return string.IsNullOrWhiteSpace(lastEvent.Description)
-                    ? ReturnStatusCodeWithResponse(500, session.SessionId,
-                        $"Something went wrong!")
-                    : ReturnStatusCodeWithResponse(200, session.SessionId, lastEvent.Description);
-            }
+            if (!_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
+            return lastEvent != null
+                ? !string.IsNullOrWhiteSpace(lastEvent.Description)
+                    ? ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}; {lastEvent.Description}")
+                    : ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}")
+                : ReturnStatusCodeWithResponse(200, session.SessionId, $"No event to show");
         }
 
         [HttpGet("seeBoard")]
