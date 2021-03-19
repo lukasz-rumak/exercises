@@ -83,9 +83,10 @@ namespace BoardGameApiTests
         public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
-            requestBody.SessionId = gameInitSetup.SessionId;
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
             await _testHelper.TestGetLastEventEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
         

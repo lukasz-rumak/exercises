@@ -31,6 +31,7 @@ namespace BoardGame.Managers
                 [EventType.OutsideBoundaries] = EventOutsideBoundaries,
                 [EventType.FieldTaken] = EventFieldTaken,
                 [EventType.WallOnTheRoute] = EventWallOnTheRoute,
+                [EventType.IncorrectPlayerId] = EventIncorrectPlayerId,
                 [EventType.None] = EventNone
             };
         }
@@ -58,37 +59,44 @@ namespace BoardGame.Managers
         
         private void EventWallCreationDone(string description)
         {
-            var eventMsg = $"Event: The wall(s) have been created! {description}";
+            var eventMsg = CreateEventMessage($"Event: The wall(s) have been created! {description}");
             _presentation.PrintEventOutput(EventType.WallCreationDone, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.WallCreationDone, Description = eventMsg});
         }
         
         private void EventWallCreationError(string description)
         {
-            var eventMsg = $"Event: The wall(s) were not created! {description}";
+            var eventMsg = CreateEventMessage($"Event: The wall(s) were not created! {description}");
             _presentation.PrintEventOutput(EventType.WallCreationError, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.WallCreationError, Description = eventMsg});
         }
         
         private void EventOutsideBoundaries(string description)
         {
-            var eventMsg = $"Event: move not possible (outside of the boundaries)! {description}";
+            var eventMsg = CreateEventMessage($"Event: move not possible (outside of the boundaries)! {description}");
             _presentation.PrintEventOutput(EventType.OutsideBoundaries, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.OutsideBoundaries, Description = eventMsg});
         }
         
         private void EventFieldTaken(string description)
         {
-            var eventMsg = $"Event: move not possible (field already taken)! {description}";
+            var eventMsg = CreateEventMessage($"Event: move not possible (field already taken)! {description}");
             _presentation.PrintEventOutput(EventType.FieldTaken, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.FieldTaken, Description = eventMsg});
         }
         
         private void EventWallOnTheRoute(string description)
         {
-            var eventMsg = $"Event: move not possible (wall on the route)! {description}";
+            var eventMsg = CreateEventMessage($"Event: move not possible (wall on the route)! {description}");
             _presentation.PrintEventOutput(EventType.WallOnTheRoute, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.WallOnTheRoute, Description = eventMsg});
+        }
+        
+        private void EventIncorrectPlayerId(string description)
+        {
+            var eventMsg = CreateEventMessage($"Event: incorrect player id! {description}");
+            _presentation.PrintEventOutput(EventType.IncorrectPlayerId, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.IncorrectPlayerId, Description = eventMsg});
         }
         
         private void EventNone(string description)
@@ -102,7 +110,7 @@ namespace BoardGame.Managers
         {
             string eventMsg = null;
             if (!string.IsNullOrWhiteSpace(description))
-                eventMsg = $"Event: {description}!";
+                eventMsg = description;
             return eventMsg;
         }
     }

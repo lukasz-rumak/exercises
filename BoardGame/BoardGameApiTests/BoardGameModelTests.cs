@@ -15,6 +15,17 @@ namespace BoardGameApiTests
         {
             _testHelper = new TestHelper();
         }
+        
+        [Theory]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", "P")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", "K")]
+        public void AddPlayer_Model_PlayerType_Should_Return_Empty(string sessionId, string playerType)
+        {
+            var model = new AddPlayer {SessionId = Guid.Parse(sessionId), PlayerType = playerType};
+            var result = _testHelper.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().BeEmpty();
+        }
 
         [Theory]
         [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", "p", new [] {"The PlayerType must be 'P' or 'K'"})]
@@ -34,6 +45,52 @@ namespace BoardGameApiTests
         public void AddPlayer_Model_PlayerType_Should_Return_Error(string sessionId, string playerType, string[] expectedResult)
         {
             var model = new AddPlayer {SessionId = Guid.Parse(sessionId), PlayerType = playerType};
+            var result = _testHelper.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().Contain(expectedResult);
+        }
+        
+        [Theory]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "M")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "L")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "R")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "RR")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "LLM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MMRMMLMM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 1, "MMRMMLMM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 10, "MMRMMLMM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 5555, "MMRMMLMM")]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 5555, "MMRMMLMMRRLLLLMMM")]
+        public void MovePlayer_Model_PlayerId_And_MoveTo_Should_Return_Empty(string sessionId, int playerId, string moveTo)
+        {
+            var model = new MovePlayer {SessionId = Guid.Parse(sessionId), PlayerId = playerId, MoveTo = moveTo};
+            var result = _testHelper.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().BeEmpty();
+        }
+        
+        [Theory]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -1, "MMRMMLMM", new [] {"Please enter valid PlayerId as integer"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -10, "MMRMMLMM", new [] {"Please enter valid PlayerId as integer"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -100, "MMRMMLMM", new [] {"Please enter valid PlayerId as integer"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MMRMXMLMM", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MMRMML!MM", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MMcRMMLMM", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "MMRMMLxMM", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "!", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "X!!!", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "XXX", new [] {"Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -1, "MMRMMXLMM", new [] {"Please enter valid PlayerId as integer", "Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -11, "MMR!MMLMM", new [] {"Please enter valid PlayerId as integer", "Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", -1111, "MMRMMLaMM", new [] {"Please enter valid PlayerId as integer", "Only following commands are available: M - move, L - turn left, R - turn right"})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "", new [] {"The MoveTo field is required."})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, " ", new [] {"The MoveTo field is required."})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, "  ", new [] {"The MoveTo field is required."})]
+        [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", 0, null, new [] {"The MoveTo field is required."})]
+        public void MovePlayer_Model_PlayerId_And_MoveTo_Should_Return_Error(string sessionId, int playerId, string moveTo, string[] expectedResult)
+        {
+            var model = new MovePlayer {SessionId = Guid.Parse(sessionId), PlayerId = playerId, MoveTo = moveTo};
             var result = _testHelper.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);

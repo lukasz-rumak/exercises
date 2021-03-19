@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace BoardGameApi.DataAnnotations
 {
-    public class MoveValidatorAttribute : ValidationAttribute
+    public class MoveToAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {

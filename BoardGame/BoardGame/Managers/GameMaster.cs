@@ -67,7 +67,10 @@ namespace BoardGame.Managers
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
             if (_player.Players.Count - 1 < playerId)
+            {
+                _eventHandler.Events[EventType.IncorrectPlayerId]($"The requested player id: {playerId}");
                 return;
+            }
             ExecuteValidation(new List<IPiece>{_player.Players[playerId]}, instructions);
             ExecuteTheInstructions(new List<IPiece>{_player.Players[playerId]}, instructions);
             UpdateGameStatus(playerId);

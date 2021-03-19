@@ -115,7 +115,7 @@ namespace BoardGameApi.Controllers
             if (!_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
             
-            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.Move}, movePlayer.PlayerId);
+            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string>{movePlayer.MoveTo}, movePlayer.PlayerId);
             var lastEvent = _gameHolder.SessionsHolder[movePlayer.SessionId].GetLastEvent();
             var result = new List<EventType>
                     {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}

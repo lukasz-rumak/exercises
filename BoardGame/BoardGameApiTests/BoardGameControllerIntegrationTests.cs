@@ -36,7 +36,7 @@ namespace BoardGameApiTests
             await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
                 {SessionId = sessionId, PlayerType = "P"}, HttpStatusCode.Created, "Created");
             await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = sessionId, PlayerId = 0, Move = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
+                {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
             await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = sessionId}, HttpStatusCode.OK,
                 "Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
         }
@@ -63,9 +63,9 @@ namespace BoardGameApiTests
             await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
                 {SessionId = secondGameSessionId, PlayerType = "P"}, HttpStatusCode.Created, "Created");
             await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = firstGameSessionId, PlayerId = 0, Move = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
+                {SessionId = firstGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
             await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = secondGameSessionId, PlayerId = 0, Move = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 1 North");
+                {SessionId = secondGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 1 North");
             await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
                 "Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,

@@ -80,6 +80,8 @@ namespace BoardGame.Managers
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.WallOnTheRoute] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
+                [EventType.IncorrectPlayerId] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
                 [EventType.None] = eventMsg => 
                     Console.WriteLine($"{eventMsg}")
             };

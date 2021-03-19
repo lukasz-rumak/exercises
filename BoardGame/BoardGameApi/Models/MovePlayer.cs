@@ -12,7 +12,7 @@ namespace BoardGameApi.Models
         [Range(0, int.MaxValue, ErrorMessage = "Please enter valid PlayerId as integer")]
         public int PlayerId { get; set; }
         [Required]
-        [MoveValidator(ErrorMessage = "Only following commands are available: M - move, L - turn left, R - turn right")]
-        public string Move { get; set; }
+        [MoveTo(ErrorMessage = "Only following commands are available: M - move, L - turn left, R - turn right")]
+        public string MoveTo { get; set; }
     }
 }
