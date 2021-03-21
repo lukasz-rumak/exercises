@@ -54,7 +54,7 @@ namespace BoardGame.Managers
 
             CreatePlayers(instructions);
             MovePlayers(instructions);
-            CollectResult(_player.Players);
+            CollectResult();
             return _gameResult.ToArray();
         }
 
@@ -66,20 +66,20 @@ namespace BoardGame.Managers
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
-            if (_player.Players.Count - 1 < playerId)
+            if (_player.ReturnPlayersNumber() - 1 < playerId)
             {
                 _eventHandler.Events[EventType.IncorrectPlayerId]($"The requested player id: {playerId}");
                 return;
             }
-            ExecuteValidation(new List<IPiece>{_player.Players[playerId]}, instructions);
-            ExecuteTheInstructions(new List<IPiece>{_player.Players[playerId]}, instructions);
+            ExecuteValidation(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
+            ExecuteTheInstructions(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
             UpdateGameStatus(playerId);
         }
         
         public void MovePlayers(IReadOnlyList<string> instructions)
         {
-            ExecuteValidation(_player.Players, instructions);
-            ExecuteTheInstructions(_player.Players, instructions);
+            ExecuteValidation(_player.ReturnPlayersInfo(), instructions);
+            ExecuteTheInstructions(_player.ReturnPlayersInfo(), instructions);
         }
 
         public EventLog GetLastEvent()
@@ -94,54 +94,56 @@ namespace BoardGame.Managers
 
         public string GenerateOutputApi()
         {
-            return _presentation.GenerateOutputApi(_board, _player.Players);
+            return _presentation.GenerateOutputApi(_board, _player.ReturnPlayersInfo());
         }
 
-        private void ExecuteValidation(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
+        private void ExecuteValidation(IReadOnlyList<IPiece> players, IReadOnlyList<string> instructions)
         {
-            for (var i = 0; i < pieces.Count; i++)
+            for (var i = 0; i < players.Count; i++)
                 if (!_validator.ValidateInstructionsInput(instructions[i]))
-                    pieces[i].IsAlive = false;
+                    players[i].IsAlive = false;
         }
-        
-        private void ExecuteTheInstructions(IReadOnlyList<IPiece> pieces, IReadOnlyList<string> instructions)
+
+        private void ExecuteTheInstructions(IReadOnlyList<IPiece> players, IReadOnlyList<string> instructions)
         {
-            var longestInstruction = GetTheLongestInstruction(pieces, instructions);
+            var longestInstruction = GetTheLongestInstruction(players, instructions);
             
             for (var i = 0; i < longestInstruction; i++)
-                for (var j = 0; j < pieces.Count; j++)
-                    if (pieces[j].IsAlive)
+                for (var j = 0; j < players.Count; j++)
+                    if (players[j].IsAlive)
                         if (instructions[j].Length > i)
                         {
-                            _board.ExecuteThePlayerInstruction(pieces[j], instructions[j][i]);
-                            _presentation.GenerateOutput(_board, pieces);
+                            _board.ExecuteThePlayerInstruction(players[j], instructions[j][i]);
+                            _presentation.GenerateOutput(_board, players);
                         }
         }
 
-        private int GetTheLongestInstruction(IReadOnlyCollection<IPiece> pieces, IReadOnlyList<string> instructions)
+        private int GetTheLongestInstruction(IReadOnlyCollection<IPiece> players, IReadOnlyList<string> instructions)
         {
             var longest = 0;
-            for (var i = 0; i < pieces.Count; i++)
+            for (var i = 0; i < players.Count; i++)
                 if (instructions[i].Length > longest)
                     longest = instructions[i].Length;
             return longest;
         }
         
-        private void CollectResult(IEnumerable<IPiece> pieces)
+        private void CollectResult()
         {
-            foreach (var piece in pieces)
+            var players = _player.ReturnPlayersInfo();
+            foreach (var player in players)
             {
-                _gameResult.Add(piece.IsAlive
-                    ? new StringBuilder().Append(piece.Position.X).Append(" ").Append(piece.Position.Y)
-                        .Append(" ").Append(piece.Position.Direction).ToString()
+                _gameResult.Add(player.IsAlive
+                    ? new StringBuilder().Append(player.Position.X).Append(" ").Append(player.Position.Y)
+                        .Append(" ").Append(player.Position.Direction).ToString()
                     : @"Instruction not clear. Exiting...");
             }
         }
         
         private void UpdateGameStatus(int playerId)
         {
+            var players = _player.ReturnPlayersInfo();
             var position =
-                $"{_player.Players[playerId].Position.X} {_player.Players[playerId].Position.Y} {_player.Players[playerId].Position.Direction}";
+                $"{players[playerId].Position.X} {players[playerId].Position.Y} {players[playerId].Position.Direction}";
             if (GameStatus.PlayerPosition.ContainsKey(playerId))
                 GameStatus.PlayerPosition[playerId] = position;
             else
