@@ -64,6 +64,8 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
+                [EventType.GameStarted] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}"),
                 [EventType.BoardBuilt] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.PlayerAdded] = eventMsg => 

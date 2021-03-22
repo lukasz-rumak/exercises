@@ -38,30 +38,20 @@ namespace BoardGameApi.Controllers
             _boardBuilderHolder = boardBuilderHolder;
             _validatorWall = validatorWall;
         }
-        
+
         [HttpPost("gameInit")]
         public ActionResult<GenericResponse> PostGameInit([FromBody] Board boardInit)
         {
-            var status = false;
             var sessionId = Guid.NewGuid();
-            try
-            {
-                var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
-                _gameHolder.SessionsHolder.Add(sessionId, game);
-                var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
-                    .WithSize(boardInit.WithSize).AddWall(boardInit.Wall.WallCoordinates);
-                _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
-                status = true;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            if (status)
-                return ReturnStatusCodeWithResponse(200, sessionId, "Game started");
-
-            return ReturnStatusCodeWithResponse(400, sessionId, "Please provide valid request");
+            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
+            _gameHolder.SessionsHolder.Add(sessionId, game);
+            var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
+                .WithSize(boardInit.WithSize);
+            _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
+            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
+            return lastEvent.Type == EventType.GameStarted
+                ? ReturnStatusCodeWithResponse(200, sessionId, "Game started")
+                : ReturnStatusCodeWithResponse(400, sessionId, "Game did not start. Please check request");
         }
 
         [HttpPut("newWall")]

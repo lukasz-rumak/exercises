@@ -17,6 +17,44 @@ namespace BoardGameApiTests
         }
         
         [Theory]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(18)]
+        [InlineData(19)]
+        [InlineData(20)]
+        public void Board_Model_PlayerType_Should_Return_Empty(int withSize)
+        {
+            var model = new Board {WithSize = withSize};
+            var result = _testHelper.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(-20 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(-10 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(-5 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(-1 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(0 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(1 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(21 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(22 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(23 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(30 ,new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(50, new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(100, new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(1000, new [] {"Please enter valid board size from 2 to 20"})]
+        public void Board_Model_PlayerType_Should_Return_Error(int withSize, string[] expectedResult)
+        {
+            var model = new Board {WithSize = withSize};
+            var result = _testHelper.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().Contain(expectedResult);
+        }
+        
+        [Theory]
         [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", "P")]
         [InlineData("c5665f24-93f5-4b55-81a0-8e245a9caecb", "K")]
         public void AddPlayer_Model_PlayerType_Should_Return_Empty(string sessionId, string playerType)

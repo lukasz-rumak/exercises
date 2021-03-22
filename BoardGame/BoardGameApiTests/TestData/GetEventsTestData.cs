@@ -11,7 +11,7 @@ namespace BoardGameApiTests.TestData
         private readonly List<object[]> _data = new List<object[]>
         {
             new object[]
-                {new Session {SessionId = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb")}, HttpStatusCode.OK, "[0] WallCreationDone; Event: The wall(s) have been created!  [1] BoardBuilt [2] PlayerAdded "},
+                {new Session {SessionId = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb")}, HttpStatusCode.OK, "[0] GameStarted [1] BoardBuilt [2] PlayerAdded "},
             new object[]
                 {new Session {SessionId = Guid.Empty}, HttpStatusCode.BadRequest, "The provided sessionId is invalid"},
             new object[]

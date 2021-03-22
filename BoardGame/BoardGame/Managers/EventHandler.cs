@@ -23,6 +23,7 @@ namespace BoardGame.Managers
         {
             return new Dictionary<EventType, Action<string>>
             {
+                [EventType.GameStarted] = EventGameStarted,
                 [EventType.BoardBuilt] = EventBoardBuilt,
                 [EventType.PlayerAdded] = EventPlayerAdded,
                 [EventType.PieceMoved] = EventPieceMove,
@@ -34,6 +35,13 @@ namespace BoardGame.Managers
                 [EventType.IncorrectPlayerId] = EventIncorrectPlayerId,
                 [EventType.None] = EventNone
             };
+        }
+        
+        private void EventGameStarted(string description)
+        {
+            var eventMsg = CreateEventMessage(description);
+            _presentation.PrintEventOutput(EventType.GameStarted, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.GameStarted, Description = eventMsg});
         }
         
         private void EventPlayerAdded(string description)

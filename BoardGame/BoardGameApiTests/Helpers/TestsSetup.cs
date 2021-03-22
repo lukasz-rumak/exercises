@@ -13,7 +13,7 @@ namespace BoardGameApiTests.Helpers
     {
         public async Task<SetupSummary> GameInitSetup(HttpClient client)
         {
-            var gameInit = new Board {Wall = new Wall {WallCoordinates = "W 1 1 2 2"}, WithSize = 5};
+            var gameInit = new Board {WithSize = 5};
 
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(gameInit), Encoding.UTF8, "application/json");

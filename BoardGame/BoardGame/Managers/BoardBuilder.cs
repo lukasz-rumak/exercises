@@ -21,6 +21,7 @@ namespace BoardGame.Managers
         public IBoardBuilder WithSize(int size)
         {
             _board.WithSize = size;
+            _eventHandler.Events[EventType.GameStarted]("");
             return this;
         }
 

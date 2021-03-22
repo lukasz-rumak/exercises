@@ -2,6 +2,7 @@ namespace BoardGame.Models
 {
     public enum EventType
     {
+        GameStarted,
         BoardBuilt,
         PlayerAdded,
         PieceMoved,
