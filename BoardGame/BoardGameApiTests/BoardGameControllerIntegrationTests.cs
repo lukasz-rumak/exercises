@@ -25,19 +25,21 @@ namespace BoardGameApiTests
             var sessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
                 HttpStatusCode.OK, "Game started");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = sessionId, WallCoordinates = "W 1 1 2 2"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = sessionId, WallCoordinates = "W 0 3 0 4"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestBuildBoardEndpoint(_client, new Session {SessionId = sessionId},
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = sessionId, WallCoordinates = "W 1 1 2 2"}, sessionId, HttpStatusCode.Created,
+                "Created");
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = sessionId, WallCoordinates = "W 0 3 0 4"}, sessionId, HttpStatusCode.Created,
+                "Created");
+            await _testHelper.TestPostEndpoint(_client, "buildBoard", new Session {SessionId = sessionId}, sessionId,
                 HttpStatusCode.Created, "Created");
-            await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
-                {SessionId = sessionId, PlayerType = "P"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
-            await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = sessionId}, HttpStatusCode.OK,
+            await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
+                {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
+                {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.OK, "Moved to 0 3 North");
+            await _testHelper.TestGetEndpoint(_client, "getLastEvent",new Session {SessionId = sessionId}, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
-            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = sessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = sessionId}, HttpStatusCode.OK,
                 "Player(s): 1|-----|0----|-----|-----|-----");
         }
         
@@ -50,33 +52,33 @@ namespace BoardGameApiTests
             var secondGameSessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
                 HttpStatusCode.OK, "Game started");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = firstGameSessionId, WallCoordinates = "W 1 1 2 2"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = secondGameSessionId, WallCoordinates = "W 0 1 0 2"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = firstGameSessionId, WallCoordinates = "W 0 3 0 4"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestNewWallEndpoint(_client,
-                new Wall {SessionId = secondGameSessionId, WallCoordinates = "W 1 0 2 0"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestBuildBoardEndpoint(_client, new Session {SessionId = firstGameSessionId},
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = firstGameSessionId, WallCoordinates = "W 1 1 2 2"}, firstGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = secondGameSessionId, WallCoordinates = "W 0 1 0 2"}, secondGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = firstGameSessionId, WallCoordinates = "W 0 3 0 4"}, firstGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpoint(_client, "newWall",
+                new Wall {SessionId = secondGameSessionId, WallCoordinates = "W 1 0 2 0"}, secondGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPostEndpoint(_client, "buildBoard", new Session {SessionId = firstGameSessionId}, firstGameSessionId,
                 HttpStatusCode.Created, "Created");
-            await _testHelper.TestBuildBoardEndpoint(_client, new Session {SessionId = secondGameSessionId},
+            await _testHelper.TestPostEndpoint(_client, "buildBoard", new Session {SessionId = secondGameSessionId}, secondGameSessionId,
                 HttpStatusCode.Created, "Created");
-            await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
-                {SessionId = firstGameSessionId, PlayerType = "P"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
-                {SessionId = secondGameSessionId, PlayerType = "P"}, HttpStatusCode.Created, "Created");
-            await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = firstGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
-            await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                {SessionId = secondGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 1 North");
-            await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
+                {SessionId = firstGameSessionId, PlayerType = "P"}, firstGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
+                {SessionId = secondGameSessionId, PlayerType = "P"}, secondGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
+                {SessionId = firstGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, firstGameSessionId, HttpStatusCode.OK, "Moved to 0 3 North");
+            await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
+                {SessionId = secondGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, secondGameSessionId, HttpStatusCode.OK, "Moved to 0 1 North");
+            await _testHelper.TestGetEndpoint(_client, "getLastEvent", new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
-            await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, "getLastEvent", new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
-            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
-                "Player(s): 1|-----|0----|-----|-----|-----");
-            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = firstGameSessionId},
+                HttpStatusCode.OK, "Player(s): 1|-----|0----|-----|-----|-----");
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
                 "Player(s): 1|-----|-----|-----|0----|-----");
         }
 
@@ -86,11 +88,11 @@ namespace BoardGameApiTests
             var sessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
                 HttpStatusCode.OK, "Game started");
-            await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
-                    {SessionId = sessionId, PlayerType = "P"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
-            await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
-                    {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
-            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = sessionId},
+            await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
+                    {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+            await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
+                    {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+            await _testHelper.TestGetEndpoint(_client, "seeBoard",new Session {SessionId = sessionId},
                 HttpStatusCode.BadRequest, "The provided sessionId is invalid");
         }
     }

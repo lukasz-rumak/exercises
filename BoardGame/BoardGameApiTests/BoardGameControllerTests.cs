@@ -39,7 +39,7 @@ namespace BoardGameApiTests
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestNewWallEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestPutEndpoint(_client, "newWall", requestBody, requestBody.SessionId, statusCodeShouldBe, responseShouldBe);
         }
 
         [Theory]
@@ -49,7 +49,7 @@ namespace BoardGameApiTests
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestBuildBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestPostEndpoint(_client, "buildBoard", requestBody, requestBody.SessionId, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
@@ -60,7 +60,7 @@ namespace BoardGameApiTests
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestAddPlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestPostEndpoint(_client, "addPlayer", requestBody, requestBody.SessionId, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
@@ -72,7 +72,7 @@ namespace BoardGameApiTests
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestMovePlayerEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestPutEndpoint(_client, "movePlayer", requestBody, requestBody.SessionId, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
@@ -84,7 +84,7 @@ namespace BoardGameApiTests
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestGetEventsEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestGetEndpoint(_client, "getEvents", requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
@@ -96,7 +96,7 @@ namespace BoardGameApiTests
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestGetLastEventEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestGetEndpoint(_client, "getLastEvent", requestBody, statusCodeShouldBe, responseShouldBe);
         }
         
         [Theory]
@@ -108,7 +108,7 @@ namespace BoardGameApiTests
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             if (requestBody.SessionId == _fakeValidGuid)
                 requestBody.SessionId = gameInitSetup.SessionId;
-            await _testHelper.TestGetSeeBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", requestBody, statusCodeShouldBe, responseShouldBe);
         }
     }
 }
