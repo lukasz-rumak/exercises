@@ -94,7 +94,10 @@ namespace BoardGame.Managers
 
         public string GenerateOutputApi()
         {
-            return _presentation.GenerateOutputApi(_board, _player.ReturnPlayersInfo());
+            var output = _presentation.GenerateOutputApi(_board, _player.ReturnPlayersInfo());
+            if (!string.IsNullOrWhiteSpace(output))
+                _eventHandler.Events[EventType.GeneratedBoardOutput]("");
+            return output;
         }
 
         private void ExecuteValidation(IReadOnlyList<IPiece> players, IReadOnlyList<string> instructions)

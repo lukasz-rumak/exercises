@@ -1,14 +1,10 @@
-using System;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using BoardGameApi.Models;
 using BoardGameApiTests.Helpers;
-using FluentAssertions;
 using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
 
 namespace BoardGameApiTests
 {
@@ -41,6 +37,8 @@ namespace BoardGameApiTests
                 {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Moved to 0 3 North");
             await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = sessionId}, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = sessionId}, HttpStatusCode.OK,
+                "Player(s): 1|-----|0----|-----|-----|-----");
         }
         
         [Fact]
@@ -76,25 +74,24 @@ namespace BoardGameApiTests
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetLastEventEndpoint(_client, new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
+            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
+                "Player(s): 1|-----|0----|-----|-----|-----");
+            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
+                "Player(s): 1|-----|-----|-----|0----|-----");
         }
 
         [Fact]
-        public async Task Get_SeeBoard_Should_Return_Board()
+        public async Task Test_Board_Not_Built_Cases()
         {
-            var model = new Session
-            {
-                SessionId = new Guid()
-            };
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"{_client.BaseAddress}boardgame/seeBoard"),
-                Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"),
-            };
-            var response = await _client.SendAsync(request);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("something");
+            var sessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
+                new Board {WithSize = 5},
+                HttpStatusCode.OK, "Game started");
+            await _testHelper.TestAddPlayerEndpoint(_client, new AddPlayer
+                    {SessionId = sessionId, PlayerType = "P"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+            await _testHelper.TestMovePlayerEndpoint(_client, new MovePlayer
+                    {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+            await _testHelper.TestGetSeeBoardEndpoint(_client, new Session {SessionId = sessionId},
+                HttpStatusCode.BadRequest, "The provided sessionId is invalid");
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
@@ -9,7 +8,6 @@ using BoardGame.Models;
 using BoardGameApi.Interfaces;
 using BoardGameApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using EventHandler = BoardGame.Managers.EventHandler;
 using Wall = BoardGameApi.Models.Wall;
 
 namespace BoardGameApi.Controllers
@@ -91,7 +89,9 @@ namespace BoardGameApi.Controllers
         [HttpPost("addPlayer")]
         public ActionResult<GenericResponse> PostAddPlayer([FromBody] AddPlayer addPlayer)
         {
-            if (!_gameHolder.SessionsHolder.ContainsKey(addPlayer.SessionId))
+            if (!IsSessionIdValid(addPlayer.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
+            if (!IsBoardBuilt(addPlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
             
             _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
@@ -103,7 +103,9 @@ namespace BoardGameApi.Controllers
         [HttpPut("movePlayer")]
         public ActionResult<GenericResponse> PutMovePlayer([FromBody] MovePlayer movePlayer)
         {
-            if (!_gameHolder.SessionsHolder.ContainsKey(movePlayer.SessionId))
+            if (!IsSessionIdValid(movePlayer.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
+            if (!IsBoardBuilt(movePlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
 
             _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
@@ -120,7 +122,7 @@ namespace BoardGameApi.Controllers
         [HttpGet("getEvents")]
         public ActionResult<GenericResponse> GetEvents(Session session)
         {
-            if (!_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+            if (!IsSessionIdValid(session.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
 
             var events = _gameHolder.SessionsHolder[session.SessionId].GetAllEvents();
@@ -133,7 +135,7 @@ namespace BoardGameApi.Controllers
         [HttpGet("getLastEvent")]
         public ActionResult<GenericResponse> GetLastEvent(Session session)
         {
-            if (!_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
+            if (!IsSessionIdValid(session.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
 
             var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
@@ -147,10 +149,25 @@ namespace BoardGameApi.Controllers
         [HttpGet("seeBoard")]
         public ActionResult GetSeeBoard(Session session)
         {
-            if (_gameHolder.SessionsHolder.ContainsKey(session.SessionId))
-                return Ok(_gameHolder.SessionsHolder[session.SessionId].GenerateOutputApi());
-            
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            if (!IsSessionIdValid(session.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            if (!IsBoardBuilt(session.SessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+
+            var output = _gameHolder.SessionsHolder[session.SessionId].GenerateOutputApi();
+            return GetLastEventType(session.SessionId) == EventType.GeneratedBoardOutput
+                ? ReturnStatusCodeWithResponse(200, session.SessionId, output)
+                : ReturnStatusCodeWithResponse(400, session.SessionId, "Board output cannot be generated");
+        }
+
+        private bool IsSessionIdValid(Guid sessionId)
+        {
+            return _gameHolder.SessionsHolder.ContainsKey(sessionId);
+        }
+        
+        private bool IsBoardBuilt(Guid sessionId)
+        {
+            return _gameHolder.SessionsHolder[sessionId].GetAllEvents().Any(e => e.Type == EventType.BoardBuilt);
         }
 
         private ObjectResult ReturnStatusCodeWithResponse(int statusCode, Guid sessionId, string response)

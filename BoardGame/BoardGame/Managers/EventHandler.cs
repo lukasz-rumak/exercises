@@ -33,6 +33,7 @@ namespace BoardGame.Managers
                 [EventType.FieldTaken] = EventFieldTaken,
                 [EventType.WallOnTheRoute] = EventWallOnTheRoute,
                 [EventType.IncorrectPlayerId] = EventIncorrectPlayerId,
+                [EventType.GeneratedBoardOutput] = EventGeneratedBoardOutput,
                 [EventType.None] = EventNone
             };
         }
@@ -105,6 +106,13 @@ namespace BoardGame.Managers
             var eventMsg = CreateEventMessage($"Event: incorrect player id! {description}");
             _presentation.PrintEventOutput(EventType.IncorrectPlayerId, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.IncorrectPlayerId, Description = eventMsg});
+        }
+        
+        private void EventGeneratedBoardOutput(string description)
+        {
+            var eventMsg = CreateEventMessage(description);
+            _presentation.PrintEventOutput(EventType.GeneratedBoardOutput, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.GeneratedBoardOutput, Description = eventMsg});
         }
         
         private void EventNone(string description)

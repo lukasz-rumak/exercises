@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using BoardGameApi.Models;
 using BoardGameApiTests.Helpers;
 using BoardGameApiTests.TestData;
-using FluentAssertions;
 using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
 
 namespace BoardGameApiTests
 {
@@ -104,22 +101,14 @@ namespace BoardGameApiTests
         
         [Theory]
         [ClassData(typeof(GetSeeBoardTestData))]
-        public async Task Get_SeeBoard_Should_Return_Board()
+        public async Task Get_SeeBoard_Should_Return_Board(Session requestBody, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
-            var model = new Session
-            {
-                SessionId = Guid.NewGuid()
-            };
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"{_client.BaseAddress}boardgame/seeBoard"),
-                Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"),
-            };
-            var response = await _client.SendAsync(request);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            responseContent.Should().Be("something");
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
+            if (requestBody.SessionId == _fakeValidGuid)
+                requestBody.SessionId = gameInitSetup.SessionId;
+            await _testHelper.TestGetSeeBoardEndpoint(_client, requestBody, statusCodeShouldBe, responseShouldBe);
         }
     }
 }

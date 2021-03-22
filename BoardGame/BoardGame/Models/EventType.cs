@@ -12,6 +12,7 @@ namespace BoardGame.Models
         FieldTaken,
         WallOnTheRoute,
         IncorrectPlayerId,
+        GeneratedBoardOutput,
         None
     }
 }
