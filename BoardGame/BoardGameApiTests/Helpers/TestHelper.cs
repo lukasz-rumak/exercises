@@ -45,21 +45,19 @@ namespace BoardGameApiTests.Helpers
             AssertResponseContent(responseContent, sessionId, responseShouldBe);
         }
 
-        public async Task TestGetEndpoint(HttpClient client, string endpointName, Session requestBody,
-            HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        public async Task TestGetEndpoint(HttpClient client, string endpointName, Guid sessionId, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"{client.BaseAddress}boardgame/{endpointName}"),
-                Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json"),
             };
             var response = await client.SendAsync(request);
             var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
-            AssertResponseContent(responseContent, requestBody.SessionId, responseShouldBe);
+            AssertResponseContent(responseContent, sessionId, responseShouldBe);
         }
-        
+
         public List<ValidationResult> ValidateModel<T>(T model)
         {
             var context = new ValidationContext(model, null, null);

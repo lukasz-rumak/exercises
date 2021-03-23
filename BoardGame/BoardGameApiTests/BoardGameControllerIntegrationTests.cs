@@ -37,9 +37,9 @@ namespace BoardGameApiTests
                 {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
                 {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.OK, "Moved to 0 3 North");
-            await _testHelper.TestGetEndpoint(_client, "getLastEvent",new Session {SessionId = sessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, $"getLastEvent/{sessionId}", sessionId, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
-            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = sessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, $"seeBoard/{sessionId}", sessionId, HttpStatusCode.OK,
                 "Player(s): 1|-----|0----|-----|-----|-----");
         }
         
@@ -72,13 +72,13 @@ namespace BoardGameApiTests
                 {SessionId = firstGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, firstGameSessionId, HttpStatusCode.OK, "Moved to 0 3 North");
             await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
                 {SessionId = secondGameSessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, secondGameSessionId, HttpStatusCode.OK, "Moved to 0 1 North");
-            await _testHelper.TestGetEndpoint(_client, "getLastEvent", new Session {SessionId = firstGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, $"getLastEvent/{firstGameSessionId}", firstGameSessionId, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
-            await _testHelper.TestGetEndpoint(_client, "getLastEvent", new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, $"getLastEvent/{secondGameSessionId}", secondGameSessionId, HttpStatusCode.OK,
                 "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
-            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = firstGameSessionId},
+            await _testHelper.TestGetEndpoint(_client, $"seeBoard/{firstGameSessionId}", firstGameSessionId,
                 HttpStatusCode.OK, "Player(s): 1|-----|0----|-----|-----|-----");
-            await _testHelper.TestGetEndpoint(_client, "seeBoard", new Session {SessionId = secondGameSessionId}, HttpStatusCode.OK,
+            await _testHelper.TestGetEndpoint(_client, $"seeBoard/{secondGameSessionId}", secondGameSessionId, HttpStatusCode.OK,
                 "Player(s): 1|-----|-----|-----|0----|-----");
         }
 
@@ -92,7 +92,7 @@ namespace BoardGameApiTests
                     {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
             await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
                     {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
-            await _testHelper.TestGetEndpoint(_client, "seeBoard",new Session {SessionId = sessionId},
+            await _testHelper.TestGetEndpoint(_client, $"seeBoard/{sessionId}", sessionId,
                 HttpStatusCode.BadRequest, "The provided sessionId is invalid");
         }
     }

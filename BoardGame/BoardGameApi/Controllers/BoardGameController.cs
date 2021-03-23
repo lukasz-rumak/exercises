@@ -119,45 +119,48 @@ namespace BoardGameApi.Controllers
                 : ReturnStatusCodeWithResponse(400, movePlayer.SessionId, lastEvent.Description);
         }
 
-        [HttpGet("getEvents")]
-        public ActionResult<GenericResponse> GetEvents(Session session)
+        [HttpGet]
+        [Route("getEvents/{sessionId}")]
+        public ActionResult<GenericResponse> GetEvents(Guid sessionId)
         {
-            if (!IsSessionIdValid(session.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            if (!IsSessionIdValid(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
 
-            var events = _gameHolder.SessionsHolder[session.SessionId].GetAllEvents();
+            var events = _gameHolder.SessionsHolder[sessionId].GetAllEvents();
             var eventsToString = BuildGetEventsResponse(events);
             return !string.IsNullOrWhiteSpace(eventsToString)
-                ? ReturnStatusCodeWithResponse(200, session.SessionId, eventsToString)
-                : ReturnStatusCodeWithResponse(200, session.SessionId, "No events to show");
+                ? ReturnStatusCodeWithResponse(200, sessionId, eventsToString)
+                : ReturnStatusCodeWithResponse(200, sessionId, "No events to show");
         }
 
-        [HttpGet("getLastEvent")]
-        public ActionResult<GenericResponse> GetLastEvent(Session session)
+        [HttpGet]
+        [Route("getLastEvent/{sessionId}")]
+        public ActionResult<GenericResponse> GetLastEvent(Guid sessionId)
         {
-            if (!IsSessionIdValid(session.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            if (!IsSessionIdValid(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
 
-            var lastEvent = _gameHolder.SessionsHolder[session.SessionId].GetLastEvent();
+            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
             return lastEvent != null
                 ? !string.IsNullOrWhiteSpace(lastEvent.Description)
-                    ? ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}; {lastEvent.Description}")
-                    : ReturnStatusCodeWithResponse(200, session.SessionId, $"{lastEvent.Type}")
-                : ReturnStatusCodeWithResponse(200, session.SessionId, "No event to show");
+                    ? ReturnStatusCodeWithResponse(200, sessionId, $"{lastEvent.Type}; {lastEvent.Description}")
+                    : ReturnStatusCodeWithResponse(200, sessionId, $"{lastEvent.Type}")
+                : ReturnStatusCodeWithResponse(200, sessionId, "No event to show");
         }
 
-        [HttpGet("seeBoard")]
-        public ActionResult GetSeeBoard(Session session)
+        [HttpGet]
+        [Route("seeBoard/{sessionId}")]
+        public ActionResult GetSeeBoard(Guid sessionId)
         {
-            if (!IsSessionIdValid(session.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
-            if (!IsBoardBuilt(session.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            if (!IsSessionIdValid(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+            if (!IsBoardBuilt(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
 
-            var output = _gameHolder.SessionsHolder[session.SessionId].GenerateOutputApi();
-            return GetLastEventType(session.SessionId) == EventType.GeneratedBoardOutput
-                ? ReturnStatusCodeWithResponse(200, session.SessionId, output)
-                : ReturnStatusCodeWithResponse(400, session.SessionId, "Board output cannot be generated");
+            var output = _gameHolder.SessionsHolder[sessionId].GenerateOutputApi();
+            return GetLastEventType(sessionId) == EventType.GeneratedBoardOutput
+                ? ReturnStatusCodeWithResponse(200, sessionId, output)
+                : ReturnStatusCodeWithResponse(400, sessionId, "Board output cannot be generated");
         }
 
         private bool IsSessionIdValid(Guid sessionId)
