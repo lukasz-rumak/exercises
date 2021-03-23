@@ -30,11 +30,9 @@ namespace BoardGameApiTests.Helpers
 
         public async Task<SetupSummary> BuildBoardSetup(HttpClient client, Guid sessionId)
         {
-            var sessionIdObject = new Session {SessionId = sessionId};
-
-            var stringContent = new StringContent(JsonConvert.SerializeObject(sessionIdObject), Encoding.UTF8,
+            var stringContent = new StringContent(JsonConvert.SerializeObject(string.Empty), Encoding.UTF8,
                 "application/json");
-            var response = await client.PostAsync("/boardgame/buildBoard", stringContent);
+            var response = await client.PostAsync($"/boardgame/buildBoard/{sessionId}", stringContent);
 
             return response.StatusCode == HttpStatusCode.Created
                 ? new SetupSummary {IsOkay = true, Description = "Setup BuildBoard is OK", SessionId = sessionId}
@@ -43,11 +41,11 @@ namespace BoardGameApiTests.Helpers
 
         public async Task<SetupSummary> BuildAddPlayerSetup(HttpClient client, Guid sessionId)
         {
-            var addPlayer = new AddPlayer {SessionId = sessionId, PlayerType = "P"};
+            var addPlayer = new AddPlayer {PlayerType = "P"};
             
             var stringContent = new StringContent(JsonConvert.SerializeObject(addPlayer), Encoding.UTF8,
                 "application/json");
-            var response = await client.PostAsync("/boardgame/addPlayer", stringContent);
+            var response = await client.PostAsync($"/boardgame/addPlayer/{sessionId}", stringContent);
 
             return response.StatusCode == HttpStatusCode.Created
                 ? new SetupSummary {IsOkay = true, Description = "Setup AddPlayer is OK", SessionId = sessionId}

@@ -28,7 +28,7 @@ namespace BoardGameApiTests.Helpers
             HttpStatusCode statusCodeShouldBe, string responseShouldBe) where T : class
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync($"/boardgame/{endpointName}", stringContent);
+            var response = await client.PostAsync($"/boardgame/{endpointName}/{sessionId}", stringContent);
             var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, sessionId, responseShouldBe);
@@ -39,7 +39,7 @@ namespace BoardGameApiTests.Helpers
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8,
                 "application/json");
-            var response = await client.PutAsync($"/boardgame/{endpointName}", stringContent);
+            var response = await client.PutAsync($"/boardgame/{endpointName}/{sessionId}", stringContent);
             var responseContent = await GetGenericResponse(response);
             AssertStatusCode(response, statusCodeShouldBe);
             AssertResponseContent(responseContent, sessionId, responseShouldBe);
@@ -50,7 +50,7 @@ namespace BoardGameApiTests.Helpers
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{client.BaseAddress}boardgame/{endpointName}"),
+                RequestUri = new Uri($"{client.BaseAddress}boardgame/{endpointName}/{sessionId}"),
             };
             var response = await client.SendAsync(request);
             var responseContent = await GetGenericResponse(response);

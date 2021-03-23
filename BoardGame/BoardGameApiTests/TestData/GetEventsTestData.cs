@@ -11,11 +11,11 @@ namespace BoardGameApiTests.TestData
         private readonly List<object[]> _data = new List<object[]>
         {
             new object[]
-                {new Session {SessionId = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb")}, HttpStatusCode.OK, "[0] GameStarted [1] BoardBuilt [2] PlayerAdded "},
+                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), HttpStatusCode.OK, "[0] GameStarted [1] BoardBuilt [2] PlayerAdded "},
             new object[]
-                {new Session {SessionId = Guid.Empty}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
+                {Guid.Empty, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
             new object[]
-                {new Session {SessionId = Guid.NewGuid()}, HttpStatusCode.NotFound, "The provided sessionId is invalid"}
+                {Guid.NewGuid(), HttpStatusCode.NotFound, "The provided sessionId is invalid"}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

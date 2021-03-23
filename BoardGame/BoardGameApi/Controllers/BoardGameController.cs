@@ -52,71 +52,75 @@ namespace BoardGameApi.Controllers
                 : ReturnStatusCodeWithResponse(400, sessionId, "Game did not start. Please check request");
         }
 
-        [HttpPut("newWall")]
-        public ActionResult<GenericResponse> PutNewWall([FromBody] Wall newWall)
+        [HttpPut]
+        [Route("newWall/{sessionId}")]
+        public ActionResult<GenericResponse> PutNewWall(Guid sessionId, [FromBody] Wall newWall)
         {
-            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(newWall.SessionId))
+            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
             {
-                _boardBuilderHolder.BuilderSessionHolder[newWall.SessionId].AddWall(newWall.WallCoordinates);
-                var lastEvent = _gameHolder.SessionsHolder[newWall.SessionId].GetLastEvent();
+                _boardBuilderHolder.BuilderSessionHolder[sessionId].AddWall(newWall.WallCoordinates);
+                var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
                 return lastEvent.Type == EventType.WallCreationDone
-                    ? ReturnStatusCodeWithResponse(201, newWall.SessionId, "Created")
-                    : ReturnStatusCodeWithResponse(400, newWall.SessionId, lastEvent.Description);
+                    ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
+                    : ReturnStatusCodeWithResponse(400, sessionId, lastEvent.Description);
             }
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(newWall.SessionId);
+            return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
         }
 
-        [HttpPost("buildBoard")]
-        public ActionResult<GenericResponse> PostBuildBoard([FromBody] Session session)
+        [HttpPost]
+        [Route("buildBoard/{sessionId}")]
+        public ActionResult<GenericResponse> PostBuildBoard(Guid sessionId)
         {
-            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(session.SessionId))
+            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
             {
-                var board = _boardBuilderHolder.BuilderSessionHolder[session.SessionId].BuildBoard();
-                _gameHolder.SessionsHolder[session.SessionId].RunBoardBuilder(board);
-                if (GetLastEventType(session.SessionId) == EventType.BoardBuilt)
+                var board = _boardBuilderHolder.BuilderSessionHolder[sessionId].BuildBoard();
+                _gameHolder.SessionsHolder[sessionId].RunBoardBuilder(board);
+                if (GetLastEventType(sessionId) == EventType.BoardBuilt)
                 {
-                    _boardBuilderHolder.BuilderSessionHolder.Remove(session.SessionId);
-                    return ReturnStatusCodeWithResponse(201, session.SessionId, "Created");
+                    _boardBuilderHolder.BuilderSessionHolder.Remove(sessionId);
+                    return ReturnStatusCodeWithResponse(201, sessionId, "Created");
                 }
 
-                ReturnStatusCodeWithResponse(400, session.SessionId, "Board not built");
+                ReturnStatusCodeWithResponse(400, sessionId, "Board not built");
             }
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(session.SessionId);
+            return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
         }
 
-        [HttpPost("addPlayer")]
-        public ActionResult<GenericResponse> PostAddPlayer([FromBody] AddPlayer addPlayer)
+        [HttpPost]
+        [Route("addPlayer/{sessionId}")]
+        public ActionResult<GenericResponse> PostAddPlayer(Guid sessionId, [FromBody] AddPlayer addPlayer)
         {
-            if (!IsSessionIdValid(addPlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
-            if (!IsBoardBuilt(addPlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(addPlayer.SessionId);
+            if (!IsSessionIdValid(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+            if (!IsBoardBuilt(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
             
-            _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
-            return GetLastEventType(addPlayer.SessionId) == EventType.PlayerAdded
-                ? ReturnStatusCodeWithResponse(201, addPlayer.SessionId, "Created")
-                : ReturnStatusCodeWithResponse(400, addPlayer.SessionId, "Player not created");
+            _gameHolder.SessionsHolder[sessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
+            return GetLastEventType(sessionId) == EventType.PlayerAdded
+                ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
+                : ReturnStatusCodeWithResponse(400, sessionId, "Player not created");
         }
 
-        [HttpPut("movePlayer")]
-        public ActionResult<GenericResponse> PutMovePlayer([FromBody] MovePlayer movePlayer)
+        [HttpPut]
+        [Route("movePlayer/{sessionId}")]
+        public ActionResult<GenericResponse> PutMovePlayer(Guid sessionId, [FromBody] MovePlayer movePlayer)
         {
-            if (!IsSessionIdValid(movePlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
-            if (!IsBoardBuilt(movePlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(movePlayer.SessionId);
+            if (!IsSessionIdValid(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+            if (!IsBoardBuilt(sessionId))
+                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
 
-            _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
-            var lastEvent = _gameHolder.SessionsHolder[movePlayer.SessionId].GetLastEvent();
+            _gameHolder.SessionsHolder[sessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
+            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
             var result = new List<EventType>
                     {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
                 .Any(e => e == lastEvent.Type);
             return result
-                ? ReturnStatusCodeWithResponse(200, movePlayer.SessionId,
-                    $"Moved to {_gameHolder.SessionsHolder[movePlayer.SessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
-                : ReturnStatusCodeWithResponse(400, movePlayer.SessionId, lastEvent.Description);
+                ? ReturnStatusCodeWithResponse(200, sessionId,
+                    $"Moved to {_gameHolder.SessionsHolder[sessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
+                : ReturnStatusCodeWithResponse(400, sessionId, lastEvent.Description);
         }
 
         [HttpGet]
