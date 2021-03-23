@@ -31,9 +31,13 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {new AddPlayer {SessionId = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), PlayerType = null}, HttpStatusCode.BadRequest, null},
             new object[]
-                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "P"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid"},
+                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "P"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
             new object[]
-                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "K"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid"}
+                {new AddPlayer {SessionId = Guid.Empty, PlayerType = "K"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
+            new object[]
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "P"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
+            new object[]
+                {new AddPlayer {SessionId = Guid.NewGuid(), PlayerType = "K"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

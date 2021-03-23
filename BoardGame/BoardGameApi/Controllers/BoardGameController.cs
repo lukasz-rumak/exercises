@@ -92,7 +92,7 @@ namespace BoardGameApi.Controllers
             if (!IsSessionIdValid(addPlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
             if (!IsBoardBuilt(addPlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(addPlayer.SessionId);
+                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(addPlayer.SessionId);
             
             _gameHolder.SessionsHolder[addPlayer.SessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
             return GetLastEventType(addPlayer.SessionId) == EventType.PlayerAdded
@@ -106,7 +106,7 @@ namespace BoardGameApi.Controllers
             if (!IsSessionIdValid(movePlayer.SessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
             if (!IsBoardBuilt(movePlayer.SessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(movePlayer.SessionId);
+                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(movePlayer.SessionId);
 
             _gameHolder.SessionsHolder[movePlayer.SessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
             var lastEvent = _gameHolder.SessionsHolder[movePlayer.SessionId].GetLastEvent();
@@ -155,7 +155,7 @@ namespace BoardGameApi.Controllers
             if (!IsSessionIdValid(sessionId))
                 return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
             if (!IsBoardBuilt(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
 
             var output = _gameHolder.SessionsHolder[sessionId].GenerateOutputApi();
             return GetLastEventType(sessionId) == EventType.GeneratedBoardOutput
@@ -184,10 +184,19 @@ namespace BoardGameApi.Controllers
         
         private ObjectResult ReturnBadRequestWithResponseSessionIdIsInvalid(Guid sessionId)
         {
-            return StatusCode(400, new GenericResponse
+            return StatusCode(404, new GenericResponse
             {
                 SessionId = sessionId,
                 Response = "The provided sessionId is invalid"
+            });
+        }
+        
+        private ObjectResult ReturnBadRequestWithResponseSessionIdIsInInvalidState(Guid sessionId)
+        {
+            return StatusCode(400, new GenericResponse
+            {
+                SessionId = sessionId,
+                Response = "The provided sessionId exists but is in invalid state"
             });
         }
 

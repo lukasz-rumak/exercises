@@ -89,11 +89,11 @@ namespace BoardGameApiTests
                 new Board {WithSize = 5},
                 HttpStatusCode.OK, "Game started");
             await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
-                    {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+                    {SessionId = sessionId, PlayerType = "P"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId exists but is in invalid state");
             await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
-                    {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+                    {SessionId = sessionId, PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.BadRequest, "The provided sessionId exists but is in invalid state");
             await _testHelper.TestGetEndpoint(_client, $"seeBoard/{sessionId}", sessionId,
-                HttpStatusCode.BadRequest, "The provided sessionId is invalid");
+                HttpStatusCode.BadRequest, "The provided sessionId exists but is in invalid state");
         }
     }
 }

@@ -35,9 +35,9 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {new Wall {SessionId = Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), WallCoordinates = null}, HttpStatusCode.BadRequest, null},
             new object[]
-                {new Wall {SessionId = Guid.NewGuid(), WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid"},
+                {new Wall {SessionId = Guid.NewGuid(), WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
             new object[]
-                {new Wall {SessionId = Guid.Empty, WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.BadRequest, "The provided sessionId is invalid"}
+                {new Wall {SessionId = Guid.Empty, WallCoordinates = "W 1 2 1 3"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"}
         };
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
