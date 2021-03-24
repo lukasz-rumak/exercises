@@ -1,19 +1,18 @@
-using System;
 using System.Linq;
 using BoardGameApi.Models;
-using BoardGameApiTests.Helpers;
+using BoardGameApiModelTests.Helpers;
 using FluentAssertions;
 using Xunit;
 
-namespace BoardGameApiTests
+namespace BoardGameApiModelTests
 {
     public class BoardGameModelTests
     {
-        private readonly TestHelper _testHelper;
+        private readonly ModelValidator _modelValidator;
 
         public BoardGameModelTests()
         {
-            _testHelper = new TestHelper();
+            _modelValidator = new ModelValidator();
         }
         
         [Theory]
@@ -27,7 +26,7 @@ namespace BoardGameApiTests
         public void Board_Model_PlayerType_Should_Return_Empty(int withSize)
         {
             var model = new Board {WithSize = withSize};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().BeEmpty();
         }
@@ -49,7 +48,7 @@ namespace BoardGameApiTests
         public void Board_Model_PlayerType_Should_Return_Error(int withSize, string[] expectedResult)
         {
             var model = new Board {WithSize = withSize};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);
         }
@@ -60,7 +59,7 @@ namespace BoardGameApiTests
         public void AddPlayer_Model_PlayerType_Should_Return_Empty(string playerType)
         {
             var model = new AddPlayer {PlayerType = playerType};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().BeEmpty();
         }
@@ -83,7 +82,7 @@ namespace BoardGameApiTests
         public void AddPlayer_Model_PlayerType_Should_Return_Error(string playerType, string[] expectedResult)
         {
             var model = new AddPlayer {PlayerType = playerType};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);
         }
@@ -103,7 +102,7 @@ namespace BoardGameApiTests
         public void MovePlayer_Model_PlayerId_And_MoveTo_Should_Return_Empty(int playerId, string moveTo)
         {
             var model = new MovePlayer {PlayerId = playerId, MoveTo = moveTo};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().BeEmpty();
         }
@@ -129,7 +128,7 @@ namespace BoardGameApiTests
         public void MovePlayer_Model_PlayerId_And_MoveTo_Should_Return_Error(int playerId, string moveTo, string[] expectedResult)
         {
             var model = new MovePlayer {PlayerId = playerId, MoveTo = moveTo};
-            var result = _testHelper.ValidateModel(model);
+            var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);
         }

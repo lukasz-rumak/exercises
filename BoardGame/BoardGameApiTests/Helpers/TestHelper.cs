@@ -58,15 +58,6 @@ namespace BoardGameApiTests.Helpers
             AssertResponseContent(responseContent, sessionId, responseShouldBe);
         }
 
-        public List<ValidationResult> ValidateModel<T>(T model)
-        {
-            var context = new ValidationContext(model, null, null);
-            var result = new List<ValidationResult>();
-            var valid = Validator.TryValidateObject(model, context, result, true);
-
-            return result;
-        }
-
         private async Task<GenericResponse> GetGenericResponse(HttpResponseMessage responseMessage)
         {
             return JsonConvert.DeserializeObject<GenericResponse>(await responseMessage.Content.ReadAsStringAsync());
