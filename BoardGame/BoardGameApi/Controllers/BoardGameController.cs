@@ -197,7 +197,7 @@ namespace BoardGameApi.Controllers
         
         private ObjectResult ReturnBadRequestWithResponseSessionIdIsInInvalidState(Guid sessionId)
         {
-            return StatusCode(400, new GenericResponse
+            return StatusCode(404, new GenericResponse
             {
                 SessionId = sessionId,
                 Response = "The provided sessionId exists but is in invalid state"
