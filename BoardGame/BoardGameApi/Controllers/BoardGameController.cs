@@ -185,6 +185,18 @@ namespace BoardGameApi.Controllers
                 Response = response
             });
         }
+
+        private ObjectResult ReturnBadRequestResponse<T>(T newObject) where T : class
+        {
+            return StatusCode(400, new BadRequestResponse<T>
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "One or more validation errors occurred.",
+                Status = 400,
+                TraceId = "not provided",
+                Errors = newObject
+            });
+        }
         
         private ObjectResult ReturnNotFoundWithResponseSessionIdIsInvalid(Guid sessionId)
         {
