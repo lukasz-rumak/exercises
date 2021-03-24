@@ -65,7 +65,7 @@ namespace BoardGameApi.Controllers
                     : ReturnStatusCodeWithResponse(400, sessionId, lastEvent.Description);
             }
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+            return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
         }
 
         [HttpPost]
@@ -85,7 +85,7 @@ namespace BoardGameApi.Controllers
                 ReturnStatusCodeWithResponse(400, sessionId, "Board not built");
             }
 
-            return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+            return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
         }
 
         [HttpPost]
@@ -93,9 +93,9 @@ namespace BoardGameApi.Controllers
         public ActionResult<GenericResponse> PostAddPlayer(Guid sessionId, [FromBody] AddPlayer addPlayer)
         {
             if (!IsSessionIdValid(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
             if (!IsBoardBuilt(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
             
             _gameHolder.SessionsHolder[sessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
             return GetLastEventType(sessionId) == EventType.PlayerAdded
@@ -108,9 +108,9 @@ namespace BoardGameApi.Controllers
         public ActionResult<GenericResponse> PutMovePlayer(Guid sessionId, [FromBody] MovePlayer movePlayer)
         {
             if (!IsSessionIdValid(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
             if (!IsBoardBuilt(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
 
             _gameHolder.SessionsHolder[sessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
             var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
@@ -128,7 +128,7 @@ namespace BoardGameApi.Controllers
         public ActionResult<GenericResponse> GetEvents(Guid sessionId)
         {
             if (!IsSessionIdValid(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
 
             var events = _gameHolder.SessionsHolder[sessionId].GetAllEvents();
             var eventsToString = BuildGetEventsResponse(events);
@@ -142,7 +142,7 @@ namespace BoardGameApi.Controllers
         public ActionResult<GenericResponse> GetLastEvent(Guid sessionId)
         {
             if (!IsSessionIdValid(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
 
             var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
             return lastEvent != null
@@ -157,9 +157,9 @@ namespace BoardGameApi.Controllers
         public ActionResult GetSeeBoard(Guid sessionId)
         {
             if (!IsSessionIdValid(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInvalid(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
             if (!IsBoardBuilt(sessionId))
-                return ReturnBadRequestWithResponseSessionIdIsInInvalidState(sessionId);
+                return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
 
             var output = _gameHolder.SessionsHolder[sessionId].GenerateOutputApi();
             return GetLastEventType(sessionId) == EventType.GeneratedBoardOutput
@@ -186,7 +186,7 @@ namespace BoardGameApi.Controllers
             });
         }
         
-        private ObjectResult ReturnBadRequestWithResponseSessionIdIsInvalid(Guid sessionId)
+        private ObjectResult ReturnNotFoundWithResponseSessionIdIsInvalid(Guid sessionId)
         {
             return StatusCode(404, new GenericResponse
             {
@@ -195,7 +195,7 @@ namespace BoardGameApi.Controllers
             });
         }
         
-        private ObjectResult ReturnBadRequestWithResponseSessionIdIsInInvalidState(Guid sessionId)
+        private ObjectResult ReturnNotFoundWithResponseSessionIdIsInInvalidState(Guid sessionId)
         {
             return StatusCode(404, new GenericResponse
             {
