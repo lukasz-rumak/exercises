@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace BoardGameApi.Models
 {
     public class BadRequestResponse<T> where T : class
@@ -9,8 +11,13 @@ namespace BoardGameApi.Models
         public T Errors { get; set; }
     }
 
-    public class WithSize
+    public class BadRequestErrors
     {
-        public string IDoNotKnow { get; set; }
+        public string[] Errors { get; set; }
+    }
+
+    public class BadRequestWithSize
+    {
+        public string[] WithSize { get; set; }
     }
 }

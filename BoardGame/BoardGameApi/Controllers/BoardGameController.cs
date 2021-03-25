@@ -48,8 +48,11 @@ namespace BoardGameApi.Controllers
             _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
             var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
-                ? ReturnStatusCodeWithResponse(200, sessionId, "Game started")
-                : ReturnStatusCodeWithResponse(400, sessionId, "Game did not start. Please check request");
+                ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
+                : ReturnBadRequestResponse(new BadRequestErrors
+                {
+                    Errors = new[] {"The game did not start. Please check request"}
+                });
         }
 
         [HttpPut]
@@ -186,7 +189,7 @@ namespace BoardGameApi.Controllers
             });
         }
 
-        private ObjectResult ReturnBadRequestResponse<T>(T newObject) where T : class
+        private ObjectResult ReturnBadRequestResponse<T>(T errors) where T : class
         {
             return StatusCode(400, new BadRequestResponse<T>
             {
@@ -194,7 +197,7 @@ namespace BoardGameApi.Controllers
                 Title = "One or more validation errors occurred.",
                 Status = 400,
                 TraceId = "not provided",
-                Errors = newObject
+                Errors = errors
             });
         }
         

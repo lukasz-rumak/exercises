@@ -24,7 +24,7 @@ namespace BoardGameApiTests
         {
             var sessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "Game started");
+                HttpStatusCode.OK, "The game started");
             await _testHelper.TestPutEndpoint(_client, "newWall",
                 new Wall {WallCoordinates = "W 1 1 2 2"}, sessionId, HttpStatusCode.Created,
                 "Created");
@@ -48,10 +48,10 @@ namespace BoardGameApiTests
         {
             var firstGameSessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "Game started");
+                HttpStatusCode.OK, "The game started");
             var secondGameSessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "Game started");
+                HttpStatusCode.OK, "The game started");
             await _testHelper.TestPutEndpoint(_client, "newWall",
                 new Wall {WallCoordinates = "W 1 1 2 2"}, firstGameSessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpoint(_client, "newWall",
@@ -87,7 +87,7 @@ namespace BoardGameApiTests
         {
             var sessionId = await _testHelper.TestGameInitEndpointAndReturnSessionId(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "Game started");
+                HttpStatusCode.OK, "The game started");
             await _testHelper.TestPostEndpoint(_client, "addPlayer", new AddPlayer
                     {PlayerType = "P"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but is in invalid state");
             await _testHelper.TestPutEndpoint(_client, "movePlayer", new MovePlayer
