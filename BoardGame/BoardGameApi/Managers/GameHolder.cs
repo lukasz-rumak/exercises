@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using BoardGame.Managers;
+using BoardGame.Interfaces;
 using BoardGameApi.Interfaces;
 
 namespace BoardGameApi.Managers
 {
     public class GameHolder : IGameHolder
     {
-        private readonly Dictionary<Guid, GameMaster> _sessionsHolder;
+        private readonly Dictionary<Guid, IGame> _sessionsHolder;
 
         public GameHolder()
         {
-            _sessionsHolder = new Dictionary<Guid, GameMaster>();
+            _sessionsHolder = new Dictionary<Guid, IGame>();
         }
 
-        public void Add(Guid sessionId, GameMaster gameMaster)
+        public void Add(Guid sessionId, IGame gameMaster)
         {
             _sessionsHolder.Add(sessionId, gameMaster);
         }
 
-        public GameMaster Get(Guid sessionId)
+        public IGame Get(Guid sessionId)
         {
             return _sessionsHolder[sessionId];
         }

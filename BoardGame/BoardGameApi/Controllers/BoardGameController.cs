@@ -236,7 +236,7 @@ namespace BoardGameApi.Controllers
             return strBuilder.ToString();
         }
 
-        private GameMaster RunInTheGame(Guid sessionId)
+        private IGame RunInTheGame(Guid sessionId)
         {
             return _gameHolder.Get(sessionId);
         }
