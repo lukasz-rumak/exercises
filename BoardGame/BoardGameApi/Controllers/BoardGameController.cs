@@ -49,10 +49,7 @@ namespace BoardGameApi.Controllers
             var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
                 ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
-                : ReturnBadRequestResponse(new BadRequestErrors
-                {
-                    Errors = new[] {"The game did not start. Please check request"}
-                });
+                : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"The game did not start. Please check request"}});
         }
 
         [HttpPut]
@@ -65,7 +62,7 @@ namespace BoardGameApi.Controllers
                 var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
                 return lastEvent.Type == EventType.WallCreationDone
                     ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
-                    : ReturnStatusCodeWithResponse(400, sessionId, lastEvent.Description);
+                    : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
             }
 
             return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
@@ -85,7 +82,7 @@ namespace BoardGameApi.Controllers
                     return ReturnStatusCodeWithResponse(201, sessionId, "Created");
                 }
 
-                ReturnStatusCodeWithResponse(400, sessionId, "Board not built");
+                ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Board not built"}});
             }
 
             return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
@@ -103,7 +100,7 @@ namespace BoardGameApi.Controllers
             _gameHolder.SessionsHolder[sessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
             return GetLastEventType(sessionId) == EventType.PlayerAdded
                 ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
-                : ReturnStatusCodeWithResponse(400, sessionId, "Player not created");
+                : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Player not created"}});
         }
 
         [HttpPut]
@@ -123,7 +120,7 @@ namespace BoardGameApi.Controllers
             return result
                 ? ReturnStatusCodeWithResponse(200, sessionId,
                     $"Moved to {_gameHolder.SessionsHolder[sessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
-                : ReturnStatusCodeWithResponse(400, sessionId, lastEvent.Description);
+                : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
         }
 
         [HttpGet]
@@ -167,7 +164,7 @@ namespace BoardGameApi.Controllers
             var output = _gameHolder.SessionsHolder[sessionId].GenerateOutputApi();
             return GetLastEventType(sessionId) == EventType.GeneratedBoardOutput
                 ? ReturnStatusCodeWithResponse(200, sessionId, output)
-                : ReturnStatusCodeWithResponse(400, sessionId, "Board output cannot be generated");
+                : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Board output cannot be generated"}});
         }
 
         private bool IsSessionIdValid(Guid sessionId)
