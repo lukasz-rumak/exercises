@@ -7,6 +7,9 @@ namespace BoardGameApi.Interfaces
 {
     public interface IBoardBuilderHolder
     {
-        Dictionary<Guid, IBoardBuilder> BuilderSessionHolder { get; set; }
+        void Add(Guid sessionId, IBoardBuilder boardBuilder);
+        void Remove(Guid sessionId);
+        IBoardBuilder Get(Guid sessionId);
+        bool IsKeyPresent(Guid sessionId);
     }
 }

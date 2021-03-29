@@ -45,7 +45,7 @@ namespace BoardGameApi.Controllers
             _gameHolder.Add(sessionId, game);
             var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
                 .WithSize(boardInit.WithSize);
-            _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
+            _boardBuilderHolder.Add(sessionId, board);
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
                 ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
@@ -56,9 +56,9 @@ namespace BoardGameApi.Controllers
         [Route("newWall/{sessionId}")]
         public ActionResult<GenericResponse> PutNewWall(Guid sessionId, [FromBody] Wall newWall)
         {
-            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
+            if (_boardBuilderHolder.IsKeyPresent(sessionId))
             {
-                _boardBuilderHolder.BuilderSessionHolder[sessionId].AddWall(newWall.WallCoordinates);
+                RunInTheBoardBuilder(sessionId).AddWall(newWall.WallCoordinates);
                 var lastEvent = RunInTheGame(sessionId).GetLastEvent();
                 return lastEvent.Type == EventType.WallCreationDone
                     ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
@@ -72,13 +72,13 @@ namespace BoardGameApi.Controllers
         [Route("buildBoard/{sessionId}")]
         public ActionResult<GenericResponse> PostBuildBoard(Guid sessionId)
         {
-            if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
+            if (_boardBuilderHolder.IsKeyPresent(sessionId))
             {
-                var board = _boardBuilderHolder.BuilderSessionHolder[sessionId].BuildBoard();
+                var board = RunInTheBoardBuilder(sessionId).BuildBoard();
                 RunInTheGame(sessionId).RunBoardBuilder(board);
                 if (GetLastEventType(sessionId) == EventType.BoardBuilt)
                 {
-                    _boardBuilderHolder.BuilderSessionHolder.Remove(sessionId);
+                    _boardBuilderHolder.Remove(sessionId);
                     return ReturnStatusCodeWithResponse(201, sessionId, "Created");
                 }
 
@@ -239,6 +239,11 @@ namespace BoardGameApi.Controllers
         private IGame RunInTheGame(Guid sessionId)
         {
             return _gameHolder.Get(sessionId);
+        }
+
+        private IBoardBuilder RunInTheBoardBuilder(Guid sessionId)
+        {
+            return _boardBuilderHolder.Get(sessionId);
         }
     }
 }
