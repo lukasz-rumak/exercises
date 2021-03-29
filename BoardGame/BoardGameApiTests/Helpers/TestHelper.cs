@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -13,63 +11,40 @@ namespace BoardGameApiTests.Helpers
 {
     public class TestHelper
     {
-        public async Task<Guid> TestGameInitEndpointAndReturnSessionId<T>(HttpClient client, Board requestBody, HttpStatusCode statusCodeShouldBe, T responseShouldBe) where T : class
+        public async Task<Guid> TestGameInitEndpointAndReturnSessionId(HttpClient client, Board requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
         {
-            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8,
+                "application/json");
             var response = await client.PostAsync("/boardgame/gameInit", stringContent);
-            AssertStatusCode(response, statusCodeShouldBe);
-            if (IsStatusCodeOk(statusCodeShouldBe))
-            {
-                var responseContent = await GetResponseContent<GenericResponse>(response);
-                if (responseContent.SessionId != Guid.Empty)
-                    responseContent.SessionId.Should().Be(responseContent.SessionId);
-                if (responseShouldBe.GetType() == typeof(GenericResponse))
-                {
-                    var neObj = (GenericResponse) responseShouldBe;
-                    new GenericResponse
-                    {
-                        SessionId = responseContent.SessionId,
-                        Response = responseShouldBe.
-                    }
-                }
-                    
-                    
-                responseContent.Should().BeEquivalentTo(responseShouldBe);
-                //AssertResponseContent(responseContent, responseContent.SessionId, responseShouldBe);
-                return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : Guid.NewGuid();
-            }
-            if (IsStatusCodeBadRequest(statusCodeShouldBe))
-            {
-                var responseContent = await GetResponseContent<BadRequestResponse<BadRequestWithSize>>(response);
-                responseContent.Errors.Should().BeEquivalentTo(responseShouldBe);
-                //AssertResponseContentForBadRequest(responseContent, responseShouldBe);
-            }
-                
-            return Guid.NewGuid();
+            var responseContent = await GetResponseContent<GenericResponse>(response);
+            AssertStatusCode(response, statusCodeExpected);
+            AssertResponseContent(responseContent, responseContent.SessionId, responseExpected);
+
+            return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : Guid.NewGuid();
         }
 
         public async Task TestPostEndpoint<T>(HttpClient client, string endpointName, T requestBody, Guid sessionId,
-            HttpStatusCode statusCodeShouldBe, string responseShouldBe) where T : class
+            HttpStatusCode statusCodeExpected, string responseExpected) where T : class
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             var response = await client.PostAsync($"/boardgame/{endpointName}/{sessionId}", stringContent);
-            var responseContent = await GetGenericResponse(response);
-            AssertStatusCode(response, statusCodeShouldBe);
-            AssertResponseContent(responseContent, sessionId, responseShouldBe);
+            var responseContent = await GetResponseContent<GenericResponse>(response);
+            AssertStatusCode(response, statusCodeExpected);
+            AssertResponseContent(responseContent, sessionId, responseExpected);
         }
         
         public async Task TestPutEndpoint<T>(HttpClient client, string endpointName, T requestBody, Guid sessionId,
-            HttpStatusCode statusCodeShouldBe, string responseShouldBe) where T : class
+            HttpStatusCode statusCodeExpected, string responseExpected) where T : class
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8,
                 "application/json");
             var response = await client.PutAsync($"/boardgame/{endpointName}/{sessionId}", stringContent);
-            var responseContent = await GetGenericResponse(response);
-            AssertStatusCode(response, statusCodeShouldBe);
-            AssertResponseContent(responseContent, sessionId, responseShouldBe);
+            var responseContent = await GetResponseContent<GenericResponse>(response);
+            AssertStatusCode(response, statusCodeExpected);
+            AssertResponseContent(responseContent, sessionId, responseExpected);
         }
 
-        public async Task TestGetEndpoint(HttpClient client, string endpointName, Guid sessionId, HttpStatusCode statusCodeShouldBe, string responseShouldBe)
+        public async Task TestGetEndpoint(HttpClient client, string endpointName, Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var request = new HttpRequestMessage
             {
@@ -77,9 +52,9 @@ namespace BoardGameApiTests.Helpers
                 RequestUri = new Uri($"{client.BaseAddress}boardgame/{endpointName}/{sessionId}"),
             };
             var response = await client.SendAsync(request);
-            var responseContent = await GetGenericResponse(response);
-            AssertStatusCode(response, statusCodeShouldBe);
-            AssertResponseContent(responseContent, sessionId, responseShouldBe);
+            var responseContent = await GetResponseContent<GenericResponse>(response);
+            AssertStatusCode(response, statusCodeExpected);
+            AssertResponseContent(responseContent, sessionId, responseExpected);
         }
 
         private async Task<T> GetResponseContent<T>(HttpResponseMessage responseMessage) where T : class
@@ -92,36 +67,36 @@ namespace BoardGameApiTests.Helpers
             return JsonConvert.DeserializeObject<GenericResponse>(await responseMessage.Content.ReadAsStringAsync());
         }
 
-        private void AssertStatusCode(HttpResponseMessage responseMessage, HttpStatusCode statusCodeShouldBe)
+        private void AssertStatusCode(HttpResponseMessage responseMessage, HttpStatusCode statusCodeExpected)
         {
-            responseMessage.StatusCode.Should().Be(statusCodeShouldBe);
+            responseMessage.StatusCode.Should().Be(statusCodeExpected);
         }
 
-        private void AssertResponseContent(GenericResponse responseContent, Guid sessionIdShouldBe, string responseShouldBe)
+        private void AssertResponseContent(GenericResponse responseContent, Guid sessionIdExpected, string responseExpected)
         {
             if (responseContent.SessionId != Guid.Empty)
-                responseContent.SessionId.Should().Be(sessionIdShouldBe);
-            responseContent.Response.Should().Be(responseShouldBe);
+                responseContent.SessionId.Should().Be(sessionIdExpected);
+            responseContent.Response.Should().Be(responseExpected);
         }
         
-        private void AssertResponseContentForBadRequest<T>(BadRequestResponse<T> responseContent, T responseShouldBe) where T : class
+        private void AssertResponseContentForBadRequest<T>(BadRequestResponse<T> responseContent, T responseExpected) where T : class
         {
-            responseContent.Errors.Should().BeEquivalentTo(responseShouldBe);
+            responseContent.Errors.Should().BeEquivalentTo(responseExpected);
         }
 
-        private bool IsStatusCodeOk(HttpStatusCode statusCodeShouldBe)
+        private bool IsStatusCodeOk(HttpStatusCode statusCodeExpected)
         {
-            return statusCodeShouldBe == HttpStatusCode.OK;
+            return statusCodeExpected == HttpStatusCode.OK;
         }
         
-        private bool IsStatusCodeBadRequest(HttpStatusCode statusCodeShouldBe)
+        private bool IsStatusCodeBadRequest(HttpStatusCode statusCodeExpected)
         {
-            return statusCodeShouldBe == HttpStatusCode.BadRequest;
+            return statusCodeExpected == HttpStatusCode.BadRequest;
         }
         
-        private bool IsStatusCodeNotFound(HttpStatusCode statusCodeShouldBe)
+        private bool IsStatusCodeNotFound(HttpStatusCode statusCodeExpected)
         {
-            return statusCodeShouldBe == HttpStatusCode.NotFound;
+            return statusCodeExpected == HttpStatusCode.NotFound;
         }
     }
 }
