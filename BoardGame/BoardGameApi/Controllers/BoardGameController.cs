@@ -42,11 +42,11 @@ namespace BoardGameApi.Controllers
         {
             var sessionId = Guid.NewGuid();
             var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
-            _gameHolder.SessionsHolder.Add(sessionId, game);
+            _gameHolder.Add(sessionId, game);
             var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
                 .WithSize(boardInit.WithSize);
             _boardBuilderHolder.BuilderSessionHolder.Add(sessionId, board);
-            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
+            var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
                 ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"The game did not start. Please check request"}});
@@ -59,7 +59,7 @@ namespace BoardGameApi.Controllers
             if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
             {
                 _boardBuilderHolder.BuilderSessionHolder[sessionId].AddWall(newWall.WallCoordinates);
-                var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
+                var lastEvent = RunInTheGame(sessionId).GetLastEvent();
                 return lastEvent.Type == EventType.WallCreationDone
                     ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
                     : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
@@ -75,7 +75,7 @@ namespace BoardGameApi.Controllers
             if (_boardBuilderHolder.BuilderSessionHolder.ContainsKey(sessionId))
             {
                 var board = _boardBuilderHolder.BuilderSessionHolder[sessionId].BuildBoard();
-                _gameHolder.SessionsHolder[sessionId].RunBoardBuilder(board);
+                RunInTheGame(sessionId).RunBoardBuilder(board);
                 if (GetLastEventType(sessionId) == EventType.BoardBuilt)
                 {
                     _boardBuilderHolder.BuilderSessionHolder.Remove(sessionId);
@@ -97,7 +97,7 @@ namespace BoardGameApi.Controllers
             if (!IsBoardBuilt(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
             
-            _gameHolder.SessionsHolder[sessionId].CreatePlayers(new List<string> {addPlayer.PlayerType});
+            RunInTheGame(sessionId).CreatePlayers(new List<string> {addPlayer.PlayerType});
             return GetLastEventType(sessionId) == EventType.PlayerAdded
                 ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Player not created"}});
@@ -112,14 +112,14 @@ namespace BoardGameApi.Controllers
             if (!IsBoardBuilt(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
 
-            _gameHolder.SessionsHolder[sessionId].MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
-            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
+            RunInTheGame(sessionId).MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
+            var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             var result = new List<EventType>
                     {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
                 .Any(e => e == lastEvent.Type);
             return result
                 ? ReturnStatusCodeWithResponse(200, sessionId,
-                    $"Moved to {_gameHolder.SessionsHolder[sessionId].GameStatus.PlayerPosition[movePlayer.PlayerId]}")
+                    $"Moved to {RunInTheGame(sessionId).GameStatus.PlayerPosition[movePlayer.PlayerId]}")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
         }
 
@@ -130,7 +130,7 @@ namespace BoardGameApi.Controllers
             if (!IsSessionIdValid(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
 
-            var events = _gameHolder.SessionsHolder[sessionId].GetAllEvents();
+            var events = RunInTheGame(sessionId).GetAllEvents();
             var eventsToString = BuildGetEventsResponse(events);
             return !string.IsNullOrWhiteSpace(eventsToString)
                 ? ReturnStatusCodeWithResponse(200, sessionId, eventsToString)
@@ -144,7 +144,7 @@ namespace BoardGameApi.Controllers
             if (!IsSessionIdValid(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
 
-            var lastEvent = _gameHolder.SessionsHolder[sessionId].GetLastEvent();
+            var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent != null
                 ? !string.IsNullOrWhiteSpace(lastEvent.Description)
                     ? ReturnStatusCodeWithResponse(200, sessionId, $"{lastEvent.Type}; {lastEvent.Description}")
@@ -161,7 +161,7 @@ namespace BoardGameApi.Controllers
             if (!IsBoardBuilt(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
 
-            var output = _gameHolder.SessionsHolder[sessionId].GenerateOutputApi();
+            var output = RunInTheGame(sessionId).GenerateOutputApi();
             return GetLastEventType(sessionId) == EventType.GeneratedBoardOutput
                 ? ReturnStatusCodeWithResponse(200, sessionId, output)
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Board output cannot be generated"}});
@@ -169,12 +169,12 @@ namespace BoardGameApi.Controllers
 
         private bool IsSessionIdValid(Guid sessionId)
         {
-            return _gameHolder.SessionsHolder.ContainsKey(sessionId);
+            return _gameHolder.IsKeyPresent(sessionId);
         }
         
         private bool IsBoardBuilt(Guid sessionId)
         {
-            return _gameHolder.SessionsHolder[sessionId].GetAllEvents().Any(e => e.Type == EventType.BoardBuilt);
+            return RunInTheGame(sessionId).GetAllEvents().Any(e => e.Type == EventType.BoardBuilt);
         }
 
         private ObjectResult ReturnStatusCodeWithResponse(int statusCode, Guid sessionId, string response)
@@ -218,7 +218,7 @@ namespace BoardGameApi.Controllers
 
         private EventType GetLastEventType(Guid sessionId)
         {
-            return _gameHolder.SessionsHolder[sessionId].GetLastEvent().Type;
+            return RunInTheGame(sessionId).GetLastEvent().Type;
         }
 
         private string BuildGetEventsResponse(IEnumerable<EventLog> events)
@@ -234,6 +234,11 @@ namespace BoardGameApi.Controllers
             }
 
             return strBuilder.ToString();
+        }
+
+        private GameMaster RunInTheGame(Guid sessionId)
+        {
+            return _gameHolder.Get(sessionId);
         }
     }
 }

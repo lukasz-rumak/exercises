@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using BoardGame.Managers;
+using BoardGameApi.Models;
 
 namespace BoardGameApi.Interfaces
 {
     public interface IGameHolder
     {
-        Dictionary<Guid, GameMaster> SessionsHolder { get; set; }
+        void Add(Guid sessionId, GameMaster gameMaster);
+        GameMaster Get(Guid sessionId);
+        bool IsKeyPresent(Guid sessionId);
     }
 }

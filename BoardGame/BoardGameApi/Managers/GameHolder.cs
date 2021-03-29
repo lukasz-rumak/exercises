@@ -7,12 +7,26 @@ namespace BoardGameApi.Managers
 {
     public class GameHolder : IGameHolder
     {
-        public Dictionary<Guid, GameMaster> SessionsHolder { get; set; }
+        private readonly Dictionary<Guid, GameMaster> _sessionsHolder;
 
         public GameHolder()
         {
-            SessionsHolder = new Dictionary<Guid, GameMaster>();
+            _sessionsHolder = new Dictionary<Guid, GameMaster>();
         }
-        
+
+        public void Add(Guid sessionId, GameMaster gameMaster)
+        {
+            _sessionsHolder.Add(sessionId, gameMaster);
+        }
+
+        public GameMaster Get(Guid sessionId)
+        {
+            return _sessionsHolder[sessionId];
+        }
+
+        public bool IsKeyPresent(Guid sessionId)
+        {
+            return _sessionsHolder.ContainsKey(sessionId);
+        }
     }
 }
