@@ -23,7 +23,7 @@ namespace BoardGameApiModelTests
         [InlineData(18)]
         [InlineData(19)]
         [InlineData(20)]
-        public void Board_Model_PlayerType_Should_Return_Empty(int withSize)
+        public void Board_Model_WithSize_Should_Return_Empty(int withSize)
         {
             var model = new Board {WithSize = withSize};
             var result = _modelValidator.ValidateModel(model);
@@ -45,9 +45,65 @@ namespace BoardGameApiModelTests
         [InlineData(50, new [] {"Please enter valid board size from 2 to 20"})]
         [InlineData(100, new [] {"Please enter valid board size from 2 to 20"})]
         [InlineData(1000, new [] {"Please enter valid board size from 2 to 20"})]
-        public void Board_Model_PlayerType_Should_Return_Error(int withSize, string[] expectedResult)
+        public void Board_Model_WithSize_Should_Return_Error(int withSize, string[] expectedResult)
         {
             var model = new Board {WithSize = withSize};
+            var result = _modelValidator.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().Contain(expectedResult);
+        }
+        
+        [Theory]
+        [InlineData("W 1 1 2 2")]
+        [InlineData("W 3 4 4 4")]
+        [InlineData("W 2 2 3 2")]
+        [InlineData("W 3 3 3 2")]
+        [InlineData("W 25 25 25 26")]
+        [InlineData("W 255 255 255 256")]
+        [InlineData("W 2555 2555 2555 2556")]
+        public void Wall_Model_WallCoordinates_Should_Return_Empty(string wallCoordinates)
+        {
+            var model = new Wall {WallCoordinates = wallCoordinates};
+            var result = _modelValidator.ValidateModel(model);
+            var resultErrorMessage = result.Select(x => x.ErrorMessage);
+            resultErrorMessage.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData("W 25 25 25 27", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})] 
+        [InlineData("W 29 29 X 30", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 2 4", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 4 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 4 1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 4 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 6 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W1 1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 12 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 X 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 22 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 ! 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 2 aaa", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 aaa 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W zxc 1 2 1", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("1 1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("V 1 1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("X 1 1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 3 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1 1 2 3", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1X1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 3 4 4", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 3 4 4 4 4", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData(" W 3 4 4 4", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 3 4 4 4 ", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData(" W 3 4 4 4 ", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W1122", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W -1 -1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData(null, new [] {"The WallCoordinates field is required."})]
+        [InlineData("", new [] {"The WallCoordinates field is required."})]
+        [InlineData(" ", new [] {"The WallCoordinates field is required."})]
+        public void Wall_Model_WallCoordinates_Should_Return_Error(string wallCoordinates, string[] expectedResult)
+        {
+            var model = new Wall {WallCoordinates = wallCoordinates};
             var result = _modelValidator.ValidateModel(model);
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);

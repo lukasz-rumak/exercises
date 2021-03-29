@@ -1,6 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using BoardGameApi.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using BoardGameApi.Validators;
 
 namespace BoardGameApi.Models
 {

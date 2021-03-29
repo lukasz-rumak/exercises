@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BoardGameApi.DataAnnotations
+namespace BoardGameApi.Validators
 {
     public class MoveToAttribute : ValidationAttribute
     {

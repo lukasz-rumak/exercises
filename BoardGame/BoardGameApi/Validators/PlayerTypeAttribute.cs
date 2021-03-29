@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BoardGameApi.DataAnnotations
+namespace BoardGameApi.Validators
 {
     public class PlayerTypeAttribute : ValidationAttribute
     {
