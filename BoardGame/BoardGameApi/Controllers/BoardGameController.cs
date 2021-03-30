@@ -18,17 +18,17 @@ namespace BoardGameApi.Controllers
     {
         private readonly IGameHolder _gameHolder;
         private readonly IBoardBuilderHolder _boardBuilderHolder;
-        private readonly IPlayer _player;
+        private readonly IPlayer _playersHandler;
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
         private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
         private readonly IGameBoard _gameBoard;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer player, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
         {
             _gameHolder = gameHolder;
-            _player = player;
+            _playersHandler = playersHandler;
             _presentation = presentation;
             _validator = validator;
             _eventHandler = eventHandler;
@@ -41,7 +41,7 @@ namespace BoardGameApi.Controllers
         public ActionResult<GenericResponse> PostGameInit([FromBody] Board boardInit)
         {
             var sessionId = Guid.NewGuid();
-            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
+            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _playersHandler);
             _gameHolder.Add(sessionId, game);
             var board = new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>())
                 .WithSize(boardInit.WithSize);

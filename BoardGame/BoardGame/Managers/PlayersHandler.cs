@@ -3,11 +3,11 @@ using BoardGame.Interfaces;
 
 namespace BoardGame.Managers
 {
-    public class Player : IPlayer
+    public class PlayersHandler : IPlayer
     {
         private readonly List<IPiece> _players;
     
-        public Player()
+        public PlayersHandler()
         {
             _players = new List<IPiece>();
         }

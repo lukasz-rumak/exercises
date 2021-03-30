@@ -34,7 +34,7 @@ namespace BoardGameApi
             services.AddControllers();
             services.AddSingleton<IGameHolder, GameHolder>();
             services.AddSingleton<IBoardBuilderHolder, BoardBuilderHolder>();
-            services.AddTransient<IPlayer, Player>();
+            services.AddTransient<IPlayer, PlayersHandler>();
             services.AddTransient<IPresentation, ConsoleOutput>();
             services.AddTransient<IValidator, Validator>();
             services.AddTransient<IValidatorWall, Validator>();

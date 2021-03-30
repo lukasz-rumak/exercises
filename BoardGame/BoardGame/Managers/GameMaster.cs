@@ -13,7 +13,7 @@ namespace BoardGame.Managers
         private readonly IEventHandler _eventHandler;
         private readonly IValidator _validator;
         private IGameBoard _board;
-        private readonly IPlayer _player;
+        private readonly IPlayer _playersHandler;
         private readonly IPresentation _presentation;
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
@@ -29,7 +29,7 @@ namespace BoardGame.Managers
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEventHandler>();
             _validator = ObjectFactory.Get<IValidator>();
-            _player = ObjectFactory.Get<IPlayer>();
+            _playersHandler = ObjectFactory.Get<IPlayer>();
             _pieceFactory = new PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
@@ -58,30 +58,30 @@ namespace BoardGame.Managers
 
         public void CreatePlayers(IReadOnlyList<string> instructions)
         {
-            _player.CreatePlayers(_board, _pieceFactory, instructions);
+            _playersHandler.CreatePlayers(_board, _pieceFactory, instructions);
             _eventHandler.PublishEvent(EventType.PlayerAdded, "");
         }
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
-            if (_player.ReturnPlayersNumber() - 1 < playerId)
+            if (_playersHandler.ReturnPlayersNumber() - 1 < playerId)
             {
                 _eventHandler.PublishEvent(EventType.IncorrectPlayerId, $"The requested player id: {playerId}");
                 return;
             }
-            ExecuteValidation(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
-            ExecuteTheInstructions(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
+            ExecuteValidation(new List<IPiece>{_playersHandler.ReturnPlayerInfo(playerId)}, instructions);
+            ExecuteTheInstructions(new List<IPiece>{_playersHandler.ReturnPlayerInfo(playerId)}, instructions);
         }
         
         public void MovePlayers(IReadOnlyList<string> instructions)
         {
-            ExecuteValidation(_player.ReturnPlayersInfo(), instructions);
-            ExecuteTheInstructions(_player.ReturnPlayersInfo(), instructions);
+            ExecuteValidation(_playersHandler.ReturnPlayersInfo(), instructions);
+            ExecuteTheInstructions(_playersHandler.ReturnPlayersInfo(), instructions);
         }
 
         public IPiece GetPlayerInfo(int playerId)
         {
-            return _player.ReturnPlayerInfo(playerId);
+            return _playersHandler.ReturnPlayerInfo(playerId);
         }
 
         public EventLog GetLastEvent()
@@ -96,7 +96,7 @@ namespace BoardGame.Managers
 
         public string GenerateOutputApi()
         {
-            var output = _presentation.GenerateOutputApi(_board, _player.ReturnPlayersInfo());
+            var output = _presentation.GenerateOutputApi(_board, _playersHandler.ReturnPlayersInfo());
             if (!string.IsNullOrWhiteSpace(output))
                 _eventHandler.PublishEvent(EventType.GeneratedBoardOutput, "");
             return output;
@@ -134,7 +134,7 @@ namespace BoardGame.Managers
         
         private void CollectResult()
         {
-            var players = _player.ReturnPlayersInfo();
+            var players = _playersHandler.ReturnPlayersInfo();
             foreach (var player in players)
             {
                 _gameResult.Add(player.IsAlive
