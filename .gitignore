@@ -101,3 +101,5 @@ BoardGame/BoardGame/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAtt
 BoardGame/BoardGameApiModelTests/obj/Debug/netcoreapp3.1/BoardGameApiModelTests.csproj.CopyComplete
 BoardGame/BoardGameApiModelTests/obj/Debug/netcoreapp3.1/BoardGameApiModelTests.AssemblyInfo.cs
 BoardGame/BoardGameApiModelTests/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
+BoardGame/BoardGameApiModelTests/bin/Debug/netcoreapp3.1/BoardGame
+BoardGame/BoardGameApiModelTests/bin/Debug/netcoreapp3.1/BoardGameApi
