@@ -119,7 +119,7 @@ namespace BoardGameApi.Controllers
                 .Any(e => e == lastEvent.Type);
             return result
                 ? ReturnStatusCodeWithResponse(200, sessionId,
-                    $"Moved to {RunInTheGame(sessionId).GameStatus.PlayerPosition[movePlayer.PlayerId]}")
+                    $"Moved to {GetPlayerPosition(sessionId, movePlayer.PlayerId)}")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
         }
 
@@ -244,6 +244,12 @@ namespace BoardGameApi.Controllers
         private IBoardBuilder RunInTheBoardBuilder(Guid sessionId)
         {
             return _boardBuilderHolder.Get(sessionId);
+        }
+
+        private string GetPlayerPosition(Guid sessionId, int playerId)
+        {
+            var playerInfo = RunInTheGame(sessionId).GetPlayerInfo(playerId);
+            return $"{playerInfo.Position.X} {playerInfo.Position.Y} {playerInfo.Position.Direction}";
         }
     }
 }

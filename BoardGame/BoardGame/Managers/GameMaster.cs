@@ -9,7 +9,6 @@ namespace BoardGame.Managers
     public class GameMaster : IGame
     {
         public ObjectFactory.ObjectFactory ObjectFactory { get; set; }
-        public GameStatus GameStatus { get; set; }
 
         private readonly IEventHandler _eventHandler;
         private readonly IValidator _validator;
@@ -36,7 +35,6 @@ namespace BoardGame.Managers
             _pieceFactory.Register("K", new KnightAbstractFactory());
             _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
             _gameResult = new List<string>();
-            GameStatus = new GameStatus{ PlayerPosition = new Dictionary<int, string>() };
         }
 
         public void RunBoardBuilder(IGameBoard board)
@@ -73,13 +71,17 @@ namespace BoardGame.Managers
             }
             ExecuteValidation(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
             ExecuteTheInstructions(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
-            UpdateGameStatus(playerId);
         }
         
         public void MovePlayers(IReadOnlyList<string> instructions)
         {
             ExecuteValidation(_player.ReturnPlayersInfo(), instructions);
             ExecuteTheInstructions(_player.ReturnPlayersInfo(), instructions);
+        }
+
+        public IPiece GetPlayerInfo(int playerId)
+        {
+            return _player.ReturnPlayerInfo(playerId);
         }
 
         public EventLog GetLastEvent()
@@ -140,17 +142,6 @@ namespace BoardGame.Managers
                         .Append(" ").Append(player.Position.Direction).ToString()
                     : @"Instruction not clear. Exiting...");
             }
-        }
-        
-        private void UpdateGameStatus(int playerId)
-        {
-            var players = _player.ReturnPlayersInfo();
-            var position =
-                $"{players[playerId].Position.X} {players[playerId].Position.Y} {players[playerId].Position.Direction}";
-            if (GameStatus.PlayerPosition.ContainsKey(playerId))
-                GameStatus.PlayerPosition[playerId] = position;
-            else
-                GameStatus.PlayerPosition.Add(playerId, position);
         }
     }
 }
