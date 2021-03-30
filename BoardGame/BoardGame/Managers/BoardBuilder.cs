@@ -9,9 +9,9 @@ namespace BoardGame.Managers
     {
         private readonly IGameBoard _board;
         private readonly IValidatorWall _validator;
-        private readonly IEvent _eventHandler;
+        private readonly IEventHandler _eventHandler;
 
-        public BoardBuilder(IEvent eventHandler, IValidatorWall validatorWall)
+        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall)
         {
             _eventHandler = eventHandler;
             _validator = validatorWall;
@@ -21,7 +21,7 @@ namespace BoardGame.Managers
         public IBoardBuilder WithSize(int size)
         {
             _board.WithSize = size;
-            _eventHandler.Events[EventType.GameStarted]("");
+            _eventHandler.PublishEvent(EventType.GameStarted, "");
             return this;
         }
 
@@ -42,7 +42,7 @@ namespace BoardGame.Managers
             var validationResult = _validator.ValidateWallInputWithReason(instruction, boardSize);
             if (!validationResult.IsValid)
             {
-                _eventHandler.Events[EventType.WallCreationError]($"{validationResult.Reason}");
+                _eventHandler.PublishEvent(EventType.WallCreationError, $"{validationResult.Reason}");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace BoardGame.Managers
                 _board.CreateWallOnBoard(CreateWall(coordinates));
             }
 
-            _eventHandler.Events[EventType.WallCreationDone]("");
+            _eventHandler.PublishEvent(EventType.WallCreationDone, "");
         }
 
         private Wall CreateWall(string coordinates)

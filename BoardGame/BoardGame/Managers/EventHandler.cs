@@ -5,18 +5,23 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class EventHandler : IEvent
+    public class EventHandler : IEventHandler
     {
-        public IDictionary<EventType, Action<string>> Events { get; set; }
         public List<EventLog> EventsLog { get; set; }
-        
+
         private readonly IPresentation _presentation;
-                
+        private readonly IDictionary<EventType, Action<string>> _events;
+        
         public EventHandler(IPresentation presentation)
         {
             _presentation = presentation;
-            Events = CreateEvents();
+            _events = CreateEvents();
             EventsLog = new List<EventLog>();
+        }
+
+        public void PublishEvent(EventType eventType, string description)
+        {
+            _events[eventType](description);
         }
 
         private Dictionary<EventType, Action<string>> CreateEvents()

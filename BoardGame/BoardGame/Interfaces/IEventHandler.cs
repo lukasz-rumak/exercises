@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {
-    public interface IEvent
+    public interface IEventHandler
     {
-        IDictionary<EventType, Action<string>> Events { get; set; } 
         List<EventLog> EventsLog { get; set; }
+        void PublishEvent(EventType eventType, string description);
     }
 }

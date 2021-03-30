@@ -38,7 +38,7 @@ namespace BoardGameApi
             services.AddTransient<IPresentation, ConsoleOutput>();
             services.AddTransient<IValidator, Validator>();
             services.AddTransient<IValidatorWall, Validator>();
-            services.AddTransient<IEvent, EventHandler>();
+            services.AddTransient<IEventHandler, EventHandler>();
             services.AddTransient<IGameBoard, GameBoard>();
         }
 

@@ -11,7 +11,7 @@ namespace BoardGame.Managers
         public ObjectFactory.ObjectFactory ObjectFactory { get; set; }
         public GameStatus GameStatus { get; set; }
 
-        private readonly IEvent _eventHandler;
+        private readonly IEventHandler _eventHandler;
         private readonly IValidator _validator;
         private IGameBoard _board;
         private readonly IPlayer _player;
@@ -19,16 +19,16 @@ namespace BoardGame.Managers
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         
-        public GameMaster(IPresentation presentation, IEvent eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
+        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
             ObjectFactory.Register<IPresentation>(presentation);
-            ObjectFactory.Register<IEvent>(eventHandler);//(ObjectFactory.Get<IPresentation>()));
+            ObjectFactory.Register<IEventHandler>(eventHandler);//(ObjectFactory.Get<IPresentation>()));
             ObjectFactory.Register<IValidator>(validator);
             ObjectFactory.Register<IValidatorWall>(validatorWall);
             ObjectFactory.Register<IPlayer>(player);
             _presentation = ObjectFactory.Get<IPresentation>();
-            _eventHandler = ObjectFactory.Get<IEvent>();
+            _eventHandler = ObjectFactory.Get<IEventHandler>();
             _validator = ObjectFactory.Get<IValidator>();
             _player = ObjectFactory.Get<IPlayer>();
             _pieceFactory = new PieceFactory();
@@ -42,7 +42,7 @@ namespace BoardGame.Managers
         public void RunBoardBuilder(IGameBoard board)
         {
             _board = board;
-            _eventHandler.Events[EventType.BoardBuilt]("");
+            _eventHandler.PublishEvent(EventType.BoardBuilt, "");
         }
 
         public string[] PlayTheGame(string[] instructions)
@@ -61,14 +61,14 @@ namespace BoardGame.Managers
         public void CreatePlayers(IReadOnlyList<string> instructions)
         {
             _player.CreatePlayers(_board, _pieceFactory, instructions);
-            _eventHandler.Events[EventType.PlayerAdded]("");
+            _eventHandler.PublishEvent(EventType.PlayerAdded, "");
         }
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
             if (_player.ReturnPlayersNumber() - 1 < playerId)
             {
-                _eventHandler.Events[EventType.IncorrectPlayerId]($"The requested player id: {playerId}");
+                _eventHandler.PublishEvent(EventType.IncorrectPlayerId, $"The requested player id: {playerId}");
                 return;
             }
             ExecuteValidation(new List<IPiece>{_player.ReturnPlayerInfo(playerId)}, instructions);
@@ -96,7 +96,7 @@ namespace BoardGame.Managers
         {
             var output = _presentation.GenerateOutputApi(_board, _player.ReturnPlayersInfo());
             if (!string.IsNullOrWhiteSpace(output))
-                _eventHandler.Events[EventType.GeneratedBoardOutput]("");
+                _eventHandler.PublishEvent(EventType.GeneratedBoardOutput, "");
             return output;
         }
 

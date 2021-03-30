@@ -22,10 +22,10 @@ namespace BoardGameApi.Controllers
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
         private readonly IValidatorWall _validatorWall;
-        private readonly IEvent _eventHandler;
+        private readonly IEventHandler _eventHandler;
         private readonly IGameBoard _gameBoard;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer player, IPresentation presentation, IValidator validator, IEvent eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer player, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
         {
             _gameHolder = gameHolder;
             _player = player;
@@ -43,7 +43,7 @@ namespace BoardGameApi.Controllers
             var sessionId = Guid.NewGuid();
             var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _player);
             _gameHolder.Add(sessionId, game);
-            var board = new BoardBuilder(game.ObjectFactory.Get<IEvent>(), game.ObjectFactory.Get<IValidatorWall>())
+            var board = new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>())
                 .WithSize(boardInit.WithSize);
             _boardBuilderHolder.Add(sessionId, board);
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();

@@ -9,11 +9,11 @@ namespace BoardGame.Managers
     {
         public int WithSize { get; set; }
 
-        private readonly IEvent _eventHandler;
+        private readonly IEventHandler _eventHandler;
         private Field[,] _board;
         private readonly List<Wall> _walls;
 
-        public GameBoard(IEvent eventHandler)
+        public GameBoard(IEventHandler eventHandler)
         {
             _eventHandler = eventHandler;
             _walls = new List<Wall>();
@@ -78,7 +78,7 @@ namespace BoardGame.Managers
         {
             if (x < WithSize && y < WithSize && x >= 0 && y >= 0)
                 return true;
-            _eventHandler.Events[EventType.OutsideBoundaries]($"({x}, {y})");
+            _eventHandler.PublishEvent(EventType.OutsideBoundaries, $"({x}, {y})");
             return false;
         }
 
@@ -86,7 +86,7 @@ namespace BoardGame.Managers
         {
             if (!_board[x, y].IsTaken)
                 return true;
-            _eventHandler.Events[EventType.FieldTaken]($"Field taken: ({x}, {y})");
+            _eventHandler.PublishEvent(EventType.FieldTaken, $"Field taken: ({x}, {y})");
             return false;
         }
 
@@ -98,7 +98,7 @@ namespace BoardGame.Managers
                 wall.WallPositionField1.Item2 == piece.Position.Y &&
                 wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY))
                 return true;
-            _eventHandler.Events[EventType.WallOnTheRoute](
+            _eventHandler.PublishEvent(EventType.WallOnTheRoute,
                 $"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX}, {newY})");
             return false;
         }
@@ -106,9 +106,10 @@ namespace BoardGame.Managers
         private void MarkFieldAsTaken(IPiece piece)
         {
             _board[piece.Position.X, piece.Position.Y].TakenBy = piece;
-            _eventHandler.Events[EventType.PieceMoved]($"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
+            _eventHandler.PublishEvent(EventType.PieceMoved,
+                $"piece moved. PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, new position: ({piece.Position.X},{piece.Position.Y})");
         }
-        
+
         private void MarkFieldAsNotTaken(int x, int y)
         {
             _board[x, y].TakenBy = null;
