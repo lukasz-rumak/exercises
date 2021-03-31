@@ -26,10 +26,17 @@ namespace BoardGameApiTests
         }
         
         [Theory]
-        [ClassData(typeof(PostGameInitTestData))]
-        public async Task Post_GameInit_Should_Return_SessionId_And_Response(Board requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
+        [ClassData(typeof(PostGameInitForOk))]
+        public async Task Post_GameInit_Should_Return_Ok(Board requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
         {
-            await _testHelper.TestGameInitEndpointAndReturnSessionId(_client, requestBody, statusCodeExpected, responseExpected);
+            await _testHelper.TestGameInitEndpointForOk(_client, requestBody, statusCodeExpected, responseExpected);
+        }
+        
+        [Theory]
+        [ClassData(typeof(PostGameInitForBadRequest))]
+        public async Task Post_GameInit_Should_Return_Bad_Request(Board requestBody, HttpStatusCode statusCodeExpected, string[] responseExpected)
+        {
+            await _testHelper.TestGameInitEndpointForBadRequest(_client, requestBody, statusCodeExpected, responseExpected);
         }
 
         [Theory]
@@ -39,7 +46,7 @@ namespace BoardGameApiTests
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             if (sessionId == _fakeValidGuid)
                 sessionId = gameInitSetup.SessionId;
-            await _testHelper.TestPutEndpoint(_client, "newWall", requestBody, sessionId, statusCodeExpected, responseExpected);
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall", requestBody, sessionId, statusCodeExpected, responseExpected);
         }
 
         [Theory]
@@ -49,30 +56,53 @@ namespace BoardGameApiTests
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             if (sessionId == _fakeValidGuid)
                 sessionId = gameInitSetup.SessionId;
-            await _testHelper.TestPostEndpoint(_client, "buildBoard", new object(), sessionId, statusCodeExpected, responseExpected);
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), sessionId, statusCodeExpected, responseExpected);
         }
         
         [Theory]
-        [ClassData(typeof(PostAddPlayerTestData))]
-        public async Task Post_AddPlayer_Should_Return_SessionId_And_Response(Guid sessionId, AddPlayer requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
+        [ClassData(typeof(PostAddPlayerOkAndNotFound))]
+        public async Task Post_AddPlayer_Should_Return_Ok_Or_Not_Found(Guid sessionId, AddPlayer requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             if (sessionId == _fakeValidGuid)
                 sessionId = gameInitSetup.SessionId;
-            await _testHelper.TestPostEndpoint(_client, "addPlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
         }
         
         [Theory]
-        [ClassData(typeof(PutMovePlayerTestData))]
-        public async Task Put_MovePlayer_Should_Return_SessionId_And_Response(Guid sessionId, MovePlayer requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
+        [ClassData(typeof(PostAddPlayerBadRequest))]
+        public async Task Post_AddPlayer_Should_Return_Bad_Request<T>(Guid sessionId, AddPlayer requestBody, HttpStatusCode statusCodeExpected, T responseExpected) where T : class
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            if (sessionId == _fakeValidGuid)
+                sessionId = gameInitSetup.SessionId;
+            await _testHelper.TestPostEndpointForBadRequest(_client, "addPlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
+        }
+        
+        [Theory]
+        [ClassData(typeof(PutMovePlayerForOkAndNotFound))]
+        public async Task Put_MovePlayer_Should_Return_Ok_Or_Not_Found(Guid sessionId, MovePlayer requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
             await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
             await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
             if (sessionId == _fakeValidGuid)
                 sessionId = gameInitSetup.SessionId;
-            await _testHelper.TestPutEndpoint(_client, "movePlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
+        }
+        
+        [Theory]
+        [ClassData(typeof(PutMovePlayerForBadRequest))]
+        public async Task Put_MovePlayer_Should_Return_Bad_Request<T>(Guid sessionId, MovePlayer requestBody, HttpStatusCode statusCodeExpected, T responseExpected) where T : class
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            await _testsSetup.BuildAddPlayerSetup(_client, gameInitSetup.SessionId);
+            if (sessionId == _fakeValidGuid)
+                sessionId = gameInitSetup.SessionId;
+            await _testHelper.TestPutEndpointForBadRequest(_client, "movePlayer", requestBody, sessionId, statusCodeExpected, responseExpected);
         }
         
         [Theory]
