@@ -6,7 +6,7 @@ using BoardGameApi.Models;
 
 namespace BoardGameApiTests.TestData
 {
-    public class PutMovePlayerForOkAndNotFound : IEnumerable<object[]>
+    public class PutMovePlayerOkAndNotFound : IEnumerable<object[]>
     {
         private readonly List<object[]> _data = new List<object[]>
         {

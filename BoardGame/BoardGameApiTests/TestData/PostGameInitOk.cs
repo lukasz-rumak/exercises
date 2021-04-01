@@ -5,7 +5,7 @@ using BoardGameApi.Models;
 
 namespace BoardGameApiTests.TestData
 {
-    public class PostGameInitForOk : IEnumerable<object[]>
+    public class PostGameInitOk : IEnumerable<object[]>
     {
         private readonly List<object[]> _data = new List<object[]>
         {

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using BoardGameApi.Models;
+using BoardGameApiTests.Models;
 using FluentAssertions;
 using Newtonsoft.Json;
 
@@ -23,15 +24,13 @@ namespace BoardGameApiTests.Helpers
             return !string.IsNullOrWhiteSpace(responseContent.ToString()) ? responseContent.SessionId : Guid.NewGuid();
         }
         
-        public async Task TestGameInitEndpointForBadRequest(HttpClient client, Board requestBody, HttpStatusCode statusCodeExpected, string[] responseExpected)
+        public async Task TestGameInitEndpointForBadRequest<T1, T2>(HttpClient client, T1 requestBody, HttpStatusCode statusCodeExpected, T2 responseExpected) where T1 : class where T2 : class
         {
-            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8,
-                "application/json");
-            var response = await client.PostAsync("/boardgame/gameInit", stringContent);
-            var responseContent = await GetResponseContent<BadRequestResponse<BadRequestWithSize>>(response);
-            var responseExpectedObject = new BadRequestWithSize { WithSize = responseExpected};
+            var stringContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync($"/boardgame/gameInit", stringContent);
+            var responseContent = await GetResponseContent<BadRequestResponse<T2>>(response);
             AssertStatusCode(response, statusCodeExpected);
-            AssertBadRequestResponseContent(responseContent, responseExpectedObject);
+            AssertBadRequestResponseContent(responseContent, responseExpected);
         }
 
         public async Task TestPostEndpointForOkAndNotFound<T>(HttpClient client, string endpointName, T requestBody, Guid sessionId,

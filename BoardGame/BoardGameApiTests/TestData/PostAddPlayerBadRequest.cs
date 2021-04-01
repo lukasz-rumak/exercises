@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using BoardGameApi.Models;
+using BoardGameApiTests.Models;
 
 namespace BoardGameApiTests.TestData
 {
