@@ -60,7 +60,7 @@ namespace BoardGameApiTests
         }
 
         [Theory]
-        [ClassData(typeof(PostBuildBoardTestData))]
+        [ClassData(typeof(PostBuildBoardOkAndNotFound))]
         public async Task Post_BuildBoard_Should_Return_SessionId_And_Response(Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
@@ -116,7 +116,7 @@ namespace BoardGameApiTests
         }
         
         [Theory]
-        [ClassData(typeof(GetEventsTestData))]
+        [ClassData(typeof(GetEventsOkAndNotFound))]
         public async Task Get_GetEvents_Should_Return_SessionId_And_Response(Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
@@ -128,7 +128,7 @@ namespace BoardGameApiTests
         }
         
         [Theory]
-        [ClassData(typeof(GetLastEventTestData))]
+        [ClassData(typeof(GetLastEventOkAndNotFound))]
         public async Task Get_GetLastEvent_Should_Return_SessionId_And_Response(Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);
@@ -140,7 +140,7 @@ namespace BoardGameApiTests
         }
         
         [Theory]
-        [ClassData(typeof(GetSeeBoardTestData))]
+        [ClassData(typeof(GetSeeBoardOkAndNotFound))]
         public async Task Get_SeeBoard_Should_Return_Board(Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
         {
             var gameInitSetup = await _testsSetup.GameInitSetup(_client);

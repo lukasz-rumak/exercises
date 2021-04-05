@@ -6,7 +6,7 @@ using BoardGameApi.Models;
 
 namespace BoardGameApiTests.TestData
 {
-    public class GetLastEventTestData : IEnumerable<object[]>
+    public class GetLastEventOkAndNotFound : IEnumerable<object[]>
     {
         private readonly List<object[]> _data = new List<object[]>
         {
