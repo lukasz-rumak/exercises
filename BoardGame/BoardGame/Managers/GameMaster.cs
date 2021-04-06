@@ -12,12 +12,14 @@ namespace BoardGame.Managers
 
         private readonly IEventHandler _eventHandler;
         private readonly IValidator _validator;
+        private IBoardBuilder _boardBuilder;
         private IGameBoard _board;
         private readonly IPlayer _playersHandler;
         private readonly IPresentation _presentation;
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
-        
+        private bool _isBoardBuilt;
+
         public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
@@ -35,12 +37,36 @@ namespace BoardGame.Managers
             _pieceFactory.Register("K", new KnightAbstractFactory());
             _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
             _gameResult = new List<string>();
+            _isBoardBuilt = false;
         }
 
         public void RunBoardBuilder(IGameBoard board)
         {
             _board = board;
+            _isBoardBuilt = true;
             _eventHandler.PublishEvent(EventType.BoardBuilt, "");
+        }
+
+        public void StartBoardBuilder(IBoardBuilder board)
+        {
+            _boardBuilder = board;
+        }
+
+        public void AddWallToBoard(string wallCoordinates)
+        {
+            _boardBuilder.AddWall(wallCoordinates);
+        }
+        
+        public void FinaliseBoardBuilder()
+        {
+            _board = _boardBuilder.BuildBoard();
+            _isBoardBuilt = true;
+            _eventHandler.PublishEvent(EventType.BoardBuilt, "");
+        }
+
+        public bool IsBoardBuilt()
+        {
+            return _isBoardBuilt;
         }
 
         public string[] PlayTheGame(string[] instructions)

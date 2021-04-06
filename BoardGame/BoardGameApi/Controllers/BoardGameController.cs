@@ -17,23 +17,19 @@ namespace BoardGameApi.Controllers
     public class BoardGameController : ControllerBase
     {
         private readonly IGameHolder _gameHolder;
-        private readonly IBoardBuilderHolder _boardBuilderHolder;
         private readonly IPlayer _playersHandler;
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
         private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
-        private readonly IGameBoard _gameBoard;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IGameBoard gameBoard, IBoardBuilderHolder boardBuilderHolder, IValidatorWall validatorWall) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall) 
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;
             _presentation = presentation;
             _validator = validator;
             _eventHandler = eventHandler;
-            _gameBoard = gameBoard;
-            _boardBuilderHolder = boardBuilderHolder;
             _validatorWall = validatorWall;
         }
 
@@ -43,9 +39,8 @@ namespace BoardGameApi.Controllers
             var sessionId = Guid.NewGuid();
             var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _playersHandler);
             _gameHolder.Add(sessionId, game);
-            var board = new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>())
-                .WithSize(boardInit.WithSize);
-            _boardBuilderHolder.Add(sessionId, board);
+            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>())
+                .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
                 ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
@@ -56,9 +51,9 @@ namespace BoardGameApi.Controllers
         [Route("newWall/{sessionId}")]
         public ActionResult<GenericResponse> PutNewWall(Guid sessionId, [FromBody] Wall newWall)
         {
-            if (_boardBuilderHolder.IsKeyPresent(sessionId))
+            if (IsSessionIdValid(sessionId) && !IsBoardBuilt(sessionId))
             {
-                RunInTheBoardBuilder(sessionId).AddWall(newWall.WallCoordinates);
+                RunInTheGame(sessionId).AddWallToBoard(newWall.WallCoordinates);
                 var lastEvent = RunInTheGame(sessionId).GetLastEvent();
                 return lastEvent.Type == EventType.WallCreationDone
                     ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
@@ -72,13 +67,11 @@ namespace BoardGameApi.Controllers
         [Route("buildBoard/{sessionId}")]
         public ActionResult<GenericResponse> PostBuildBoard(Guid sessionId)
         {
-            if (_boardBuilderHolder.IsKeyPresent(sessionId))
+            if (IsSessionIdValid(sessionId) && !IsBoardBuilt(sessionId))
             {
-                var board = RunInTheBoardBuilder(sessionId).BuildBoard();
-                RunInTheGame(sessionId).RunBoardBuilder(board);
-                if (GetLastEventType(sessionId) == EventType.BoardBuilt)
+                RunInTheGame(sessionId).FinaliseBoardBuilder();
+                if (IsBoardBuilt(sessionId) && GetLastEventType(sessionId) == EventType.BoardBuilt)
                 {
-                    _boardBuilderHolder.Remove(sessionId);
                     return ReturnStatusCodeWithResponse(201, sessionId, "Created");
                 }
 
@@ -174,7 +167,7 @@ namespace BoardGameApi.Controllers
         
         private bool IsBoardBuilt(Guid sessionId)
         {
-            return RunInTheGame(sessionId).GetAllEvents().Any(e => e.Type == EventType.BoardBuilt);
+            return RunInTheGame(sessionId).IsBoardBuilt();
         }
 
         private ObjectResult ReturnStatusCodeWithResponse(int statusCode, Guid sessionId, string response)
@@ -240,12 +233,7 @@ namespace BoardGameApi.Controllers
         {
             return _gameHolder.Get(sessionId);
         }
-
-        private IBoardBuilder RunInTheBoardBuilder(Guid sessionId)
-        {
-            return _boardBuilderHolder.Get(sessionId);
-        }
-
+        
         private string GetPlayerPosition(Guid sessionId, int playerId)
         {
             var playerInfo = RunInTheGame(sessionId).GetPlayerInfo(playerId);

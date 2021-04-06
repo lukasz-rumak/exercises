@@ -8,7 +8,11 @@ namespace BoardGame.Interfaces
     public interface IGame
     {
         ObjectFactory.ObjectFactory ObjectFactory { get; set; }
-        void RunBoardBuilder(IGameBoard gameBoard);
+        void RunBoardBuilder(IGameBoard board);
+        void StartBoardBuilder(IBoardBuilder board);
+        void AddWallToBoard(string wallCoordinates);
+        void FinaliseBoardBuilder();
+        bool IsBoardBuilt();
         string[] PlayTheGame(string[] instructions);
         void CreatePlayers(IReadOnlyList<string> instructions);
         void MovePlayer(IReadOnlyList<string> instructions, int playerId);
