@@ -111,8 +111,7 @@ namespace BoardGameApi.Controllers
                     {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
                 .Any(e => e == lastEvent.Type);
             return result
-                ? ReturnStatusCodeWithResponse(200, sessionId,
-                    $"Moved to {GetPlayerPosition(sessionId, movePlayer.PlayerId)}")
+                ? ReturnStatusCodeWithResponse(200, sessionId, lastEvent.Description)
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
         }
 

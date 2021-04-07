@@ -12,11 +12,11 @@ namespace BoardGameApiTests.TestData
         private readonly List<object[]> _data = new List<object[]>
         {
             new object[]
-                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 10, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Event: incorrect player id! The requested player id: 10"}}},
+                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 10, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Incorrect player id! The requested player id: 10"}}},
             new object[]
-                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 100, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Event: incorrect player id! The requested player id: 100"}}},
+                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 100, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Incorrect player id! The requested player id: 100"}}},
             new object[]
-                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 987654, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Event: incorrect player id! The requested player id: 987654"}}},
+                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 987654, MoveTo = "MMMMMMMM"}, HttpStatusCode.BadRequest, new BadRequestErrors { Errors = new [] {"Incorrect player id! The requested player id: 987654"}}},
             new object[]
                 {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 0, MoveTo = "MMMXRXRXRM"}, HttpStatusCode.BadRequest, new BadRequestMoveTo { MoveTo = new [] {"Only following commands are available: M - move, L - turn left, R - turn right"}}},
             new object[]

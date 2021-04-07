@@ -36,9 +36,19 @@ namespace BoardGameApiTests
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", new AddPlayer
                 {PlayerType = "P"}, sessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
-                {PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.OK, "Moved to 0 3 North");
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Piece moved. PieceId: 0, PieceType: Pawn, new position: (0,1)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Piece moved. PieceId: 0, PieceType: Pawn, new position: (0,2)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Piece moved. PieceId: 0, PieceType: Pawn, new position: (0,3)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.OK, "Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", sessionId, HttpStatusCode.OK,
-                "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+                "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
                 "Player(s): 1|-----|0----|-----|-----|-----");
         }
@@ -69,13 +79,17 @@ namespace BoardGameApiTests
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", new AddPlayer
                 {PlayerType = "P"}, secondGameSessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
-                {PlayerId = 0, MoveTo = "MMMMMMMM"}, firstGameSessionId, HttpStatusCode.OK, "Moved to 0 3 North");
+                {PlayerId = 0, MoveTo = "MMM"}, firstGameSessionId, HttpStatusCode.OK, "Piece moved. PieceId: 0, PieceType: Pawn, new position: (0,3)");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
-                {PlayerId = 0, MoveTo = "MMMMMMMM"}, secondGameSessionId, HttpStatusCode.OK, "Moved to 0 1 North");
+                {PlayerId = 0, MoveTo = "MMM"}, firstGameSessionId, HttpStatusCode.OK, "Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, secondGameSessionId, HttpStatusCode.OK, "Piece moved. PieceId: 0, PieceType: Pawn, new position: (0,1)");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "MMM"}, secondGameSessionId, HttpStatusCode.OK, "Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", firstGameSessionId, HttpStatusCode.OK,
-                "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
+                "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", secondGameSessionId, HttpStatusCode.OK,
-                "WallOnTheRoute; Event: move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
+                "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", firstGameSessionId,
                 HttpStatusCode.OK, "Player(s): 1|-----|0----|-----|-----|-----");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", secondGameSessionId, HttpStatusCode.OK,

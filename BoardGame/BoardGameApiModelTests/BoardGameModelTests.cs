@@ -98,6 +98,7 @@ namespace BoardGameApiModelTests
         [InlineData(" W 3 4 4 4 ", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
         [InlineData("W1122", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
         [InlineData("W -1 -1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
+        [InlineData("W 1  1 2 2", new [] {"Please enter valid wall coordinates format. For example: W 1 1 2 1"})]
         [InlineData(null, new [] {"The WallCoordinates field is required."})]
         [InlineData("", new [] {"The WallCoordinates field is required."})]
         [InlineData(" ", new [] {"The WallCoordinates field is required."})]
