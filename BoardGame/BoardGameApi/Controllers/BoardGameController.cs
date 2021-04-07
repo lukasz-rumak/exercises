@@ -43,7 +43,7 @@ namespace BoardGameApi.Controllers
                 .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted
-                ? ReturnStatusCodeWithResponse(200, sessionId, "The game started")
+                ? ReturnStatusCodeWithResponse(200, sessionId, "The game has started")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"The game did not start. Please check request"}});
         }
 
@@ -51,7 +51,7 @@ namespace BoardGameApi.Controllers
         [Route("newWall/{sessionId}")]
         public ActionResult<GenericResponse> PutNewWall(Guid sessionId, [FromBody] Wall newWall)
         {
-            if (IsSessionIdValid(sessionId) && !IsBoardBuilt(sessionId))
+            if (IsSessionIdValid(sessionId) && !IsGameComplete(sessionId) && !IsBoardBuilt(sessionId))
             {
                 RunInTheGame(sessionId).AddWallToBoard(newWall.WallCoordinates);
                 var lastEvent = RunInTheGame(sessionId).GetLastEvent();
@@ -67,7 +67,7 @@ namespace BoardGameApi.Controllers
         [Route("buildBoard/{sessionId}")]
         public ActionResult<GenericResponse> PostBuildBoard(Guid sessionId)
         {
-            if (IsSessionIdValid(sessionId) && !IsBoardBuilt(sessionId))
+            if (IsSessionIdValid(sessionId) && !IsGameComplete(sessionId) && !IsBoardBuilt(sessionId))
             {
                 RunInTheGame(sessionId).FinaliseBoardBuilder();
                 if (IsBoardBuilt(sessionId) && GetLastEventType(sessionId) == EventType.BoardBuilt)
@@ -87,6 +87,8 @@ namespace BoardGameApi.Controllers
         {
             if (!IsSessionIdValid(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
+            if (IsGameComplete(sessionId))
+                return ReturnNotFoundWithResponseTheGameEnded(sessionId);
             if (!IsBoardBuilt(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
             
@@ -102,6 +104,8 @@ namespace BoardGameApi.Controllers
         {
             if (!IsSessionIdValid(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
+            if (IsGameComplete(sessionId))
+                return ReturnNotFoundWithResponseTheGameEnded(sessionId);
             if (!IsBoardBuilt(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
 
@@ -158,10 +162,30 @@ namespace BoardGameApi.Controllers
                 ? ReturnStatusCodeWithResponse(200, sessionId, output)
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"Board output cannot be generated"}});
         }
+        
+        [HttpPost]
+        [Route("endGame/{sessionId}")]
+        public ActionResult PostEndGame(Guid sessionId)
+        {
+            if (!IsSessionIdValid(sessionId))
+                return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
+            if (IsGameComplete(sessionId))
+                return ReturnNotFoundWithResponseTheGameEnded(sessionId);
 
+            RunInTheGame(sessionId).MarkGameAsComplete();
+            return RunInTheGame(sessionId).IsGameComplete()
+                ? ReturnStatusCodeWithResponse(200, sessionId, "The game has been marked as complete")
+                : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"The attempt to mark the game as complete has failed"}});
+        }
+        
         private bool IsSessionIdValid(Guid sessionId)
         {
             return _gameHolder.IsKeyPresent(sessionId);
+        }
+
+        private bool IsGameComplete(Guid sessionId)
+        {
+            return RunInTheGame(sessionId).IsGameComplete();
         }
         
         private bool IsBoardBuilt(Guid sessionId)
@@ -196,6 +220,15 @@ namespace BoardGameApi.Controllers
             {
                 SessionId = sessionId,
                 Response = "The provided sessionId is invalid"
+            });
+        }
+        
+        private ObjectResult ReturnNotFoundWithResponseTheGameEnded(Guid sessionId)
+        {
+            return StatusCode(404, new GenericResponse
+            {
+                SessionId = sessionId,
+                Response = "The provided sessionId exists but the game has ended"
             });
         }
         

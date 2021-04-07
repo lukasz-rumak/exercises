@@ -150,5 +150,16 @@ namespace BoardGameApiTests
                 sessionId = gameInitSetup.SessionId;
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, statusCodeExpected, responseExpected);
         }
+        
+        [Theory]
+        [ClassData(typeof(PostEndGameOkAndNotFound))]
+        public async Task Post_EndGame_Should_Return_SessionId_And_Response(Guid sessionId, HttpStatusCode statusCodeExpected, string responseExpected)
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            await _testsSetup.BuildBoardSetup(_client, gameInitSetup.SessionId);
+            if (sessionId == _fakeValidGuid)
+                sessionId = gameInitSetup.SessionId;
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, statusCodeExpected, responseExpected);
+        }
     }
 }

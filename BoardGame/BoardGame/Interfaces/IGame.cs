@@ -21,5 +21,7 @@ namespace BoardGame.Interfaces
         EventLog GetLastEvent();
         List<EventLog> GetAllEvents();
         string GenerateOutputApi();
+        bool IsGameComplete();
+        void MarkGameAsComplete();
     }
 }

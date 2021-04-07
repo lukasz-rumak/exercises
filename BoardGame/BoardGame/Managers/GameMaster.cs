@@ -19,6 +19,7 @@ namespace BoardGame.Managers
         private readonly PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         private bool _isBoardBuilt;
+        private bool _isGameComplete;
 
         public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
         {
@@ -38,6 +39,7 @@ namespace BoardGame.Managers
             _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
             _gameResult = new List<string>();
             _isBoardBuilt = false;
+            _isGameComplete = false;
         }
 
         public void RunBoardBuilder(IGameBoard board)
@@ -126,6 +128,16 @@ namespace BoardGame.Managers
             if (!string.IsNullOrWhiteSpace(output))
                 _eventHandler.PublishEvent(EventType.GeneratedBoardOutput, "");
             return output;
+        }
+
+        public bool IsGameComplete()
+        {
+            return _isGameComplete;
+        }
+
+        public void MarkGameAsComplete()
+        {
+            _isGameComplete = true;
         }
 
         private void ExecuteValidation(IReadOnlyList<IPiece> players, IReadOnlyList<string> instructions)

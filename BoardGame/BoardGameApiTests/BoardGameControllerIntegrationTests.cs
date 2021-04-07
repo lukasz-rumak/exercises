@@ -24,7 +24,7 @@ namespace BoardGameApiTests
         {
             var sessionId = await _testHelper.TestGameInitEndpointForOk(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "The game started");
+                HttpStatusCode.OK, "The game has started");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall",
                 new Wall {WallCoordinates = "W 1 1 2 2"}, sessionId, HttpStatusCode.Created,
                 "Created");
@@ -51,6 +51,8 @@ namespace BoardGameApiTests
                 "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
                 "Player(s): 1|-----|0----|-----|-----|-----");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, HttpStatusCode.OK,
+                "The game has been marked as complete");
         }
         
         [Fact]
@@ -58,10 +60,10 @@ namespace BoardGameApiTests
         {
             var firstGameSessionId = await _testHelper.TestGameInitEndpointForOk(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "The game started");
+                HttpStatusCode.OK, "The game has started");
             var secondGameSessionId = await _testHelper.TestGameInitEndpointForOk(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "The game started");
+                HttpStatusCode.OK, "The game has started");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall",
                 new Wall {WallCoordinates = "W 1 1 2 2"}, firstGameSessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall",
@@ -94,6 +96,10 @@ namespace BoardGameApiTests
                 HttpStatusCode.OK, "Player(s): 1|-----|0----|-----|-----|-----");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", secondGameSessionId, HttpStatusCode.OK,
                 "Player(s): 1|-----|-----|-----|0----|-----");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), firstGameSessionId, HttpStatusCode.OK,
+                "The game has been marked as complete");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), secondGameSessionId, HttpStatusCode.OK,
+                "The game has been marked as complete");
         }
 
         [Fact]
@@ -101,13 +107,38 @@ namespace BoardGameApiTests
         {
             var sessionId = await _testHelper.TestGameInitEndpointForOk(_client,
                 new Board {WithSize = 5},
-                HttpStatusCode.OK, "The game started");
+                HttpStatusCode.OK, "The game has started");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", new AddPlayer
                     {PlayerType = "P"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but is in invalid state");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
                     {PlayerId = 0, MoveTo = "MMMMMMMM"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but is in invalid state");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId,
                 HttpStatusCode.NotFound, "The provided sessionId exists but is in invalid state");
+        }
+        
+        [Fact]
+        public async Task Test_Game_Ended_Cases()
+        {
+            var sessionId = await _testHelper.TestGameInitEndpointForOk(_client,
+                new Board {WithSize = 5},
+                HttpStatusCode.OK, "The game has started");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, HttpStatusCode.OK,
+                "The game has been marked as complete");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall",
+                new Wall {WallCoordinates = "W 1 1 2 2"}, sessionId, HttpStatusCode.NotFound,
+                "The provided sessionId is invalid");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), sessionId,
+                HttpStatusCode.NotFound, "The provided sessionId is invalid");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", new AddPlayer
+                {PlayerType = "P"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but the game has ended");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
+                {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but the game has ended");
+            await _testHelper.TestGetEndpoint(_client, "getLastEvent", sessionId, HttpStatusCode.OK,
+                "GameStarted");
+            await _testHelper.TestGetEndpoint(_client, "getEvents", sessionId, HttpStatusCode.OK,
+                "[0] GameStarted ");
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.NotFound,
+                "The provided sessionId exists but is in invalid state");
         }
     }
 }
