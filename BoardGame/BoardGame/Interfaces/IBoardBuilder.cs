@@ -4,6 +4,7 @@ namespace BoardGame.Interfaces
     {
         IBoardBuilder WithSize(int size);
         IBoardBuilder AddWall(string instruction);
+        IBoardBuilder AddBerry(string instruction);
         IGameBoard BuildBoard();
     }
 }

@@ -76,6 +76,10 @@ namespace BoardGame.Managers
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.WallCreationError] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
+                [EventType.BerryCreationDone] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.BerryCreationError] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
                 [EventType.OutsideBoundaries] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.FieldTaken] = eventMsg =>

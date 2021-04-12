@@ -1,19 +1,22 @@
-﻿using BoardGame.Interfaces;
+using BoardGame.Interfaces;
 using BoardGame.Managers;
+using BoardGame.Models;
 using Xunit;
 
 namespace BoardGameTests
 {
-    public class BoardGame5x5SizeWithWallsTests
+    public class BoardGame5x5SizeWithWallsAndBerriesTests
     {
         private readonly IGame _game;
 
-        public BoardGame5x5SizeWithWallsTests()
+        public BoardGame5x5SizeWithWallsAndBerriesTests()
         {
             _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(), new Validator(), new Validator(), new PlayersHandler());
             _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(), _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>()).WithSize(5)
                     .AddWall("W 0 0 1 1").AddWall("W 3 3 4 4").AddWall("W 2 2 3 3")
-                    .AddWall("W 1 1 1 2").AddWall("W 0 3 0 4").AddWall("W 3 4 4 4").BuildBoard());
+                    .AddWall("W 1 1 1 2").AddWall("W 0 3 0 4").AddWall("W 3 4 4 4")
+                    .AddBerry("B 1 1").AddBerry("B 1 2").AddBerry("B 2 1").AddBerry("B 0 0")
+                    .BuildBoard());
         }
 
         [Theory]

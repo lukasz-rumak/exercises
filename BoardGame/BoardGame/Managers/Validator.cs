@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class Validator : IValidator, IValidatorWall
+    public class Validator : IValidator, IValidatorWall, IValidatorBerry
     {
         public List<string> AllowedPieceTypes { get; set; }
 
@@ -33,7 +34,7 @@ namespace BoardGame.Managers
                 return new ValidationResult {IsValid = false, Reason = "Input wall position should be integers"};
             if (!ValidateWallAgainstPositionDifference(inputConverted)) 
                 return new ValidationResult {IsValid = false, Reason = "Input wall position difference should be 0 or 1"};
-            if (!ValidateWallAgainstBoardSize(inputConverted, boardSize)) 
+            if (!ValidateAgainstBoardSize(inputConverted, boardSize)) 
                 return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
@@ -65,9 +66,39 @@ namespace BoardGame.Managers
             return true;
         }
 
-        private bool ValidateWallAgainstBoardSize(IReadOnlyList<int> input, int boardSize)
+        private bool ValidateAgainstBoardSize(IReadOnlyList<int> input, int boardSize)
         {
             return input.All(t => t >= 0 && t < boardSize);
+        }
+        
+        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
+            if (!input.StartsWith('B'))
+                return new ValidationResult {IsValid = false, Reason = "Input should start with 'B'"};
+            if (!ValidateBerryAgainstSyntax(input))
+                return new ValidationResult {IsValid = false, Reason = "Input should have the following syntax: 'B 1 1'"};
+            if (!ValidateAgainstBoardSize(CreateBerryIntegerList(input), boardSize)) 
+                return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
+
+            return new ValidationResult {IsValid = true, Reason = ""};
+        }
+
+        private bool ValidateBerryAgainstSyntax(string input)
+        {
+            var regex = new Regex(@"^B \d* \d*$");
+            return regex.IsMatch(input ?? string.Empty);
+        }
+
+        private List<int> CreateBerryIntegerList(string input)
+        {
+            var list = new List<int>();
+            var values = input.Split('B')[1].Split(' ').Skip(1);
+            foreach (var v in values)
+                if (int.TryParse(v, out int result))
+                    list.Add(result);
+            return list;
         }
         
         private bool IsPieceType(char c)

@@ -12,11 +12,13 @@ namespace BoardGame.Managers
         private readonly IEventHandler _eventHandler;
         private Field[,] _board;
         private readonly List<Wall> _walls;
+        private readonly List<Berry> _berries;
 
         public GameBoard(IEventHandler eventHandler)
         {
             _eventHandler = eventHandler;
             _walls = new List<Wall>();
+            _berries = new List<Berry>();
         }
 
         public void GenerateBoard(int size)
@@ -31,6 +33,11 @@ namespace BoardGame.Managers
         {
             _walls.Add(wallToAdd);
             _walls.Add(wallToAdd.ReversedWall());
+        }
+
+        public void CreateBerryOnBoard(Berry berryToAdd)
+        {
+            _berries.Add(berryToAdd);
         }
 
         public bool IsFieldTaken(int x, int y)

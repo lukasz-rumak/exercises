@@ -21,13 +21,14 @@ namespace BoardGame.Managers
         private bool _isBoardBuilt;
         private bool _isGameComplete;
 
-        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IPlayer player)
+        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
             ObjectFactory.Register<IPresentation>(presentation);
             ObjectFactory.Register<IEventHandler>(eventHandler);//(ObjectFactory.Get<IPresentation>()));
             ObjectFactory.Register<IValidator>(validator);
             ObjectFactory.Register<IValidatorWall>(validatorWall);
+            ObjectFactory.Register<IValidatorBerry>(validatorBerry);
             ObjectFactory.Register<IPlayer>(player);
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEventHandler>();

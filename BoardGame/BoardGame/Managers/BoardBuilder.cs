@@ -8,13 +8,15 @@ namespace BoardGame.Managers
     public class BoardBuilder : IBoardBuilder
     {
         private readonly IGameBoard _board;
-        private readonly IValidatorWall _validator;
+        private readonly IValidatorBerry _validatorBerry;
+        private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
 
-        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall)
+        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry)
         {
             _eventHandler = eventHandler;
-            _validator = validatorWall;
+            _validatorWall = validatorWall;
+            _validatorBerry = validatorBerry;
             _board = new GameBoard(_eventHandler);
         }
 
@@ -31,6 +33,12 @@ namespace BoardGame.Managers
             return this;
         }
 
+        public IBoardBuilder AddBerry(string instruction)
+        {
+            AddBerryToBoard(instruction, _board.WithSize);
+            return this;
+        }
+
         public IGameBoard BuildBoard()
         {
             _board.GenerateBoard(_board.WithSize);
@@ -39,7 +47,7 @@ namespace BoardGame.Managers
 
         private void AddWallToBoard(string instruction, int boardSize)
         {
-            var validationResult = _validator.ValidateWallInputWithReason(instruction, boardSize);
+            var validationResult = _validatorWall.ValidateWallInputWithReason(instruction, boardSize);
             if (!validationResult.IsValid)
             {
                 _eventHandler.PublishEvent(EventType.WallCreationError, $"{validationResult.Reason}");
@@ -64,6 +72,35 @@ namespace BoardGame.Managers
             {
                 WallPositionField1 = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
                 WallPositionField2 = (int.Parse(coordinates[2].ToString()), int.Parse(coordinates[3].ToString()))
+            };
+        }
+        
+        private void AddBerryToBoard(string instruction, int boardSize)
+        {
+            var validationResult = _validatorBerry.ValidateBerryInputWithReason(instruction, boardSize);
+            if (!validationResult.IsValid)
+            {
+                _eventHandler.PublishEvent(EventType.BerryCreationError, $"{validationResult.Reason}");
+                return;
+            }
+            
+            var stringBuilder = new StringBuilder();
+            foreach (var c in instruction.Where(c => c != ' '))
+                stringBuilder.Append(c);
+            var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split("B");
+            foreach (var coordinates in berryToBuild)
+            {
+                _board.CreateBerryOnBoard(CreateBerry(coordinates));
+            }
+
+            _eventHandler.PublishEvent(EventType.BerryCreationDone, "");
+        }
+
+        private Berry CreateBerry(string coordinates)
+        {
+            return new Berry
+            {
+                BerryPosition = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString()))
             };
         }
     }

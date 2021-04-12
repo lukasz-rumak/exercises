@@ -8,6 +8,8 @@ namespace BoardGame.Models
         PieceMoved,
         WallCreationDone,
         WallCreationError,
+        BerryCreationDone,
+        BerryCreationError,
         OutsideBoundaries,
         FieldTaken,
         WallOnTheRoute,

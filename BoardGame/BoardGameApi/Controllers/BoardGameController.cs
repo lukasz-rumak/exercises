@@ -21,9 +21,10 @@ namespace BoardGameApi.Controllers
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
         private readonly IValidatorWall _validatorWall;
+        private readonly IValidatorBerry _validatorBerry;
         private readonly IEventHandler _eventHandler;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry) 
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;
@@ -31,15 +32,16 @@ namespace BoardGameApi.Controllers
             _validator = validator;
             _eventHandler = eventHandler;
             _validatorWall = validatorWall;
+            _validatorBerry = validatorBerry;
         }
 
         [HttpPost("gameInit")]
         public ActionResult<GenericResponse> PostGameInit([FromBody] Board boardInit)
         {
             var sessionId = Guid.NewGuid();
-            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _playersHandler);
+            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _validatorBerry, _playersHandler);
             _gameHolder.Add(sessionId, game);
-            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>())
+            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>())
                 .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted

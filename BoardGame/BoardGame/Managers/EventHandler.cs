@@ -34,6 +34,8 @@ namespace BoardGame.Managers
                 [EventType.PieceMoved] = EventPieceMove,
                 [EventType.WallCreationDone] = EventWallCreationDone,
                 [EventType.WallCreationError] = EventWallCreationError,
+                [EventType.BerryCreationDone] = EventBerryCreationDone,
+                [EventType.BerryCreationError] = EventBerryCreationError,
                 [EventType.OutsideBoundaries] = EventOutsideBoundaries,
                 [EventType.FieldTaken] = EventFieldTaken,
                 [EventType.WallOnTheRoute] = EventWallOnTheRoute,
@@ -73,16 +75,30 @@ namespace BoardGame.Managers
         
         private void EventWallCreationDone(string description)
         {
-            var eventMsg = CreateEventMessage($"The wall(s) have been created! {description}");
+            var eventMsg = CreateEventMessage($"The wall has been created! {description}");
             _presentation.PrintEventOutput(EventType.WallCreationDone, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.WallCreationDone, Description = eventMsg});
         }
         
         private void EventWallCreationError(string description)
         {
-            var eventMsg = CreateEventMessage($"The wall(s) were not created! {description}");
+            var eventMsg = CreateEventMessage($"The wall was not created! {description}");
             _presentation.PrintEventOutput(EventType.WallCreationError, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.WallCreationError, Description = eventMsg});
+        }
+        
+        private void EventBerryCreationDone(string description)
+        {
+            var eventMsg = CreateEventMessage($"The berry has been created! {description}");
+            _presentation.PrintEventOutput(EventType.BerryCreationDone, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BerryCreationDone, Description = eventMsg});
+        }
+        
+        private void EventBerryCreationError(string description)
+        {
+            var eventMsg = CreateEventMessage($"The berry was not created! {description}");
+            _presentation.PrintEventOutput(EventType.BerryCreationError, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BerryCreationError, Description = eventMsg});
         }
         
         private void EventOutsideBoundaries(string description)
