@@ -12,13 +12,13 @@ namespace BoardGame.Managers
         private readonly IEventHandler _eventHandler;
         private Field[,] _board;
         private readonly List<Wall> _walls;
-        private readonly List<Berry> _berries;
+        private readonly List<IBerry> _berries;
 
         public GameBoard(IEventHandler eventHandler)
         {
             _eventHandler = eventHandler;
             _walls = new List<Wall>();
-            _berries = new List<Berry>();
+            _berries = new List<IBerry>();
         }
 
         public void GenerateBoard(int size)
@@ -35,7 +35,7 @@ namespace BoardGame.Managers
             _walls.Add(wallToAdd.ReversedWall());
         }
 
-        public void CreateBerryOnBoard(Berry berryToAdd)
+        public void CreateBerryOnBoard(IBerry berryToAdd)
         {
             _berries.Add(berryToAdd);
         }

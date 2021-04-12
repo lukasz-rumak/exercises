@@ -1,4 +1,5 @@
-﻿using BoardGame.Interfaces;
+﻿using System.Collections.Generic;
+using BoardGame.Interfaces;
 using BoardGame.Models;
 
 namespace BoardGame.Managers
@@ -9,6 +10,8 @@ namespace BoardGame.Managers
         public string PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
+
+        private readonly List<IBerry> _collectedBerries;
         
         public Pawn(int pawnId)
         {
@@ -21,8 +24,19 @@ namespace BoardGame.Managers
                 Y = pawnId,
                 Direction = Direction.North
             };
+            _collectedBerries = new List<IBerry>();
+        }
+        
+        public void CollectBerry(IBerry berry)
+        {
+            _collectedBerries.Add(berry);
         }
 
+        public int CalculateScore()
+        {
+            throw new System.NotImplementedException();
+        }
+        
         public (int, int) CalculatePieceNewPosition()
         {
             return Position.Direction switch

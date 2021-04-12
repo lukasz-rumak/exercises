@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
@@ -59,9 +61,7 @@ namespace BoardGame.Managers
                 stringBuilder.Append(c);
             var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
             foreach (var coordinates in wallsToBuild)
-            {
                 _board.CreateWallOnBoard(CreateWall(coordinates));
-            }
 
             _eventHandler.PublishEvent(EventType.WallCreationDone, "");
         }
@@ -89,18 +89,17 @@ namespace BoardGame.Managers
                 stringBuilder.Append(c);
             var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split("B");
             foreach (var coordinates in berryToBuild)
-            {
-                _board.CreateBerryOnBoard(CreateBerry(coordinates));
-            }
+                _board.CreateBerryOnBoard(CreateBerry(coordinates, new BlueBerry()));
 
             _eventHandler.PublishEvent(EventType.BerryCreationDone, "");
         }
 
-        private Berry CreateBerry(string coordinates)
+        private IBerry CreateBerry<T>(string coordinates, T berryType) where T : IBerry, new()
         {
-            return new Berry
+            return new T
             {
-                BerryPosition = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString()))
+                BerryPosition = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
+                IsEaten = false
             };
         }
     }

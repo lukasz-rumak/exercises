@@ -20,6 +20,16 @@ namespace BoardGame.Managers
                 Y = 9999
             };
 
+        public void CollectBerry(IBerry berry)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int CalculateScore()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public (int, int) CalculatePieceNewPosition()
         {
             throw new System.NotImplementedException();
