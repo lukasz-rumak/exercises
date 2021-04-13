@@ -10,6 +10,7 @@ namespace BoardGame.Models
         WallCreationError,
         BerryCreationDone,
         BerryCreationError,
+        BerryEaten,
         OutsideBoundaries,
         FieldTaken,
         WallOnTheRoute,

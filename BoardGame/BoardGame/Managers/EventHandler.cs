@@ -36,6 +36,7 @@ namespace BoardGame.Managers
                 [EventType.WallCreationError] = EventWallCreationError,
                 [EventType.BerryCreationDone] = EventBerryCreationDone,
                 [EventType.BerryCreationError] = EventBerryCreationError,
+                [EventType.BerryEaten] = EventBerryEaten,
                 [EventType.OutsideBoundaries] = EventOutsideBoundaries,
                 [EventType.FieldTaken] = EventFieldTaken,
                 [EventType.WallOnTheRoute] = EventWallOnTheRoute,
@@ -99,6 +100,13 @@ namespace BoardGame.Managers
             var eventMsg = CreateEventMessage($"The berry was not created! {description}");
             _presentation.PrintEventOutput(EventType.BerryCreationError, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.BerryCreationError, Description = eventMsg});
+        }
+        
+        private void EventBerryEaten(string description)
+        {
+            var eventMsg = CreateEventMessage($"The berry has been eaten! {description}");
+            _presentation.PrintEventOutput(EventType.BerryEaten, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BerryEaten, Description = eventMsg});
         }
         
         private void EventOutsideBoundaries(string description)

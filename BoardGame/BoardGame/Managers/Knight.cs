@@ -34,7 +34,7 @@ namespace BoardGame.Managers
 
         public int CalculateScore()
         {
-            throw new System.NotImplementedException();
+            return _collectedBerries.Count;
         }
         
         public (int, int) CalculatePieceNewPosition()

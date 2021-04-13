@@ -80,6 +80,8 @@ namespace BoardGame.Managers
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.BerryCreationError] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
+                [EventType.BerryEaten] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
                 [EventType.OutsideBoundaries] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.FieldTaken] = eventMsg =>
