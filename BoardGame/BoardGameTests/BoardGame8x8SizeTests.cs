@@ -15,9 +15,9 @@ namespace BoardGameTests
         }
 
         [Theory]
-        [InlineData(new []{"PMRMLMRM"}, new []{"2 2 East"})]
-        [InlineData(new []{"PRMMMLMM"}, new []{"3 2 North"})]
-        [InlineData(new []{"PMMMMM"}, new []{"0 5 North"})]
+        [InlineData(new []{"PMRMLMRM"}, new []{"[P] 2 2 East [S] 0"})]
+        [InlineData(new []{"PRMMMLMM"}, new []{"[P] 3 2 North [S] 0"})]
+        [InlineData(new []{"PMMMMM"}, new []{"[P] 0 5 North [S] 0"})]
         [InlineData(new []{"PMXMMM"}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
         [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]

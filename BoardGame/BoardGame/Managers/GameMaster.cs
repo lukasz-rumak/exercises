@@ -177,8 +177,9 @@ namespace BoardGame.Managers
             foreach (var player in players)
             {
                 _gameResult.Add(player.IsAlive
-                    ? new StringBuilder().Append(player.Position.X).Append(" ").Append(player.Position.Y)
-                        .Append(" ").Append(player.Position.Direction).ToString()
+                    ? new StringBuilder().Append("[P] ").Append(player.Position.X).Append(" ").Append(player.Position.Y)
+                        .Append(" ").Append(player.Position.Direction).Append(" ").Append("[S] ")
+                        .Append(player.CalculateScore()).ToString()
                     : @"Instruction not clear. Exiting...");
             }
         }
