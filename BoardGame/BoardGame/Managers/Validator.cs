@@ -78,8 +78,11 @@ namespace BoardGame.Managers
             if (!input.StartsWith('B'))
                 return new ValidationResult {IsValid = false, Reason = "Input should start with 'B'"};
             if (!ValidateBerryAgainstSyntax(input))
-                return new ValidationResult {IsValid = false, Reason = "Input should have the following syntax: 'B 1 1'"};
-            if (!ValidateAgainstBoardSize(CreateBerryIntegerList(input), boardSize)) 
+                return new ValidationResult {IsValid = false, Reason = "Input should have the following syntax: 'B 1 2'"};
+            var position = CreateBerryIntegerList(input);
+            if (!ValidateBerryAgainstStartingPosition(position))
+                return new ValidationResult {IsValid = false, Reason = "Input cannot be player starting position, for example: 'B 0 0'"};
+            if (!ValidateAgainstBoardSize(position, boardSize)) 
                 return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
@@ -89,6 +92,11 @@ namespace BoardGame.Managers
         {
             var regex = new Regex(@"^B \d* \d*$");
             return regex.IsMatch(input ?? string.Empty);
+        }
+
+        private bool ValidateBerryAgainstStartingPosition(IReadOnlyList<int> list)
+        {
+            return list[0] - list[1] != 0;
         }
 
         private List<int> CreateBerryIntegerList(string input)
