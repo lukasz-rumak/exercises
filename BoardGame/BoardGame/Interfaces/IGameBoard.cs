@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using BoardGame.Managers;
-using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {
@@ -10,6 +8,7 @@ namespace BoardGame.Interfaces
         void GenerateBoard(int size);
         void CreateWallOnBoard(Wall wallToAdd);
         void CreateBerryOnBoard(IBerry berryToAdd);
+        bool CheckIfAllBerriesCollected();
         bool IsFieldTaken(int x, int y);
         int ReturnPieceIdFromTakenField(int x, int y);
         void MarkFieldAsTakenByNewPiece(IPiece piece);

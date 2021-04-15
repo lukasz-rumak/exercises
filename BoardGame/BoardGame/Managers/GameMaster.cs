@@ -159,6 +159,7 @@ namespace BoardGame.Managers
                         {
                             _board.ExecuteThePlayerInstruction(players[j], instructions[j][i]);
                             _presentation.GenerateOutput(_board, players);
+                            if (_board.CheckIfAllBerriesCollected()) return;
                         }
         }
 

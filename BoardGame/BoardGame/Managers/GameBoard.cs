@@ -39,6 +39,11 @@ namespace BoardGame.Managers
         {
             _berries.Add(berryToAdd);
         }
+        
+        public bool CheckIfAllBerriesCollected()
+        {
+            return _berries.Any() && _berries.All(berry => berry.IsEaten);
+        }
 
         public bool IsFieldTaken(int x, int y)
         {
