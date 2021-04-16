@@ -24,4 +24,9 @@ namespace BoardGameApiTests.Models
     {
         public string[] WallCoordinates { get; set; }
     }
+    
+    public class BadRequestBerryCoordinates
+    {
+        public string[] BerryCoordinates { get; set; }
+    }
 }

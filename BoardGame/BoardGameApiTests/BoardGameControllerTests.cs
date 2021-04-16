@@ -58,6 +58,26 @@ namespace BoardGameApiTests
                 sessionId = gameInitSetup.SessionId;
             await _testHelper.TestPutEndpointForBadRequest(_client, "newWall", requestBody, sessionId, statusCodeExpected, responseExpected);
         }
+        
+        [Theory]
+        [ClassData(typeof(PutNewBerryOkAndNotFound))]
+        public async Task Put_NewBerry_Should_Return_Ok_Or_Not_Found(Guid sessionId, Berry requestBody, HttpStatusCode statusCodeExpected, string responseExpected)
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            if (sessionId == _fakeValidGuid)
+                sessionId = gameInitSetup.SessionId;
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry", requestBody, sessionId, statusCodeExpected, responseExpected);
+        }
+        
+        [Theory]
+        [ClassData(typeof(PutNewBerryBadRequest))]
+        public async Task Put_NewBerry_Should_Return_Bad_Request<T>(Guid sessionId, Berry requestBody, HttpStatusCode statusCodeExpected, T responseExpected) where T : class
+        {
+            var gameInitSetup = await _testsSetup.GameInitSetup(_client);
+            if (sessionId == _fakeValidGuid)
+                sessionId = gameInitSetup.SessionId;
+            await _testHelper.TestPutEndpointForBadRequest(_client, "newBerry", requestBody, sessionId, statusCodeExpected, responseExpected);
+        }
 
         [Theory]
         [ClassData(typeof(PostBuildBoardOkAndNotFound))]

@@ -83,7 +83,7 @@ namespace BoardGame.Managers
             if (!ValidateBerryAgainstStartingPosition(position))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be player starting position, for example: 'B 0 0'"};
             if (!ValidateAgainstBoardSize(position, boardSize)) 
-                return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
+                return new ValidationResult {IsValid = false, Reason = "Input berry position should fit into the board size"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
         }

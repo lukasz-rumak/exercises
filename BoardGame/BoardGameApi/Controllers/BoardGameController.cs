@@ -64,6 +64,22 @@ namespace BoardGameApi.Controllers
 
             return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
         }
+        
+        [HttpPut]
+        [Route("newBerry/{sessionId}")]
+        public ActionResult PutNewBerry(Guid sessionId, [FromBody] Berry newBerry)
+        {
+            if (IsSessionIdValid(sessionId) && !IsGameComplete(sessionId) && !IsBoardBuilt(sessionId))
+            {
+                RunInTheGame(sessionId).AddBerryToBoard(newBerry.BerryCoordinates);
+                var lastEvent = RunInTheGame(sessionId).GetLastEvent();
+                return lastEvent.Type == EventType.BerryCreationDone
+                    ? ReturnStatusCodeWithResponse(201, sessionId, "Created")
+                    : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {lastEvent.Description}});
+            }
+
+            return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
+        }
 
         [HttpPost]
         [Route("buildBoard/{sessionId}")]
@@ -114,7 +130,7 @@ namespace BoardGameApi.Controllers
             RunInTheGame(sessionId).MovePlayer(new List<string> {movePlayer.MoveTo}, movePlayer.PlayerId);
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             var result = new List<EventType>
-                    {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute}
+                    {EventType.PieceMoved, EventType.OutsideBoundaries, EventType.FieldTaken, EventType.WallOnTheRoute, EventType.BerryEaten}
                 .Any(e => e == lastEvent.Type);
             return result
                 ? ReturnStatusCodeWithResponse(200, sessionId, lastEvent.Description)

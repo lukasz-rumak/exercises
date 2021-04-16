@@ -59,6 +59,11 @@ namespace BoardGame.Managers
         {
             _boardBuilder.AddWall(wallCoordinates);
         }
+
+        public void AddBerryToBoard(string berryCoordinates)
+        {
+            _boardBuilder.AddBerry(berryCoordinates);
+        }
         
         public void FinaliseBoardBuilder()
         {

@@ -18,7 +18,8 @@ namespace BoardGame.Managers
         public void GenerateOutput(IGameBoard board, IReadOnlyList<IPiece> pieces)
         {
             Console.WriteLine("=====");
-            Console.WriteLine($"Player(s): {pieces.Count}");
+            foreach (var piece in pieces)
+                Console.WriteLine($"Player {piece.PieceId}: {piece.CalculateScore()} point(s) collected");
             Console.WriteLine("=====");
             for (int i = board.WithSize - 1; i >= 0; i--)
             {
@@ -37,7 +38,8 @@ namespace BoardGame.Managers
         public string GenerateOutputApi(IGameBoard board, IReadOnlyList<IPiece> pieces)
         {
             var result = new StringBuilder();
-            result.Append($"Player(s): {pieces.Count}");
+            foreach (var piece in pieces)
+                result.Append($"Player {piece.PieceId}: {piece.CalculateScore()} point(s) collected; ");
             for (int i = board.WithSize - 1; i >= 0; i--)
             {
                 var str = new StringBuilder();

@@ -104,7 +104,7 @@ namespace BoardGame.Managers
         
         private void EventBerryEaten(string description)
         {
-            var eventMsg = CreateEventMessage($"The berry has been eaten! {description}");
+            var eventMsg = CreateEventMessage($"The piece moved and the berry has been eaten. {description}");
             _presentation.PrintEventOutput(EventType.BerryEaten, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.BerryEaten, Description = eventMsg});
         }

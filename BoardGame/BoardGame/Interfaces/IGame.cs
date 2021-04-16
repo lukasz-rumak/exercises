@@ -11,6 +11,7 @@ namespace BoardGame.Interfaces
         void RunBoardBuilder(IGameBoard board);
         void StartBoardBuilder(IBoardBuilder board);
         void AddWallToBoard(string wallCoordinates);
+        void AddBerryToBoard(string berryCoordinates);
         void FinaliseBoardBuilder();
         bool IsBoardBuilt();
         string[] PlayTheGame(string[] instructions);
