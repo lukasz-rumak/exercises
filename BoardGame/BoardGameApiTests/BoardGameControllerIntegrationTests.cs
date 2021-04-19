@@ -54,7 +54,7 @@ namespace BoardGameApiTests
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
                 "Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, HttpStatusCode.OK,
-                "The game has been marked as complete");
+                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
         }
         
         [Fact]
@@ -107,9 +107,9 @@ namespace BoardGameApiTests
             await _testHelper.TestGetEndpoint(_client, "seeBoard", secondGameSessionId, HttpStatusCode.OK,
                 "Player 0: 1 point(s) collected; |-----|-----|-----|0----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), firstGameSessionId, HttpStatusCode.OK,
-                "The game has been marked as complete");
+                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), secondGameSessionId, HttpStatusCode.OK,
-                "The game has been marked as complete");
+                "The game has been marked as complete. The game summary: Player 0: 1 point(s) collected; |-----|-----|-----|0----|-----");
         }
 
         [Fact]
@@ -132,8 +132,10 @@ namespace BoardGameApiTests
             var sessionId = await _testHelper.TestGameInitEndpointForOk(_client,
                 new Board {WithSize = 5},
                 HttpStatusCode.OK, "The game has started");
+            await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), sessionId,
+                HttpStatusCode.Created, "Created");            
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, HttpStatusCode.OK,
-                "The game has been marked as complete");
+                "The game has been marked as complete. The game summary: |-----|-----|-----|-----|-----");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newWall",
                 new Wall {WallCoordinates = "W 1 1 2 2"}, sessionId, HttpStatusCode.NotFound,
                 "The provided sessionId is invalid");
@@ -144,11 +146,11 @@ namespace BoardGameApiTests
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "movePlayer", new MovePlayer
                 {PlayerId = 0, MoveTo = "M"}, sessionId, HttpStatusCode.NotFound, "The provided sessionId exists but the game has ended");
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", sessionId, HttpStatusCode.OK,
-                "GameStarted");
+                "GeneratedBoardOutput");
             await _testHelper.TestGetEndpoint(_client, "getEvents", sessionId, HttpStatusCode.OK,
-                "[0] GameStarted ");
-            await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.NotFound,
-                "The provided sessionId exists but is in invalid state");
+                "[0] GameStarted [1] BoardBuilt [2] GeneratedBoardOutput ");
+            await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
+                "|-----|-----|-----|-----|-----");
         }
     }
 }

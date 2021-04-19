@@ -187,12 +187,15 @@ namespace BoardGameApi.Controllers
         {
             if (!IsSessionIdValid(sessionId))
                 return ReturnNotFoundWithResponseSessionIdIsInvalid(sessionId);
+            if (!IsBoardBuilt(sessionId))
+                return ReturnNotFoundWithResponseSessionIdIsInInvalidState(sessionId);
             if (IsGameComplete(sessionId))
                 return ReturnNotFoundWithResponseTheGameEnded(sessionId);
 
             RunInTheGame(sessionId).MarkGameAsComplete();
+            var gameOutput = RunInTheGame(sessionId).GenerateOutputApi();
             return RunInTheGame(sessionId).IsGameComplete()
-                ? ReturnStatusCodeWithResponse(200, sessionId, "The game has been marked as complete")
+                ? ReturnStatusCodeWithResponse(200, sessionId, $"The game has been marked as complete. The game summary: {gameOutput}")
                 : ReturnBadRequestResponse(new BadRequestErrors {Errors = new[] {"The attempt to mark the game as complete has failed"}});
         }
         
