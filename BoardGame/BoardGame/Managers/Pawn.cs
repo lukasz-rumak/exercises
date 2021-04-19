@@ -4,14 +4,12 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class Pawn : IPiece
+    public class Pawn : BerryCollector, IPiece
     {
         public int PieceId { get; set; }
         public string PieceType { get; set; }
         public bool IsAlive { get; set; }
         public IPosition Position { get; }
-
-        private readonly List<IBerry> _collectedBerries;
         
         public Pawn(int pawnId)
         {
@@ -24,19 +22,8 @@ namespace BoardGame.Managers
                 Y = pawnId,
                 Direction = Direction.North
             };
-            _collectedBerries = new List<IBerry>();
-        }
-        
-        public void CollectBerry(IBerry berry)
-        {
-            _collectedBerries.Add(berry);
         }
 
-        public int CalculateScore()
-        {
-            return _collectedBerries.Count;
-        }
-        
         public (int, int) CalculatePieceNewPosition()
         {
             return Position.Direction switch

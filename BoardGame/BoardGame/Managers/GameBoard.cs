@@ -78,7 +78,7 @@ namespace BoardGame.Managers
             MarkFieldAsNotTaken(piece.Position.X, piece.Position.Y);
             piece.ChangePiecePosition(newX, newY);
             MarkFieldAsTaken(piece);
-            CollectBerry(piece);
+            CollectBerryIfAny(piece);
         }
 
         private bool IsMovePossible(IPiece piece, int newX, int newY)
@@ -128,27 +128,21 @@ namespace BoardGame.Managers
             _board[x, y].TakenBy = null;
         }
 
-        private void CollectBerry(IPiece piece)
+        private void CollectBerryIfAny(IPiece piece)
         {
-            if (_berries == null) return;
-            var berry = CollectBerryFromFieldIfAny(piece);
-            if (berry == null ) return;            
-            UpdatePieceBerryCollection(piece, berry);
+            var berry = GetBerryFromFieldIfAny(piece.Position.X, piece.Position.Y);
+            if (berry == null ) return;
+            piece.CollectBerry(berry);
             MarkBerryAsEaten(berry);
             _eventHandler.PublishEvent(EventType.BerryEaten,
                 $"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, from field ({piece.Position.X},{piece.Position.Y})");
         }
 
-        private IBerry CollectBerryFromFieldIfAny(IPiece piece)
+        private IBerry GetBerryFromFieldIfAny(int x, int y)
         {
             return _berries.Where(berry => berry.IsEaten == false)
                 .FirstOrDefault(berry =>
-                    berry.BerryPosition.Item1 == piece.Position.X && berry.BerryPosition.Item2 == piece.Position.Y);
-        }
-
-        private void UpdatePieceBerryCollection(IPiece piece, IBerry berry)
-        {
-            piece.CollectBerry(berry);
+                    berry.BerryPosition.Item1 == x && berry.BerryPosition.Item2 == y);
         }
 
         private void MarkBerryAsEaten(IBerry berry)

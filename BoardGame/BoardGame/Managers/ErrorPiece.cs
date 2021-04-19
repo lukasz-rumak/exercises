@@ -3,7 +3,7 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class ErrorPiece : IPiece
+    public class ErrorPiece : BerryCollector, IPiece
     {
         public int PieceId { get; set; }
         public string PieceType { get; set; }
@@ -19,17 +19,7 @@ namespace BoardGame.Managers
                 X = 9999,
                 Y = 9999
             };
-
-        public void CollectBerry(IBerry berry)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int CalculateScore()
-        {
-            throw new System.NotImplementedException();
-        }
-
+        
         public (int, int) CalculatePieceNewPosition()
         {
             throw new System.NotImplementedException();
