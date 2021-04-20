@@ -7,19 +7,19 @@ namespace BoardGameApi.Managers
 {
     public class GameHolder : IGameHolder
     {
-        private readonly Dictionary<Guid, IGame> _sessionsHolder;
+        private readonly Dictionary<Guid, IGameApi> _sessionsHolder;
 
         public GameHolder()
         {
-            _sessionsHolder = new Dictionary<Guid, IGame>();
+            _sessionsHolder = new Dictionary<Guid, IGameApi>();
         }
 
-        public void Add(Guid sessionId, IGame gameMaster)
+        public void Add(Guid sessionId, IGameApi gameMaster)
         {
             _sessionsHolder.Add(sessionId, gameMaster);
         }
 
-        public IGame Get(Guid sessionId)
+        public IGameApi Get(Guid sessionId)
         {
             return _sessionsHolder[sessionId];
         }

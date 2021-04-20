@@ -282,7 +282,7 @@ namespace BoardGameApi.Controllers
             return strBuilder.ToString();
         }
 
-        private IGame RunInTheGame(Guid sessionId)
+        private IGameApi RunInTheGame(Guid sessionId)
         {
             return _gameHolder.Get(sessionId);
         }

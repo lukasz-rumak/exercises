@@ -5,8 +5,8 @@ namespace BoardGameApi.Interfaces
 {
     public interface IGameHolder
     {
-        void Add(Guid sessionId, IGame gameMaster);
-        IGame Get(Guid sessionId);
+        void Add(Guid sessionId, IGameApi gameMaster);
+        IGameApi Get(Guid sessionId);
         bool IsKeyPresent(Guid sessionId);
     }
 }

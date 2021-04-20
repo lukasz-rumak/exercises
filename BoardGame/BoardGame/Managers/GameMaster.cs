@@ -7,7 +7,7 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class GameMaster : IGame
+    public class GameMaster : IGame, IGameApi
     {
         public ObjectFactory.ObjectFactory ObjectFactory { get; set; }
 
