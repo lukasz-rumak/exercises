@@ -28,6 +28,8 @@ namespace BoardGame.Managers
                 {
                     if (board.IsFieldTaken(j, i))
                         str.Append(board.ReturnPieceIdFromTakenField(j, i));
+                    else if (board.IsNotEatenBerryOnField(j, i))
+                        str.Append("b");
                     else
                         str.Append("-");
                 }
@@ -47,6 +49,8 @@ namespace BoardGame.Managers
                 {
                     if (board.IsFieldTaken(j, i))
                         str.Append(board.ReturnPieceIdFromTakenField(j, i));
+                    else if (board.IsNotEatenBerryOnField(j, i))
+                        str.Append("b");
                     else
                         str.Append("-");
                 }

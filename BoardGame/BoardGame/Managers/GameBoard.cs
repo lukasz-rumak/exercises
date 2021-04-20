@@ -45,6 +45,12 @@ namespace BoardGame.Managers
             return _berries.Any() && _berries.All(berry => berry.IsEaten);
         }
 
+        public bool IsNotEatenBerryOnField(int x, int y)
+        {
+            return _berries.Where(berry => berry.IsEaten == false)
+                .Any(berry => berry.BerryPosition.Item1 == x && berry.BerryPosition.Item2 == y);
+        }
+
         public bool IsFieldTaken(int x, int y)
         {
             return _board[x, y].IsTaken;

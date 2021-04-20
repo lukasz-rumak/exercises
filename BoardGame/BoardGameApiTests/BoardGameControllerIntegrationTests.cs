@@ -33,6 +33,10 @@ namespace BoardGameApiTests
                 new Berry { BerryCoordinates = "B 0 1"}, sessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
                 new Berry { BerryCoordinates = "B 0 3"}, sessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 3 4"}, sessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 4 3"}, sessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), sessionId,
                 HttpStatusCode.Created, "Created");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "addPlayer", new AddPlayer
@@ -52,9 +56,9 @@ namespace BoardGameApiTests
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", sessionId, HttpStatusCode.OK,
                 "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,3) to (0, 4)");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
-                "Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
+                "Player 0: 2 point(s) collected; |---b-|0---b|-----|-----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), sessionId, HttpStatusCode.OK,
-                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
+                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |---b-|0---b|-----|-----|-----");
         }
         
         [Fact]
@@ -82,6 +86,14 @@ namespace BoardGameApiTests
                 new Berry { BerryCoordinates = "B 0 3"}, firstGameSessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
                 new Berry { BerryCoordinates = "B 0 3"}, secondGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 3 4"}, firstGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 3 4"}, secondGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 4 3"}, firstGameSessionId, HttpStatusCode.Created, "Created");
+            await _testHelper.TestPutEndpointForOkAndNotFound(_client, "newBerry",
+                new Berry { BerryCoordinates = "B 4 3"}, secondGameSessionId, HttpStatusCode.Created, "Created");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), firstGameSessionId,
                 HttpStatusCode.Created, "Created");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "buildBoard", new object(), secondGameSessionId,
@@ -103,13 +115,13 @@ namespace BoardGameApiTests
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", secondGameSessionId, HttpStatusCode.OK,
                 "WallOnTheRoute; Move not possible (wall on the route)! PieceId: 0, PieceType: Pawn, move from (0,1) to (0, 2)");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", firstGameSessionId,
-                HttpStatusCode.OK, "Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
+                HttpStatusCode.OK, "Player 0: 2 point(s) collected; |---b-|0---b|-----|-----|-----");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", secondGameSessionId, HttpStatusCode.OK,
-                "Player 0: 1 point(s) collected; |-----|-----|-----|0----|-----");
+                "Player 0: 1 point(s) collected; |---b-|b---b|-----|0----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), firstGameSessionId, HttpStatusCode.OK,
-                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |-----|0----|-----|-----|-----");
+                "The game has been marked as complete. The game summary: Player 0: 2 point(s) collected; |---b-|0---b|-----|-----|-----");
             await _testHelper.TestPostEndpointForOkAndNotFound(_client, "endGame", new object(), secondGameSessionId, HttpStatusCode.OK,
-                "The game has been marked as complete. The game summary: Player 0: 1 point(s) collected; |-----|-----|-----|0----|-----");
+                "The game has been marked as complete. The game summary: Player 0: 1 point(s) collected; |---b-|b---b|-----|0----|-----");
         }
 
         [Fact]

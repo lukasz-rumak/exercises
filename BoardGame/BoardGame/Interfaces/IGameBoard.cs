@@ -9,6 +9,7 @@ namespace BoardGame.Interfaces
         void CreateWallOnBoard(Wall wallToAdd);
         void CreateBerryOnBoard(IBerry berryToAdd);
         bool CheckIfAllBerriesCollected();
+        bool IsNotEatenBerryOnField(int x, int y);
         bool IsFieldTaken(int x, int y);
         int ReturnPieceIdFromTakenField(int x, int y);
         void MarkFieldAsTakenByNewPiece(IPiece piece);
