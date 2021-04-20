@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
@@ -57,16 +58,19 @@ namespace BoardGame.Managers
 
         public void AddWallToBoard(string wallCoordinates)
         {
+            if (_isGameComplete) return;
             _boardBuilder.AddWall(wallCoordinates);
         }
 
         public void AddBerryToBoard(string berryCoordinates)
         {
+            if (_isGameComplete) return;
             _boardBuilder.AddBerry(berryCoordinates);
         }
         
         public void FinaliseBoardBuilder()
         {
+            if (_isGameComplete) return;
             _board = _boardBuilder.BuildBoard();
             _isBoardBuilt = true;
             _eventHandler.PublishEvent(EventType.BoardBuilt, "");
@@ -92,12 +96,14 @@ namespace BoardGame.Managers
 
         public void CreatePlayers(IReadOnlyList<string> instructions)
         {
+            if (_isGameComplete) return;
             _playersHandler.CreatePlayers(_board, _pieceFactory, instructions);
             _eventHandler.PublishEvent(EventType.PlayerAdded, "");
         }
         
         public void MovePlayer(IReadOnlyList<string> instructions, int playerId)
         {
+            if (_isGameComplete) return;
             if (_playersHandler.ReturnPlayersNumber() - 1 < playerId)
             {
                 _eventHandler.PublishEvent(EventType.IncorrectPlayerId, $"The requested player id: {playerId}");
@@ -109,6 +115,7 @@ namespace BoardGame.Managers
         
         public void MovePlayers(IReadOnlyList<string> instructions)
         {
+            if (_isGameComplete) return;
             ExecuteValidation(_playersHandler.ReturnPlayersInfo(), instructions);
             ExecuteTheInstructions(_playersHandler.ReturnPlayersInfo(), instructions);
         }
@@ -176,7 +183,7 @@ namespace BoardGame.Managers
                     longest = instructions[i].Length;
             return longest;
         }
-        
+
         private void CollectResult()
         {
             var players = _playersHandler.ReturnPlayersInfo();
