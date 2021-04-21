@@ -1,6 +1,7 @@
 using BoardGame.Interfaces;
+using BoardGame.Managers;
 
-namespace BoardGame.Managers
+namespace BoardGame.PieceFactory
 {
     public class PawnAbstractFactory : PieceAbstractFactory
     {

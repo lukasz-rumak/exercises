@@ -12,7 +12,7 @@ namespace BoardGame.Managers
             _players = new List<IPiece>();
         }
         
-        public void CreatePlayers(IGameBoard board, PieceFactory pieceFactory, IReadOnlyList<string> instructions)
+        public void CreatePlayers(IGameBoard board, PieceFactory.PieceFactory pieceFactory, IReadOnlyList<string> instructions)
         {
             for (var i = 0; i < instructions.Count; i++)
             {

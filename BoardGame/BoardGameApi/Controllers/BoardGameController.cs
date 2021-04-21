@@ -23,8 +23,9 @@ namespace BoardGameApi.Controllers
         private readonly IValidatorWall _validatorWall;
         private readonly IValidatorBerry _validatorBerry;
         private readonly IEventHandler _eventHandler;
+        private readonly IBerryCreator _berryCreator;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry) 
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator)
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;
@@ -33,15 +34,17 @@ namespace BoardGameApi.Controllers
             _eventHandler = eventHandler;
             _validatorWall = validatorWall;
             _validatorBerry = validatorBerry;
+            _berryCreator = berryCreator;
         }
 
         [HttpPost("gameInit")]
         public ActionResult<GenericResponse> PostGameInit([FromBody] Board boardInit)
         {
             var sessionId = Guid.NewGuid();
-            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _validatorBerry, _playersHandler);
+            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _validatorBerry, _playersHandler, _berryCreator);
             _gameHolder.Add(sessionId, game);
-            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>())
+            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), 
+                    game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>(), game.ObjectFactory.Get<IBerryCreator>())
                 .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted

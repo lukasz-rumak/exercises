@@ -1,6 +1,6 @@
 using BoardGame.Interfaces;
 
-namespace BoardGame.Models
+namespace BoardGame.Models.Berries
 {
     public class BlueBerry : IBerry
     {

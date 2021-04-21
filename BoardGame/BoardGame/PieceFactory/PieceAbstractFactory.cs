@@ -1,6 +1,6 @@
 using BoardGame.Interfaces;
 
-namespace BoardGame.Managers
+namespace BoardGame.PieceFactory
 {
     public abstract class PieceAbstractFactory
     {

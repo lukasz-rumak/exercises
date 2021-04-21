@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
+using BoardGame.PieceFactory;
 
 namespace BoardGame.Managers
 {
@@ -17,12 +18,12 @@ namespace BoardGame.Managers
         private IGameBoard _board;
         private readonly IPlayer _playersHandler;
         private readonly IPresentation _presentation;
-        private readonly PieceFactory _pieceFactory;
+        private readonly PieceFactory.PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         private bool _isBoardBuilt;
         private bool _isGameComplete;
 
-        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player)
+        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player, IBerryCreator berryCreator)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
             ObjectFactory.Register<IPresentation>(presentation);
@@ -31,11 +32,12 @@ namespace BoardGame.Managers
             ObjectFactory.Register<IValidatorWall>(validatorWall);
             ObjectFactory.Register<IValidatorBerry>(validatorBerry);
             ObjectFactory.Register<IPlayer>(player);
+            ObjectFactory.Register<IBerryCreator>(berryCreator);
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEventHandler>();
             _validator = ObjectFactory.Get<IValidator>();
             _playersHandler = ObjectFactory.Get<IPlayer>();
-            _pieceFactory = new PieceFactory();
+            _pieceFactory = new PieceFactory.PieceFactory();
             _pieceFactory.Register("P", new PawnAbstractFactory());
             _pieceFactory.Register("K", new KnightAbstractFactory());
             _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();

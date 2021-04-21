@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoardGame.Interfaces;
+using BoardGame.Managers;
 
-namespace BoardGame.Managers
+namespace BoardGame.PieceFactory
 {
     public class PieceFactory
     {

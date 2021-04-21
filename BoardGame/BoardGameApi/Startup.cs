@@ -40,6 +40,7 @@ namespace BoardGameApi
             services.AddTransient<IValidatorBerry, Validator>();
             services.AddTransient<IEventHandler, EventHandler>();
             services.AddTransient<IGameBoard, GameBoard>();
+            services.AddTransient<IBerryCreator, BerryCreator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

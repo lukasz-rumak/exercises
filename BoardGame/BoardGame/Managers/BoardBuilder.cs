@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
@@ -13,12 +13,14 @@ namespace BoardGame.Managers
         private readonly IValidatorBerry _validatorBerry;
         private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
-
-        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry)
+        private readonly IBerryCreator _berryCreator;
+        
+        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator)
         {
             _eventHandler = eventHandler;
             _validatorWall = validatorWall;
             _validatorBerry = validatorBerry;
+            _berryCreator = berryCreator;
             _board = new GameBoard(_eventHandler);
         }
 
@@ -89,18 +91,9 @@ namespace BoardGame.Managers
                 stringBuilder.Append(c);
             var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split("B");
             foreach (var coordinates in berryToBuild)
-                _board.CreateBerryOnBoard(CreateBerry(coordinates, new BlueBerry()));
+                _board.CreateBerryOnBoard(_berryCreator.CreateBerryBasedOnType(instruction[0].ToString(), coordinates));
 
             _eventHandler.PublishEvent(EventType.BerryCreationDone, "");
-        }
-
-        private IBerry CreateBerry<T>(string coordinates, T berryType) where T : IBerry, new()
-        {
-            return new T
-            {
-                BerryPosition = (int.Parse(coordinates[0].ToString()), int.Parse(coordinates[1].ToString())),
-                IsEaten = false
-            };
         }
     }
 }
