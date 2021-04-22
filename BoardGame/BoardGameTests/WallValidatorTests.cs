@@ -53,7 +53,7 @@ namespace BoardGameTests
         [InlineData(null, 5, false, "Input cannot be null, empty or whitespace")]
         [InlineData("", 5, false, "Input cannot be null, empty or whitespace")]
         [InlineData(" ", 5, false, "Input cannot be null, empty or whitespace")]
-        public void ReturnExpectedVersusActualForDifferentWallInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
+        public void ReturnExpectedVersusActualForDifferentInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
         {
             var actual = _validator.ValidateWallInputWithReason(instruction, boardSize);
             Assert.Equal(expectedResult, actual.IsValid);

@@ -16,7 +16,7 @@ namespace BoardGameApi.Validators
 
         private bool ValidateSyntax(string strValue)
         {
-            var regex = new Regex(@"^B \d* \d*$");
+            var regex = new Regex(@"^[BS] \d* \d*$");
             return regex.IsMatch(strValue ?? string.Empty);
         }
 
@@ -28,7 +28,7 @@ namespace BoardGameApi.Validators
         private List<int> CreateBerryIntegerList(string input)
         {
             var list = new List<int>();
-            var values = input.Split('B')[1].Split(' ').Skip(1);
+            var values = input[2..].Split(' ');
             foreach (var v in values)
                 if (int.TryParse(v, out int result))
                     list.Add(result);

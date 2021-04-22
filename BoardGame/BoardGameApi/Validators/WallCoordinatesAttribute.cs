@@ -23,7 +23,7 @@ namespace BoardGameApi.Validators
         private List<int> CreateIntegerList(string strValue)
         {
             var list = new List<int>();
-            var values = strValue.Split('W')[1].Split(' ').Skip(1);
+            var values = strValue[2..].Split(' ');
             foreach (var v in values)
                 if (int.TryParse(v, out int result))
                     list.Add(result);

@@ -75,10 +75,10 @@ namespace BoardGame.Managers
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
-            if (!input.StartsWith('B'))
-                return new ValidationResult {IsValid = false, Reason = "Input should start with 'B'"};
+            if (!input.StartsWith('B') && !input.StartsWith('S'))
+                return new ValidationResult {IsValid = false, Reason = "Input should start with 'B' or 'S'"};
             if (!ValidateBerryAgainstSyntax(input))
-                return new ValidationResult {IsValid = false, Reason = "Input should have the following syntax: 'B 1 2'"};
+                return new ValidationResult {IsValid = false, Reason = "Input should have the following syntax: 'B 1 2' or 'S 1 2'"};
             var position = CreateBerryIntegerList(input);
             if (!ValidateBerryAgainstStartingPosition(position))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be player starting position, for example: 'B 0 0'"};
@@ -90,7 +90,7 @@ namespace BoardGame.Managers
 
         private bool ValidateBerryAgainstSyntax(string input)
         {
-            var regex = new Regex(@"^B \d* \d*$");
+            var regex = new Regex(@"^[BS] \d* \d*$");
             return regex.IsMatch(input ?? string.Empty);
         }
 
@@ -102,7 +102,7 @@ namespace BoardGame.Managers
         private List<int> CreateBerryIntegerList(string input)
         {
             var list = new List<int>();
-            var values = input.Split('B')[1].Split(' ').Skip(1);
+            var values = input[2..].Split(' ');
             foreach (var v in values)
                 if (int.TryParse(v, out int result))
                     list.Add(result);

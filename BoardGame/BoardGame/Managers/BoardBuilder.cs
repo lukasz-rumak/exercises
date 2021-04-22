@@ -61,7 +61,7 @@ namespace BoardGame.Managers
             var stringBuilder = new StringBuilder();
             foreach (var c in instruction.Where(c => c != ' '))
                 stringBuilder.Append(c);
-            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split("W");
+            var wallsToBuild = stringBuilder.ToString().Remove(0, 1).Split();
             foreach (var coordinates in wallsToBuild)
                 _board.CreateWallOnBoard(CreateWall(coordinates));
 
@@ -89,7 +89,7 @@ namespace BoardGame.Managers
             var stringBuilder = new StringBuilder();
             foreach (var c in instruction.Where(c => c != ' '))
                 stringBuilder.Append(c);
-            var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split("B");
+            var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split();
             foreach (var coordinates in berryToBuild)
                 _board.CreateBerryOnBoard(_berryCreator.CreateBerryBasedOnType(instruction[0].ToString(), coordinates));
 
