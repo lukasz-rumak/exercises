@@ -89,9 +89,10 @@ namespace BoardGame.Managers
             var stringBuilder = new StringBuilder();
             foreach (var c in instruction.Where(c => c != ' '))
                 stringBuilder.Append(c);
+            var berryType = _berryCreator.MapToBerryType(instruction[0].ToString());
             var berryToBuild = stringBuilder.ToString().Remove(0, 1).Split();
             foreach (var coordinates in berryToBuild)
-                _board.CreateBerryOnBoard(_berryCreator.CreateBerryBasedOnType(instruction[0].ToString(), coordinates));
+                _board.CreateBerryOnBoard(_berryCreator.CreateBerryBasedOnType(berryType, coordinates));
 
             _eventHandler.PublishEvent(EventType.BerryCreationDone, "");
         }

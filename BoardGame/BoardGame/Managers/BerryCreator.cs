@@ -8,24 +8,35 @@ namespace BoardGame.Managers
 {
     public class BerryCreator : IBerryCreator
     {
-        private readonly Dictionary<string, Func<string, IBerry>> _berrySelector;
+        private readonly Dictionary<BerryType, Func<string, IBerry>> _berrySelector;
 
         public BerryCreator()
         {
             _berrySelector = CreateBerrySelector();
         }
 
-        public IBerry CreateBerryBasedOnType(string berryType, string coordinates)
+        public IBerry CreateBerryBasedOnType(BerryType berryType, string coordinates)
         {
             return _berrySelector[berryType](coordinates);
         }
 
-        private Dictionary<string, Func<string, IBerry>> CreateBerrySelector()
+        public BerryType MapToBerryType(string berryType)
         {
-            return new Dictionary<string, Func<string, IBerry>>
+            return berryType switch
             {
-                ["B"] = coordinates => CreateBlueBerry(coordinates),
-                ["S"] = coordinates => CreateStrawBerry(coordinates)
+                "B" => BerryType.BlueBerry,
+                "S" => BerryType.StrawBerry,
+                _ => BerryType.None
+            };
+        }
+
+        private Dictionary<BerryType, Func<string, IBerry>> CreateBerrySelector()
+        {
+            return new Dictionary<BerryType, Func<string, IBerry>>
+            {
+                [BerryType.BlueBerry] = coordinates => CreateBlueBerry(coordinates),
+                [BerryType.StrawBerry] = coordinates => CreateStrawBerry(coordinates),
+                [BerryType.None] = coordinates => CreateErrorBerry(coordinates)
             };
         }
 
@@ -46,6 +57,11 @@ namespace BoardGame.Managers
         private IBerry CreateStrawBerry(string coordinates)
         {
             return CreateBerry(coordinates, new StrawBerry());
+        }
+        
+        private IBerry CreateErrorBerry(string coordinates)
+        {
+            return CreateBerry(coordinates, new ErrorBerry());
         }
     }
 }
