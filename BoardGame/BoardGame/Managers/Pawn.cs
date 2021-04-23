@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BoardGame.Interfaces;
 using BoardGame.Models;
+using BoardGame.Models.Berries;
 
 namespace BoardGame.Managers
 {
@@ -22,6 +24,13 @@ namespace BoardGame.Managers
                 Y = pawnId,
                 Direction = Direction.North
             };
+        }
+        
+        public override int CalculateScore()
+        {
+            var blueberry = CollectedBerries.Count(berry => berry.GetType() == typeof(BlueBerry));
+            var strawberry = CollectedBerries.Count(berry => berry.GetType() == typeof(StrawBerry)) * 2;
+            return blueberry + strawberry;
         }
 
         public (int, int) CalculatePieceNewPosition()

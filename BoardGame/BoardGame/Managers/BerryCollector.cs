@@ -5,16 +5,16 @@ namespace BoardGame.Managers
 {
     public abstract class BerryCollector
     {
-        private readonly List<IBerry> _collectedBerries = new List<IBerry>();
+        protected readonly List<IBerry> CollectedBerries = new List<IBerry>();
         
         public void CollectBerry(IBerry berry)
         {
-            _collectedBerries.Add(berry);
+            CollectedBerries.Add(berry);
         }
 
-        public int CalculateScore()
+        public virtual int CalculateScore()
         {
-            return _collectedBerries.Count;
+            return CollectedBerries.Count;
         }
     }
 }
