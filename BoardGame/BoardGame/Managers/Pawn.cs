@@ -25,12 +25,11 @@ namespace BoardGame.Managers
                 Direction = Direction.North
             };
         }
-        
+
         public override int CalculateScore()
         {
-            var blueberry = CollectedBerries.Count(berry => berry.GetType() == typeof(BlueBerry));
-            var strawberry = CollectedBerries.Count(berry => berry.GetType() == typeof(StrawBerry)) * 2;
-            return blueberry + strawberry;
+            return CollectedBerries.Count(berry => berry.GetType() == typeof(BlueBerry))
+                   + (CollectedBerries.Count(berry => berry.GetType() == typeof(StrawBerry)) * 2);
         }
 
         public (int, int) CalculatePieceNewPosition()

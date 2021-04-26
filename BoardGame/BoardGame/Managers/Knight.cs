@@ -29,9 +29,8 @@ namespace BoardGame.Managers
 
         public override int CalculateScore()
         {
-            var blueberry = CollectedBerries.Count(berry => berry.GetType() == typeof(BlueBerry)) * 2;
-            var strawberry = CollectedBerries.Count(berry => berry.GetType() == typeof(StrawBerry));
-            return blueberry + strawberry;
+            return (CollectedBerries.Count(berry => berry.GetType() == typeof(BlueBerry)) * 2)
+                   + CollectedBerries.Count(berry => berry.GetType() == typeof(StrawBerry));
         }
 
         public (int, int) CalculatePieceNewPosition()
