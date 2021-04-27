@@ -4,7 +4,6 @@ namespace BoardGame.Interfaces
 {
     public interface IBerryCreator
     {
-        IBerry CreateBerryBasedOnType(BerryType berryType, string coordinates);
-        BerryType MapToBerryType(string berryType);
+        IBerry CreateBerryBasedOnType(string berryType, string coordinates); 
     }
 }
