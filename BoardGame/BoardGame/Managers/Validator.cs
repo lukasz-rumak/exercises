@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using BoardGame.Interfaces;
 using BoardGame.Models;
+using BoardGame.Tmp;
 
 namespace BoardGame.Managers
 {
@@ -84,6 +85,8 @@ namespace BoardGame.Managers
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be player starting position, for example: 'B 0 0'"};
             if (!ValidateAgainstBoardSize(position, boardSize)) 
                 return new ValidationResult {IsValid = false, Reason = "Input berry position should fit into the board size"};
+            if(!new KnightNodes(boardSize).ValidateBerryAdd(position[0], position[1]))
+                return new ValidationResult {IsValid = false, Reason = "Input berry position should allow ending the game"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
         }
