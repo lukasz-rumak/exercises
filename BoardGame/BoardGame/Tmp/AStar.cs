@@ -95,7 +95,7 @@ namespace BoardGame.Tmp
                 "X|X|X|X|X"
             };
 
-            List<string> map = new List<string>
+            List<string> map2 = new List<string>
             {
                 "        ",
                 "        ",
@@ -106,6 +106,15 @@ namespace BoardGame.Tmp
                 " x      ",
                 " x      ",
                 " x      "
+            };
+            
+            List<string> map = new List<string>
+            {
+                "- ---",
+                " - --",
+                " -- -",
+                "- -- ",
+                "A---B"
             };
             
             var start = new Tile();
@@ -192,6 +201,10 @@ namespace BoardGame.Tmp
                 new Tile {X = currentTile.X, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
                 new Tile {X = currentTile.X - 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1},
                 new Tile {X = currentTile.X + 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1},
+                new Tile {X = currentTile.X + 1, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
+                new Tile {X = currentTile.X + 1, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
+                new Tile {X = currentTile.X - 1, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
+                new Tile {X = currentTile.X - 1, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
             };
 
             possibleTiles.ForEach(tile => tile.SetDistance(targetTile.X, targetTile.Y));
