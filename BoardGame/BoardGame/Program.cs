@@ -10,16 +10,15 @@ namespace BoardGame
     {
         static void Main(string[] args)
         {
-            var aStar = new AStar();
-            aStar.MainFunc();
-            
             var game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(),
                 new Validator(), new Validator(), new PlayersHandler(), new BerryCreator());
             game.RunBoardBuilder(
                 new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>(),
                         game.ObjectFactory.Get<IValidatorBerry>(), game.ObjectFactory.Get<IBerryCreator>()).WithSize(5)
-                    .AddWall("W 1 1 2 1").AddWall("W 1 1 2 1").BuildBoard());
-            game.PlayTheGame(new[] {"PMLMMRRMMMM"});
+                    .AddWall("W 1 1 2 1").AddWall("W 1 1 2 1").AddWall("W 0 3 0 2").AddWall("W 0 4 1 4").AddWall("W 0 4 1 3").AddWall("W 1 4 0 3")
+                    .AddWall("W 3 4 4 4").AddWall("W 3 3 4 4").AddWall("W 4 3 4 4").BuildBoard());
+
+            game.PlayTheGame(new[] {"PMMMM"});
             Console.WriteLine("I did nothing.");
         }
     }

@@ -33,13 +33,13 @@ namespace BoardGame.Managers
 
         public IBoardBuilder AddWall(string instruction)
         {
-            AddWallToBoard(instruction, _board.WithSize);
+            AddWallToBoard(instruction);
             return this;
         }
 
         public IBoardBuilder AddBerry(string instruction)
         {
-            AddBerryToBoard(instruction, _board.WithSize);
+            AddBerryToBoard(instruction);
             return this;
         }
 
@@ -49,9 +49,9 @@ namespace BoardGame.Managers
             return _board;
         }
 
-        private void AddWallToBoard(string instruction, int boardSize)
+        private void AddWallToBoard(string instruction)
         {
-            var validationResult = _validatorWall.ValidateWallInputWithReason(instruction, boardSize);
+            var validationResult = _validatorWall.ValidateWallInputWithReason(instruction, _board.WithSize, _board.GetWalls(), _board.GetBerries());
             if (!validationResult.IsValid)
             {
                 _eventHandler.PublishEvent(EventType.WallCreationError, $"{validationResult.Reason}");
@@ -77,9 +77,9 @@ namespace BoardGame.Managers
             };
         }
         
-        private void AddBerryToBoard(string instruction, int boardSize)
+        private void AddBerryToBoard(string instruction)
         {
-            var validationResult = _validatorBerry.ValidateBerryInputWithReason(instruction, boardSize);
+            var validationResult = _validatorBerry.ValidateBerryInputWithReason(instruction, _board.WithSize, _board.GetWalls());
             if (!validationResult.IsValid)
             {
                 _eventHandler.PublishEvent(EventType.BerryCreationError, $"{validationResult.Reason}");

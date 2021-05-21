@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
 using Xunit;
@@ -55,7 +56,9 @@ namespace BoardGameTests
         [InlineData(" ", 5, false, "Input cannot be null, empty or whitespace")]
         public void ReturnExpectedVersusActualForDifferentInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
         {
-            var actual = _validator.ValidateWallInputWithReason(instruction, boardSize);
+            var walls = new List<Wall>();
+            var berries = new List<IBerry>();
+            var actual = _validator.ValidateWallInputWithReason(instruction, boardSize, walls, berries);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);
         }

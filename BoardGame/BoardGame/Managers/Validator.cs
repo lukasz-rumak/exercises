@@ -20,7 +20,7 @@ namespace BoardGame.Managers
             return input.All(c => IsPieceType(c) || IsMovementType(c));
         }
 
-        public ValidationResult ValidateWallInputWithReason(string input, int boardSize)
+        public ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls, List<IBerry> berries)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
@@ -72,7 +72,7 @@ namespace BoardGame.Managers
             return input.All(t => t >= 0 && t < boardSize);
         }
         
-        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize)
+        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BoardGame.Managers;
 
 namespace BoardGame.Interfaces
@@ -8,6 +9,8 @@ namespace BoardGame.Interfaces
         void GenerateBoard(int size);
         void CreateWallOnBoard(Wall wallToAdd);
         void CreateBerryOnBoard(IBerry berryToAdd);
+        List<Wall> GetWalls();
+        List<IBerry> GetBerries();
         bool CheckIfAllBerriesCollected();
         bool IsNotEatenBerryOnField(int x, int y);
         bool IsFieldTaken(int x, int y);

@@ -39,7 +39,17 @@ namespace BoardGame.Managers
         {
             _berries.Add(berryToAdd);
         }
-        
+
+        public List<Wall> GetWalls()
+        {
+            return _walls;
+        }
+
+        public List<IBerry> GetBerries()
+        {
+            return _berries;
+        }
+
         public bool CheckIfAllBerriesCollected()
         {
             return _berries.Any() && _berries.All(berry => berry.IsEaten);
