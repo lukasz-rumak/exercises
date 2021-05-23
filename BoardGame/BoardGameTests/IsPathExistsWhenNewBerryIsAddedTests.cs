@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using BoardGame.Interfaces;
 using BoardGame.Managers;
 using Xunit;
 
 namespace BoardGameTests
 {
-    public class IsPathExistsTests
+    public class IsPathExistsWhenNewBerryIsAddedTests
     {
-        private readonly IAStarSearch _aStarSearch;
+        private readonly IAStarPathFinder _aStarPathFinder;
 
-        public IsPathExistsTests()
+        public IsPathExistsWhenNewBerryIsAddedTests()
         {
-            _aStarSearch = new AStarSearch();
+            _aStarPathFinder = new AStarPathFinder();
         }
 
         [Fact]
@@ -25,7 +26,7 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarSearch.IsPathExists(walls, 5, 0, 0, 4, 4);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5,4, 4);
             Assert.True(actual);
         }
         
@@ -51,7 +52,7 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarSearch.IsPathExists(walls, 5, 0, 0, 4, 2);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 2);
             Assert.True(actual);
         }
         
@@ -82,7 +83,7 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarSearch.IsPathExists(walls, 5, 0, 0, 4, 2);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 2);
             Assert.False(actual);
         }
         
@@ -133,7 +134,7 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarSearch.IsPathExists(walls, 5, 0, 0, 2, 2);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 2, 2);
             Assert.False(actual);
         }
         
@@ -141,7 +142,7 @@ namespace BoardGameTests
         public void ReturnFalseForNotReachableFieldByKnight()
         {
             var walls = new List<Wall>();
-            var actual = _aStarSearch.IsPathExists(walls, 5, 2, 2, 3, 2);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 3, 2);
             Assert.False(actual);
         }
     }

@@ -24,8 +24,9 @@ namespace BoardGameApi.Controllers
         private readonly IValidatorBerry _validatorBerry;
         private readonly IEventHandler _eventHandler;
         private readonly IBerryCreator _berryCreator;
+        private readonly IAStarPathFinder _aStarPathFinder;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator)
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinder aStarPathFinder)
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;
@@ -35,16 +36,18 @@ namespace BoardGameApi.Controllers
             _validatorWall = validatorWall;
             _validatorBerry = validatorBerry;
             _berryCreator = berryCreator;
+            _aStarPathFinder = aStarPathFinder;
         }
 
         [HttpPost("gameInit")]
         public ActionResult<GenericResponse> PostGameInit([FromBody] Board boardInit)
         {
             var sessionId = Guid.NewGuid();
-            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _validatorBerry, _playersHandler, _berryCreator);
+            var game = new GameMaster(_presentation, _eventHandler, _validator, _validatorWall, _validatorBerry, _playersHandler, _berryCreator, _aStarPathFinder);
             _gameHolder.Add(sessionId, game);
-            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), 
-                    game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>(), game.ObjectFactory.Get<IBerryCreator>())
+            RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(),
+                    game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>(),
+                    game.ObjectFactory.Get<IBerryCreator>(), game.ObjectFactory.Get<IAStarPathFinder>())
                 .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted

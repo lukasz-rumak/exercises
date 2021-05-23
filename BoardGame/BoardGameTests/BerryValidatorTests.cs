@@ -110,7 +110,8 @@ namespace BoardGameTests
         public void ReturnExpectedVersusActualForDifferentInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
         {
             var walls = new List<Wall>();
-            var actual = _validator.ValidateBerryInputWithReason(instruction, boardSize, walls);
+            var aStartPathFinder = new AStarPathFinder();
+            var actual = _validator.ValidateBerryInputWithReason(instruction, boardSize, walls, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);
         }

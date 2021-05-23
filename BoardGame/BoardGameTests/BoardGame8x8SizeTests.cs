@@ -10,8 +10,11 @@ namespace BoardGameTests
 
         public BoardGame8x8SizeTests()
         {
-            _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(), new Validator(), new Validator(), new PlayersHandler(), new BerryCreator());
-            _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(), _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(), _game.ObjectFactory.Get<IBerryCreator>()).WithSize(8).BuildBoard());
+            _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(),
+                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(), new AStarPathFinder());
+            _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(),
+                _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(),
+                _game.ObjectFactory.Get<IBerryCreator>(), _game.ObjectFactory.Get<IAStarPathFinder>()).WithSize(8).BuildBoard());
         }
 
         [Theory]

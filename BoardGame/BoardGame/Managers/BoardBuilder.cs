@@ -14,13 +14,15 @@ namespace BoardGame.Managers
         private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
         private readonly IBerryCreator _berryCreator;
+        private readonly IAStarPathFinder _aStarPathFinder;
         
-        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator)
+        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinder aStarPathFinder)
         {
             _eventHandler = eventHandler;
             _validatorWall = validatorWall;
             _validatorBerry = validatorBerry;
             _berryCreator = berryCreator;
+            _aStarPathFinder = aStarPathFinder;
             _board = new GameBoard(_eventHandler);
         }
 
@@ -51,7 +53,7 @@ namespace BoardGame.Managers
 
         private void AddWallToBoard(string instruction)
         {
-            var validationResult = _validatorWall.ValidateWallInputWithReason(instruction, _board.WithSize, _board.GetWalls(), _board.GetBerries());
+            var validationResult = _validatorWall.ValidateWallInputWithReason(instruction, _board.WithSize, _board.GetWalls(), _board.GetBerries(), _aStarPathFinder);
             if (!validationResult.IsValid)
             {
                 _eventHandler.PublishEvent(EventType.WallCreationError, $"{validationResult.Reason}");
@@ -79,7 +81,7 @@ namespace BoardGame.Managers
         
         private void AddBerryToBoard(string instruction)
         {
-            var validationResult = _validatorBerry.ValidateBerryInputWithReason(instruction, _board.WithSize, _board.GetWalls());
+            var validationResult = _validatorBerry.ValidateBerryInputWithReason(instruction, _board.WithSize, _board.GetWalls(), _aStarPathFinder);
             if (!validationResult.IsValid)
             {
                 _eventHandler.PublishEvent(EventType.BerryCreationError, $"{validationResult.Reason}");

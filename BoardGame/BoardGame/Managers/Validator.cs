@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using BoardGame.Interfaces;
 using BoardGame.Models;
-using BoardGame.Tmp;
 
 namespace BoardGame.Managers
 {
@@ -20,23 +19,30 @@ namespace BoardGame.Managers
             return input.All(c => IsPieceType(c) || IsMovementType(c));
         }
 
-        public ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls, List<IBerry> berries)
+        public ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls,
+            List<IBerry> berries, IAStarPathFinder aStarPathFinder)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
             if (!input.StartsWith('W'))
                 return new ValidationResult {IsValid = false, Reason = "Input should start with 'W'"};
             var inputSplited = input.Split('W')[1].Split(' ');
-            if (!ValidateWallAgainstLength(inputSplited)) 
-                return new ValidationResult {IsValid = false, Reason = "Input wall position should contain four chars divided by whitespace"};
+            if (!ValidateWallAgainstLength(inputSplited))
+                return new ValidationResult
+                    {IsValid = false, Reason = "Input wall position should contain four chars divided by whitespace"};
             inputSplited = inputSplited.Skip(1).ToArray();
             var inputConverted = ValidateWallAgainstNonIntAndConvert(inputSplited);
-            if (inputConverted == null) 
+            if (inputConverted == null)
                 return new ValidationResult {IsValid = false, Reason = "Input wall position should be integers"};
-            if (!ValidateWallAgainstPositionDifference(inputConverted)) 
-                return new ValidationResult {IsValid = false, Reason = "Input wall position difference should be 0 or 1"};
-            if (!ValidateAgainstBoardSize(inputConverted, boardSize)) 
-                return new ValidationResult {IsValid = false, Reason = "Input wall position should fit into the board size"};
+            if (!ValidateWallAgainstPositionDifference(inputConverted))
+                return new ValidationResult
+                    {IsValid = false, Reason = "Input wall position difference should be 0 or 1"};
+            if (!ValidateAgainstBoardSize(inputConverted, boardSize))
+                return new ValidationResult
+                    {IsValid = false, Reason = "Input wall position should fit into the board size"};
+            if (!ValidateWallAgainstEndingGame(inputConverted, boardSize, walls, berries, aStarPathFinder))
+                return new ValidationResult
+                    {IsValid = false, Reason = "Input wall position should allow ending the game"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
         }
@@ -71,8 +77,22 @@ namespace BoardGame.Managers
         {
             return input.All(t => t >= 0 && t < boardSize);
         }
-        
-        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls)
+
+        private bool ValidateWallAgainstEndingGame(int[] inputConverted, int boardSize, List<Wall> walls,
+            List<IBerry> berries, IAStarPathFinder aStarPathFinder)
+        {
+            var wall = new Wall
+            {
+                WallPositionField1 = (inputConverted[0], inputConverted[1]),
+                WallPositionField2 = (inputConverted[2], inputConverted[3])
+            };
+            walls.Add(wall);
+            walls.Add(wall.ReversedWall());
+
+            return aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, boardSize);
+        }
+
+        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls, IAStarPathFinder aStarPathFinder)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
@@ -85,8 +105,8 @@ namespace BoardGame.Managers
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be player starting position, for example: 'B 0 0'"};
             if (!ValidateAgainstBoardSize(position, boardSize)) 
                 return new ValidationResult {IsValid = false, Reason = "Input berry position should fit into the board size"};
-            // if(!new KnightNodes(boardSize).ValidateBerryAdd(position[0], position[1]))
-            //    return new ValidationResult {IsValid = false, Reason = "Input berry position should allow ending the game"};
+            if (!ValidateBerryAgainstEndingGame(aStarPathFinder, walls, boardSize, position[0], position[1]))
+                return new ValidationResult {IsValid = false, Reason = "Input berry position should allow ending the game"};
 
             return new ValidationResult {IsValid = true, Reason = ""};
         }
@@ -100,6 +120,12 @@ namespace BoardGame.Managers
         private bool ValidateBerryAgainstStartingPosition(IReadOnlyList<int> list)
         {
             return list[0] - list[1] != 0;
+        }
+
+        private bool ValidateBerryAgainstEndingGame(IAStarPathFinder aStarPathFinder, List<Wall> walls, int boardSize,
+            int berryPositionX, int berryPositionY)
+        {
+            return aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, boardSize, berryPositionX, berryPositionY);
         }
 
         private List<int> CreateBerryIntegerList(string input)

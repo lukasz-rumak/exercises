@@ -10,9 +10,11 @@ namespace BoardGameTests
 
         public BoardGame5x5SizeWithBerriesTests()
         {
-            _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(), new Validator(), new Validator(), new PlayersHandler(), new BerryCreator());
+            _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(),
+                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(), new AStarPathFinder());
             _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(),
-                    _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(), _game.ObjectFactory.Get<IBerryCreator>()).WithSize(5)
+                    _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(),
+                    _game.ObjectFactory.Get<IBerryCreator>(), _game.ObjectFactory.Get<IAStarPathFinder>()).WithSize(5)
                 .AddBerry("B 0 0").AddBerry("S 0 1").AddBerry("B 0 2").AddBerry("S 0 3")
                 .AddBerry("B 1 0").AddBerry("S 1 1").AddBerry("B 1 2").AddBerry("S 1 3")
                 .AddBerry("B 2 0").AddBerry("S 2 1").AddBerry("B 2 2").AddBerry("S 2 3")

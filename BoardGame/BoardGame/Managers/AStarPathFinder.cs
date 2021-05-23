@@ -1,38 +1,57 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BoardGame.Interfaces;
 using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public interface IAStarSearch
-    {
-        bool IsPathExists(List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY, int berryPositionX,
-            int berryPositionY);
-    }
-
-    public class AStarSearch : IAStarSearch
+    public class AStarPathFinder : IAStarPathFinder
     {
         private readonly Dictionary<Piece, Func<Tile, List<Tile>>> _piecePossibleMoves;
 
-        public AStarSearch()
+        public AStarPathFinder()
         {
             _piecePossibleMoves = CreatePossibleMovesDict();
         }
 
-        public bool IsPathExists(List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
-            int berryPositionX, int berryPositionY)
+        public bool ArePathsExistWhenNewWallIsAdded(List<Wall> walls, List<IBerry> berries, int boardSize)
         {
-            if (!AStarSearchAlgorithm(Piece.Knight, walls, boardSize, piecePositionX, piecePositionY, berryPositionX,
-                berryPositionY))
-                return false;
-            if (!AStarSearchAlgorithm(Piece.Pawn, walls, boardSize, piecePositionX, piecePositionY, berryPositionX,
-                berryPositionY))
-                return false;
+            for (int i = 0; i < boardSize; i++)
+            {
+                foreach (var berry in berries)
+                {
+                    if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i,
+                        berry.BerryPosition.Item1,
+                        berry.BerryPosition.Item2))
+                        return false;
+                    if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i,
+                        berry.BerryPosition.Item1,
+                        berry.BerryPosition.Item2))
+                        return false;
+                }
+            }
+
             return true;
         }
 
-        private bool AStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
+        public bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
+            int berryPositionY)
+        {
+            for (int i = 0; i < boardSize; i++)
+            {
+                if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i, berryPositionX,
+                    berryPositionY))
+                    return false;
+                if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i, berryPositionX,
+                    berryPositionY))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
             int berryPositionX, int berryPositionY)
         {
             var start = new Tile
@@ -118,6 +137,15 @@ namespace BoardGame.Managers
             return false;
         }
 
+        private Dictionary<Piece, Func<Tile, List<Tile>>> CreatePossibleMovesDict()
+        {
+            return new Dictionary<Piece, Func<Tile, List<Tile>>>
+            {
+                [Piece.Pawn] = GetPossibleTilesForPawn,
+                [Piece.Knight] = GetPossibleTilesForKnight,
+            };
+        }
+        
         private List<Tile> GetPossibleTilesForPawn(Tile currentTile)
         {
             return new List<Tile>
@@ -141,15 +169,6 @@ namespace BoardGame.Managers
                     {X = currentTile.X - 1, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
                 new Tile
                     {X = currentTile.X - 1, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1}
-            };
-        }
-        
-        private Dictionary<Piece, Func<Tile, List<Tile>>> CreatePossibleMovesDict()
-        {
-            return new Dictionary<Piece, Func<Tile, List<Tile>>>
-            {
-                [Piece.Pawn] = GetPossibleTilesForPawn,
-                [Piece.Knight] = GetPossibleTilesForKnight,
             };
         }
     }

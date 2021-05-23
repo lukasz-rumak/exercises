@@ -6,6 +6,6 @@ namespace BoardGame.Interfaces
 {
     public interface IValidatorWall
     {
-        ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls, List<IBerry> berries);
+        ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls, List<IBerry> berries, IAStarPathFinder aStarPathFinders);
     }
 }
