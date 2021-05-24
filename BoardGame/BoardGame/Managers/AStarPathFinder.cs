@@ -17,38 +17,70 @@ namespace BoardGame.Managers
 
         public bool ArePathsExistWhenNewWallIsAdded(List<Wall> walls, List<IBerry> berries, int boardSize)
         {
-            for (int i = 0; i < boardSize; i++)
+            var counterKnight = 0;
+            var counterPawn = 0;
+
+            foreach (var berry in berries)
             {
-                foreach (var berry in berries)
+                for (int i = 0; i < boardSize; i++)
                 {
-                    if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i,
+                    if (IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i,
                         berry.BerryPosition.Item1,
                         berry.BerryPosition.Item2))
-                        return false;
-                    if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i,
-                        berry.BerryPosition.Item1,
-                        berry.BerryPosition.Item2))
-                        return false;
+                    {
+                        counterKnight++;
+                        break;
+                    }
                 }
             }
 
-            return true;
+            if (berries.Count != counterKnight)
+                return false;
+            
+            foreach (var berry in berries)
+            {
+                for (int i = 0; i < boardSize; i++)
+                {
+                    if (IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i,
+                        berry.BerryPosition.Item1,
+                        berry.BerryPosition.Item2))
+                    {
+                        counterPawn++;
+                        break;
+                    }
+                }
+            }
+
+            return berries.Count == counterPawn;
         }
 
         public bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
             int berryPositionY)
         {
+            var statusKnight = false;
+            var statusPawn = false;
+
             for (int i = 0; i < boardSize; i++)
             {
-                if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i, berryPositionX,
+                if (IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i, berryPositionX,
                     berryPositionY))
-                    return false;
-                if (!IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i, berryPositionX,
-                    berryPositionY))
-                    return false;
+                {
+                    statusKnight = true;
+                    break;
+                }
             }
 
-            return true;
+            for (int i = 0; i < boardSize; i++)
+            {
+                if (IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i, berryPositionX,
+                    berryPositionY))
+                {
+                    statusPawn = true;
+                    break;
+                }
+            }
+
+            return statusKnight && statusPawn;
         }
 
         private bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,

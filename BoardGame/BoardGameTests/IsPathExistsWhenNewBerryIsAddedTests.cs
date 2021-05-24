@@ -57,19 +57,29 @@ namespace BoardGameTests
         }
         
         [Fact]
-        public void ReturnFalseForNonExistingPathPieceBlocked()
+        public void ReturnTrueForExistingPathWhenFirstPieceBlocked()
         {
             var walls = new List<Wall>
             {
                 new Wall
                 {
-                    WallPositionField1 = (1, 1),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (0, 0),
+                    WallPositionField2 = (1, 1)
                 },
                 new Wall
                 {
-                    WallPositionField1 = (1, 0),
-                    WallPositionField2 = (1, 1)
+                    WallPositionField1 = (1, 1),
+                    WallPositionField2 = (0, 0)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (0, 0),
+                    WallPositionField2 = (0, 1)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (0, 1),
+                    WallPositionField2 = (0, 0)
                 },
                 new Wall
                 {
@@ -78,71 +88,53 @@ namespace BoardGameTests
                 },
                 new Wall
                 {
-                    WallPositionField1 = (0, 0),
-                    WallPositionField2 = (1, 1)
+                    WallPositionField1 = (1, 0),
+                    WallPositionField2 = (0, 0)
                 }
             };
             
             var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 2);
-            Assert.False(actual);
+            Assert.True(actual);
         }
         
         [Fact]
-        public void ReturnFalseForNonExistingPathNoAccess()
+        public void ReturnFalseForNonExistingPathWhenNoAccess()
         {
             var walls = new List<Wall>
             {
                 new Wall
                 {
-                    WallPositionField1 = (2, 3),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (4, 0),
+                    WallPositionField2 = (3, 0)
                 },
                 new Wall
                 {
-                    WallPositionField1 = (3, 3),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (3, 0),
+                    WallPositionField2 = (4, 0)
                 },
                 new Wall
                 {
-                    WallPositionField1 = (3, 2),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (4, 0),
+                    WallPositionField2 = (3, 1)
                 },
                 new Wall
                 {
                     WallPositionField1 = (3, 1),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField2 = (4, 0)
                 },
                 new Wall
                 {
-                    WallPositionField1 = (2, 1),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (4, 0),
+                    WallPositionField2 = (4, 1)
                 },
                 new Wall
                 {
-                    WallPositionField1 = (1, 1),
-                    WallPositionField2 = (2, 2)
-                },
-                new Wall
-                {
-                    WallPositionField1 = (1, 2),
-                    WallPositionField2 = (2, 2)
-                },
-                new Wall
-                {
-                    WallPositionField1 = (1, 3),
-                    WallPositionField2 = (2, 2)
+                    WallPositionField1 = (4, 1),
+                    WallPositionField2 = (4, 0)
                 }
             };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 2, 2);
-            Assert.False(actual);
-        }
-        
-        [Fact]
-        public void ReturnFalseForNotReachableFieldByKnight()
-        {
-            var walls = new List<Wall>();
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 3, 2);
+            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 0);
             Assert.False(actual);
         }
     }
