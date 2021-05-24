@@ -20,7 +20,7 @@ namespace BoardGame.Managers
         }
 
         public ValidationResult ValidateWallInputWithReason(string input, int boardSize, List<Wall> walls,
-            List<IBerry> berries, IAStarPathFinder aStarPathFinder)
+            List<IBerry> berries, IAStarPathFinderAlgorithm aStarPathFinder)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
@@ -79,20 +79,21 @@ namespace BoardGame.Managers
         }
 
         private bool ValidateWallAgainstEndingGame(int[] inputConverted, int boardSize, List<Wall> walls,
-            List<IBerry> berries, IAStarPathFinder aStarPathFinder)
+            List<IBerry> berries, IAStarPathFinderAlgorithm aStarPathFinder)
         {
+            var wallsNew = walls.Select(w => w).ToList();
             var wall = new Wall
             {
                 WallPositionField1 = (inputConverted[0], inputConverted[1]),
                 WallPositionField2 = (inputConverted[2], inputConverted[3])
             };
-            walls.Add(wall);
-            walls.Add(wall.ReversedWall());
+            wallsNew.Add(wall);
+            wallsNew.Add(wall.ReversedWall());
 
-            return aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, boardSize);
+            return aStarPathFinder.ArePathsExistWhenNewWallIsAdded(wallsNew, berries, boardSize);
         }
 
-        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls, IAStarPathFinder aStarPathFinder)
+        public ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls, IAStarPathFinderAlgorithm aStarPathFinder)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult {IsValid = false, Reason = "Input cannot be null, empty or whitespace"};
@@ -122,7 +123,7 @@ namespace BoardGame.Managers
             return list[0] - list[1] != 0;
         }
 
-        private bool ValidateBerryAgainstEndingGame(IAStarPathFinder aStarPathFinder, List<Wall> walls, int boardSize,
+        private bool ValidateBerryAgainstEndingGame(IAStarPathFinderAlgorithm aStarPathFinder, List<Wall> walls, int boardSize,
             int berryPositionX, int berryPositionY)
         {
             return aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, boardSize, berryPositionX, berryPositionY);

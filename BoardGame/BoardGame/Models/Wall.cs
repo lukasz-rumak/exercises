@@ -1,4 +1,4 @@
-﻿namespace BoardGame.Managers
+﻿namespace BoardGame.Models
 {
     public class Wall
     {

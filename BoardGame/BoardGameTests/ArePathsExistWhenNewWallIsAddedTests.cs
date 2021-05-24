@@ -9,11 +9,11 @@ namespace BoardGameTests
 {
     public class ArePathsExistWhenNewWallIsAddedTests
     {
-        private readonly IAStarPathFinder _aStarPathFinder;
+        private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
 
         public ArePathsExistWhenNewWallIsAddedTests()
         {
-            _aStarPathFinder = new AStarPathFinder();
+            _aStarPathFinder = new AStarPathFinderAlgorithm();
         }
 
         [Fact]

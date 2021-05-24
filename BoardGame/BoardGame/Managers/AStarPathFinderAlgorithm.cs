@@ -6,11 +6,11 @@ using BoardGame.Models;
 
 namespace BoardGame.Managers
 {
-    public class AStarPathFinder : IAStarPathFinder
+    public class AStarPathFinderAlgorithm : IAStarPathFinderAlgorithm
     {
         private readonly Dictionary<Piece, Func<Tile, List<Tile>>> _piecePossibleMoves;
 
-        public AStarPathFinder()
+        public AStarPathFinderAlgorithm()
         {
             _piecePossibleMoves = CreatePossibleMovesDict();
         }
@@ -82,7 +82,7 @@ namespace BoardGame.Managers
 
             return statusKnight && statusPawn;
         }
-
+        
         private bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
             int berryPositionX, int berryPositionY)
         {

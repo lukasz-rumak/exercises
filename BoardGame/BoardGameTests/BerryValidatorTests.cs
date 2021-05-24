@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
+using BoardGame.Models;
 using Xunit;
 
 namespace BoardGameTests
@@ -110,7 +111,7 @@ namespace BoardGameTests
         public void ReturnExpectedVersusActualForDifferentInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
         {
             var walls = new List<Wall>();
-            var aStartPathFinder = new AStarPathFinder();
+            var aStartPathFinder = new AStarPathFinderAlgorithm();
             var actual = _validator.ValidateBerryInputWithReason(instruction, boardSize, walls, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);

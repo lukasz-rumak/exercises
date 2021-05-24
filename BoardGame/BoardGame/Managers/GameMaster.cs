@@ -23,7 +23,7 @@ namespace BoardGame.Managers
         private bool _isBoardBuilt;
         private bool _isGameComplete;
 
-        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player, IBerryCreator berryCreator, IAStarPathFinder aStarPathFinder)
+        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player, IBerryCreator berryCreator, IAStarPathFinderAlgorithm aStarPathFinder)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
             ObjectFactory.Register<IPresentation>(presentation);
@@ -33,7 +33,7 @@ namespace BoardGame.Managers
             ObjectFactory.Register<IValidatorBerry>(validatorBerry);
             ObjectFactory.Register<IPlayer>(player);
             ObjectFactory.Register<IBerryCreator>(berryCreator);
-            ObjectFactory.Register<IAStarPathFinder>(aStarPathFinder);
+            ObjectFactory.Register<IAStarPathFinderAlgorithm>(aStarPathFinder);
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEventHandler>();
             _validator = ObjectFactory.Get<IValidator>();

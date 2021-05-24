@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BoardGame.Managers;
+using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {

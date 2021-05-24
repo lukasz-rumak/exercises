@@ -41,7 +41,7 @@ namespace BoardGameApi
             services.AddTransient<IEventHandler, EventHandler>();
             services.AddTransient<IGameBoard, GameBoard>();
             services.AddTransient<IBerryCreator, BerryCreator>();
-            services.AddTransient<IAStarPathFinder, AStarPathFinder>();
+            services.AddTransient<IAStarPathFinderAlgorithm, AStarPathFinderAlgorithm>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

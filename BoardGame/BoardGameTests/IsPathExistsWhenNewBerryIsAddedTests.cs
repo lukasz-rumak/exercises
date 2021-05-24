@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
+using BoardGame.Models;
 using Xunit;
 
 namespace BoardGameTests
 {
     public class IsPathExistsWhenNewBerryIsAddedTests
     {
-        private readonly IAStarPathFinder _aStarPathFinder;
+        private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
 
         public IsPathExistsWhenNewBerryIsAddedTests()
         {
-            _aStarPathFinder = new AStarPathFinder();
+            _aStarPathFinder = new AStarPathFinderAlgorithm();
         }
 
         [Fact]

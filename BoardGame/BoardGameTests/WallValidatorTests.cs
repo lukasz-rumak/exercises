@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
+using BoardGame.Models;
+using Moq;
 using Xunit;
 
 namespace BoardGameTests
@@ -58,10 +60,36 @@ namespace BoardGameTests
         {
             var walls = new List<Wall>();
             var berries = new List<IBerry>();
-            var aStartPathFinder = new AStarPathFinder();
+            var aStartPathFinder = new AStarPathFinderAlgorithm();
             var actual = _validator.ValidateWallInputWithReason(instruction, boardSize, walls, berries, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);
+        }
+
+        [Fact]
+        public void WallThatFailsValidatorShouldNotBeAddedToTheListOfWalls()
+        {
+            var walls = new List<Wall>
+            {
+                new Wall
+                {
+                    WallPositionField1 = (1, 1),
+                    WallPositionField2 = (1, 0)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (1, 0),
+                    WallPositionField2 = (1, 1)
+                }
+            };
+            
+            var berries = new List<IBerry>();
+            var aStarPathFinder = new Mock<IAStarPathFinderAlgorithm>();
+            aStarPathFinder.Setup(x => x.ArePathsExistWhenNewWallIsAdded(It.IsAny<List<Wall>>(),
+                It.IsAny<List<IBerry>>(), It.IsInRange(5, 10, Range.Inclusive))).Returns(false);
+            var actual = _validator.ValidateWallInputWithReason("W 1 1 2 2", 5, walls, berries, aStarPathFinder.Object);
+            Assert.False(actual.IsValid);
+            Assert.Equal(2, walls.Count);
         }
     }
 }
