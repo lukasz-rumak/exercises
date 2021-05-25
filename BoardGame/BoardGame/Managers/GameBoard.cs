@@ -107,7 +107,7 @@ namespace BoardGame.Managers
         {
             if (x < WithSize && y < WithSize && x >= 0 && y >= 0)
                 return true;
-            _eventHandler.PublishEvent(EventType.OutsideBoundaries, $"({x}, {y})");
+            _eventHandler.PublishEvent(EventType.OutsideBoundaries, $"({x},{y})");
             return false;
         }
 
@@ -115,7 +115,7 @@ namespace BoardGame.Managers
         {
             if (!_board[x, y].IsTaken)
                 return true;
-            _eventHandler.PublishEvent(EventType.FieldTaken, $"Field taken: ({x}, {y})");
+            _eventHandler.PublishEvent(EventType.FieldTaken, $"Field taken: ({x},{y})");
             return false;
         }
 
@@ -128,7 +128,7 @@ namespace BoardGame.Managers
                 wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY))
                 return true;
             _eventHandler.PublishEvent(EventType.WallOnTheRoute,
-                $"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX}, {newY})");
+                $"PieceId: {piece.PieceId}, PieceType: {piece.PieceType}, move from ({piece.Position.X},{piece.Position.Y}) to ({newX},{newY})");
             return false;
         }
 

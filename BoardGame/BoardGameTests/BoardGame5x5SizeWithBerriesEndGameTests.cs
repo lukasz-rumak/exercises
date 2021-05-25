@@ -15,13 +15,13 @@ namespace BoardGameTests
             _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(),
                     _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(),
                     _game.ObjectFactory.Get<IBerryCreator>(), _game.ObjectFactory.Get<IAStarPathFinderAdapter>()).WithSize(5)
-                .AddBerry("B 0 0").AddBerry("S 1 0").AddBerry("B 2 0").AddBerry("B 3 0").AddBerry("B 4 0")
-                .AddBerry("B 1 1").AddBerry("S 2 1").AddBerry("B 3 1").AddBerry("B 4 1")
+                .AddBerry("B 0 0").AddBerry("S 2 0").AddBerry("B 4 0")
+                .AddBerry("B 1 1").AddBerry("S 3 1")
                 .BuildBoard());
         }
 
         [Theory]
-        [InlineData(new []{"PRMMMMLMMMMMM", "PRMMMMLMMMMMM"}, new []{"[P] 4 0 East [S] 5", "[P] 4 1 East [S] 4"})]
+        [InlineData(new []{"PRMMMMLMMMMMM", "PRMMMMLMMMMMM"}, new []{"[P] 4 0 East [S] 3", "[P] 4 1 East [S] 2"})]
         public void ReturnExpectedVersusActualForDifferentInputInstructions(string[] input, string[] expectedResult)
         {
             var actual = _game.PlayTheGame(input);

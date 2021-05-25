@@ -17,7 +17,7 @@ namespace BoardGameApiTests.TestData
             new object[]
                 {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 0, MoveTo = "MMMLMMMRRMMMM"}, HttpStatusCode.OK, "The piece moved. PieceId: 0, PieceType: Pawn, new position: (4,3)"},
             new object[]
-                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Move not possible (outside of the boundaries)! (0, 5)"},
+                {Guid.Parse("c5665f24-93f5-4b55-81a0-8e245a9caecb"), new MovePlayer {PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.OK, "Move not possible (outside of the boundaries)! (0,5)"},
             new object[]
                 {Guid.Empty, new MovePlayer {PlayerId = 0, MoveTo = "MMMMMMMM"}, HttpStatusCode.NotFound, "The provided sessionId is invalid"},
             new object[]
