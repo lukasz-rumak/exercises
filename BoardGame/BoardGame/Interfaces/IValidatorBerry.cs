@@ -6,6 +6,6 @@ namespace BoardGame.Interfaces
 {
     public interface IValidatorBerry
     {
-        ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls, IAStarPathFinderAlgorithm aStarPathFinder);
+        ValidationResult ValidateBerryInputWithReason(string input, int boardSize, List<Wall> walls, IAStarPathFinderAdapter aStarPathFinder);
     }
 }

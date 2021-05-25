@@ -8,11 +8,11 @@ namespace BoardGameTests
 {
     public class IsPathExistsWhenNewBerryIsAddedTests
     {
-        private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
+        private readonly IAStarPathFinderAdapter _aStarPathFinder;
 
         public IsPathExistsWhenNewBerryIsAddedTests()
         {
-            _aStarPathFinder = new AStarPathFinderAlgorithm();
+            _aStarPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm());
         }
 
         [Fact]

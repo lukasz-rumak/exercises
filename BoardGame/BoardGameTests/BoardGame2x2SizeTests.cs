@@ -11,10 +11,10 @@ namespace BoardGameTests
         public BoardGame2x2SizeTests()
         {
             _game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(),
-                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(), new AStarPathFinderAlgorithm());
+                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(), new AStarPathFinderAdapter(new AStarPathFinderAlgorithm()));
             _game.RunBoardBuilder(new BoardBuilder(_game.ObjectFactory.Get<IEventHandler>(),
                 _game.ObjectFactory.Get<IValidatorWall>(), _game.ObjectFactory.Get<IValidatorBerry>(),
-                _game.ObjectFactory.Get<IBerryCreator>(), _game.ObjectFactory.Get<IAStarPathFinderAlgorithm>()).WithSize(2).BuildBoard());
+                _game.ObjectFactory.Get<IBerryCreator>(), _game.ObjectFactory.Get<IAStarPathFinderAdapter>()).WithSize(2).BuildBoard());
         }
 
         [Theory]

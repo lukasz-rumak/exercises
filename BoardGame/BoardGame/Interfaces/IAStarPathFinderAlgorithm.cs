@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using BoardGame.Managers;
 using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {
     public interface IAStarPathFinderAlgorithm
     {
-        bool ArePathsExistWhenNewWallIsAdded(List<Wall> walls, List<IBerry> berries, int boardSize);
-        bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX, int berryPositionY);
+        bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize,
+            int piecePositionX, int piecePositionY,
+            int berryPositionX, int berryPositionY);
     }
 }

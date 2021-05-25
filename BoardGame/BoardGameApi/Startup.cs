@@ -41,6 +41,7 @@ namespace BoardGameApi
             services.AddTransient<IEventHandler, EventHandler>();
             services.AddTransient<IGameBoard, GameBoard>();
             services.AddTransient<IBerryCreator, BerryCreator>();
+            services.AddTransient<IAStarPathFinderAdapter, AStarPathFinderAdapter>();
             services.AddTransient<IAStarPathFinderAlgorithm, AStarPathFinderAlgorithm>();
         }
 

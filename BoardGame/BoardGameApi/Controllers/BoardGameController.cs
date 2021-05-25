@@ -24,9 +24,9 @@ namespace BoardGameApi.Controllers
         private readonly IValidatorBerry _validatorBerry;
         private readonly IEventHandler _eventHandler;
         private readonly IBerryCreator _berryCreator;
-        private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
+        private readonly IAStarPathFinderAdapter _aStarPathFinder;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAlgorithm aStarPathFinder)
+        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;
@@ -47,7 +47,7 @@ namespace BoardGameApi.Controllers
             _gameHolder.Add(sessionId, game);
             RunInTheGame(sessionId).StartBoardBuilder(new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(),
                     game.ObjectFactory.Get<IValidatorWall>(), game.ObjectFactory.Get<IValidatorBerry>(),
-                    game.ObjectFactory.Get<IBerryCreator>(), game.ObjectFactory.Get<IAStarPathFinderAlgorithm>())
+                    game.ObjectFactory.Get<IBerryCreator>(), game.ObjectFactory.Get<IAStarPathFinderAdapter>())
                 .WithSize(boardInit.WithSize));
             var lastEvent = RunInTheGame(sessionId).GetLastEvent();
             return lastEvent.Type == EventType.GameStarted

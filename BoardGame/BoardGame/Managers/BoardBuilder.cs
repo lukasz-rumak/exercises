@@ -14,9 +14,9 @@ namespace BoardGame.Managers
         private readonly IValidatorWall _validatorWall;
         private readonly IEventHandler _eventHandler;
         private readonly IBerryCreator _berryCreator;
-        private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
+        private readonly IAStarPathFinderAdapter _aStarPathFinder;
         
-        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAlgorithm aStarPathFinder)
+        public BoardBuilder(IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
         {
             _eventHandler = eventHandler;
             _validatorWall = validatorWall;

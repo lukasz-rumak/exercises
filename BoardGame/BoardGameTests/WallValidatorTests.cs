@@ -60,7 +60,7 @@ namespace BoardGameTests
         {
             var walls = new List<Wall>();
             var berries = new List<IBerry>();
-            var aStartPathFinder = new AStarPathFinderAlgorithm();
+            var aStartPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm());
             var actual = _validator.ValidateWallInputWithReason(instruction, boardSize, walls, berries, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);
@@ -84,7 +84,7 @@ namespace BoardGameTests
             };
             
             var berries = new List<IBerry>();
-            var aStarPathFinder = new Mock<IAStarPathFinderAlgorithm>();
+            var aStarPathFinder = new Mock<IAStarPathFinderAdapter>();
             aStarPathFinder.Setup(x => x.ArePathsExistWhenNewWallIsAdded(It.IsAny<List<Wall>>(),
                 It.IsAny<List<IBerry>>(), It.IsInRange(5, 10, Range.Inclusive))).Returns(false);
             var actual = _validator.ValidateWallInputWithReason("W 1 1 2 2", 5, walls, berries, aStarPathFinder.Object);
