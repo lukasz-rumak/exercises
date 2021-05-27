@@ -8,27 +8,13 @@ namespace BoardGame.Managers
 {
     public class AStarPathFinderAlgorithm : IAStarPathFinderAlgorithm
     {
-        public bool IsPathPossibleUsingAStarSearchAlgorithm(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
-            int berryPositionX, int berryPositionY)
+        public bool IsPathPossibleUsingAStarSearchAlgorithm(List<(int, int)> possibleMoves, List<Wall> walls, 
+            int boardSize, int startX, int startY, int targetX, int targetY)
         {
-            var start = new Tile
-            {
-                Y = piecePositionY,
-                X = piecePositionX
-            };
-
-            var finish = new Tile
-            {
-                Y = berryPositionY,
-                X = berryPositionX
-            };
-
+            var start = GetStartPosition(startX, startY);
+            var finish = GetFinishPosition(targetX, targetY);
             start.SetDistance(finish.X, finish.Y);
-
-            var activeTiles = new List<Tile>
-            {
-                start
-            };
+            var activeTiles = new List<Tile> { start };
             var visitedTiles = new List<Tile>();
 
             while (activeTiles.Any())
@@ -65,6 +51,24 @@ namespace BoardGame.Managers
             }
 
             return false;
+        }
+
+        private Tile GetStartPosition(int startX, int startY)
+        {
+            return new Tile
+            {
+                Y = startY,
+                X = startX
+            };
+        }
+
+        private Tile GetFinishPosition(int targetX, int targetY)
+        {
+            return new Tile
+            {
+                Y = targetY,
+                X = targetX
+            };
         }
 
         private List<Tile> GetWalkableTiles(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize, Tile currentTile, Tile targetTile)
