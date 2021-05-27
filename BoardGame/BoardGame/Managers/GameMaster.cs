@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using BoardGame.Interfaces;
 using BoardGame.Models;
-using BoardGame.PieceFactory;
 
 namespace BoardGame.Managers
 {
@@ -16,14 +15,13 @@ namespace BoardGame.Managers
         private readonly IValidator _validator;
         private IBoardBuilder _boardBuilder;
         private IGameBoard _board;
-        private readonly IPlayer _playersHandler;
+        private readonly IPlayerCreation _playersHandler;
         private readonly IPresentation _presentation;
-        private readonly PieceFactory.PieceFactory _pieceFactory;
         private readonly List<string> _gameResult;
         private bool _isBoardBuilt;
         private bool _isGameComplete;
 
-        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayer player, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
+        public GameMaster(IPresentation presentation, IEventHandler eventHandler, IValidator validator, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IPlayerCreation player, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
         {
             ObjectFactory = new ObjectFactory.ObjectFactory();
             ObjectFactory.Register<IPresentation>(presentation);
@@ -31,17 +29,14 @@ namespace BoardGame.Managers
             ObjectFactory.Register<IValidator>(validator);
             ObjectFactory.Register<IValidatorWall>(validatorWall);
             ObjectFactory.Register<IValidatorBerry>(validatorBerry);
-            ObjectFactory.Register<IPlayer>(player);
+            ObjectFactory.Register<IPlayerCreation>(player);
             ObjectFactory.Register<IBerryCreator>(berryCreator);
             ObjectFactory.Register<IAStarPathFinderAdapter>(aStarPathFinder);
             _presentation = ObjectFactory.Get<IPresentation>();
             _eventHandler = ObjectFactory.Get<IEventHandler>();
             _validator = ObjectFactory.Get<IValidator>();
-            _playersHandler = ObjectFactory.Get<IPlayer>();
-            _pieceFactory = new PieceFactory.PieceFactory();
-            _pieceFactory.Register("P", new PawnAbstractFactory());
-            _pieceFactory.Register("K", new KnightAbstractFactory());
-            _validator.AllowedPieceTypes = _pieceFactory.GetRegisteredKeys();
+            _playersHandler = ObjectFactory.Get<IPlayerCreation>();
+            _validator.AllowedPieceTypes = _playersHandler.GetRegisteredPieceKeys();
             _gameResult = new List<string>();
             _isBoardBuilt = false;
             _isGameComplete = false;
@@ -100,7 +95,7 @@ namespace BoardGame.Managers
         public void CreatePlayers(IReadOnlyList<string> instructions)
         {
             if (_isGameComplete) return;
-            _playersHandler.CreatePlayers(_board, _pieceFactory, instructions);
+            _playersHandler.CreatePlayers(_board, instructions);
             _eventHandler.PublishEvent(EventType.PlayerAdded, "");
         }
         

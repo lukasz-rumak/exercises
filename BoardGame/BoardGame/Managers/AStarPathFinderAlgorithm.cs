@@ -8,14 +8,7 @@ namespace BoardGame.Managers
 {
     public class AStarPathFinderAlgorithm : IAStarPathFinderAlgorithm
     {
-        private readonly Dictionary<Piece, Func<Tile, List<Tile>>> _piecePossibleMoves;
-
-        public AStarPathFinderAlgorithm()
-        {
-            _piecePossibleMoves = CreatePossibleMovesDict();
-        }
-
-        public bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
+        public bool IsPathPossibleUsingAStarSearchAlgorithm(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize, int piecePositionX, int piecePositionY,
             int berryPositionX, int berryPositionY)
         {
             var start = new Tile
@@ -48,7 +41,7 @@ namespace BoardGame.Managers
                 visitedTiles.Add(checkTile);
                 activeTiles.Remove(checkTile);
 
-                var walkableTiles = GetWalkableTiles(pieceType, walls, boardSize, checkTile, finish);
+                var walkableTiles = GetWalkableTiles(possibleMoves, walls, boardSize, checkTile, finish);
 
                 foreach (var walkableTile in walkableTiles)
                 {
@@ -74,9 +67,9 @@ namespace BoardGame.Managers
             return false;
         }
 
-        private List<Tile> GetWalkableTiles(Piece pieceType, List<Wall> walls, int boardSize, Tile currentTile, Tile targetTile)
+        private List<Tile> GetWalkableTiles(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize, Tile currentTile, Tile targetTile)
         {
-            var possibleTiles = _piecePossibleMoves[pieceType](currentTile);
+            var possibleTiles = GetPossibleTiles(possibleMoves, currentTile);
             
             possibleTiles.ForEach(tile => tile.SetDistance(targetTile.X, targetTile.Y));
 
@@ -101,39 +94,18 @@ namespace BoardGame.Managers
             return false;
         }
 
-        private Dictionary<Piece, Func<Tile, List<Tile>>> CreatePossibleMovesDict()
+        private List<Tile> GetPossibleTiles(List<(int, int)> possibleMoves, Tile currentTile)
         {
-            return new Dictionary<Piece, Func<Tile, List<Tile>>>
+            var list = new List<Tile>();
+            foreach (var (x, y) in possibleMoves)
             {
-                [Piece.Pawn] = GetPossibleTilesForPawn,
-                [Piece.Knight] = GetPossibleTilesForKnight,
-            };
-        }
-        
-        private List<Tile> GetPossibleTilesForPawn(Tile currentTile)
-        {
-            return new List<Tile>
-            {
-                new Tile {X = currentTile.X, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile {X = currentTile.X, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile {X = currentTile.X - 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile {X = currentTile.X + 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1}
-            };
-        }
+                list.Add(new Tile
+                {
+                    X = currentTile.X + x, Y = currentTile.Y + y, Parent = currentTile, Cost = currentTile.Cost + 1
+                });
+            }
 
-        private List<Tile> GetPossibleTilesForKnight(Tile currentTile)
-        {
-            return new List<Tile>
-            {
-                new Tile
-                    {X = currentTile.X + 1, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile
-                    {X = currentTile.X + 1, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile
-                    {X = currentTile.X - 1, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile
-                    {X = currentTile.X - 1, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1}
-            };
+            return list;
         }
     }
 }

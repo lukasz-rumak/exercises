@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using BoardGame.Managers;
 
 namespace BoardGame.Interfaces
 {
-    public interface IPlayer
+    public interface IPlayerCreation
     {
-        void CreatePlayers(IGameBoard board, PieceFactory.PieceFactory pieceFactory, IReadOnlyList<string> instructions);
+        List<string> GetRegisteredPieceKeys();
+        void CreatePlayers(IGameBoard board, IReadOnlyList<string> instructions);
         int ReturnPlayersNumber();
         IReadOnlyList<IPiece> ReturnPlayersInfo();
         IPiece ReturnPlayerInfo(int playerId);

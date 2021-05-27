@@ -122,7 +122,7 @@ namespace BoardGameTests
         public void ReturnExpectedVersusActualForDifferentInputInstructionsWithReason(string instruction, int boardSize, bool expectedResult, string expectedReason)
         {
             var walls = new List<Wall>();
-            var aStartPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm());
+            var aStartPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm(), new PlayersHandler());
             var actual = _validator.ValidateBerryInputWithReason(instruction, boardSize, walls, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);

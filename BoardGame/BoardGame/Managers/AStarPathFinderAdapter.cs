@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 
@@ -7,77 +9,66 @@ namespace BoardGame.Managers
     public class AStarPathFinderAdapter : IAStarPathFinderAdapter
     {
         private readonly IAStarPathFinderAlgorithm _aStarPathFinder;
-        public AStarPathFinderAdapter(IAStarPathFinderAlgorithm aStarPathFinder)
+        private readonly IPlayerMovement _player;
+        private readonly Dictionary<string, List<(int, int)>> _possibleMoves;
+
+        public AStarPathFinderAdapter(IAStarPathFinderAlgorithm aStarPathFinder, IPlayerMovement player)
         {
             _aStarPathFinder = aStarPathFinder;
+            _player = player;
+            _possibleMoves = CreatePossibleMovesDictionary();
         }
-        
+
         public bool ArePathsExistWhenNewWallIsAdded(List<Wall> walls, List<IBerry> berries, int boardSize)
         {
-            var counterKnight = 0;
-            var counterPawn = 0;
-
-            foreach (var berry in berries)
+            foreach (var possibleMove in _possibleMoves)
             {
-                for (int i = 0; i < boardSize; i++)
+                var counter = 0;
+                foreach (var berry in berries)
                 {
-                    if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i,
-                        berry.BerryPosition.Item1,
-                        berry.BerryPosition.Item2))
+                    for (int i = 0; i < boardSize; i++)
                     {
-                        counterKnight++;
-                        break;
+                        if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(possibleMove.Value, walls,
+                            boardSize, i, i, berry.BerryPosition.Item1,
+                            berry.BerryPosition.Item2))
+                        {
+                            counter++;
+                            break;
+                        }
                     }
                 }
+                if (berries.Count != counter)
+                    return false;
             }
 
-            if (berries.Count != counterKnight)
-                return false;
-            
-            foreach (var berry in berries)
-            {
-                for (int i = 0; i < boardSize; i++)
-                {
-                    if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i,
-                        berry.BerryPosition.Item1,
-                        berry.BerryPosition.Item2))
-                    {
-                        counterPawn++;
-                        break;
-                    }
-                }
-            }
-
-            return berries.Count == counterPawn;
+            return true;
         }
 
         public bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
             int berryPositionY)
         {
-            var statusKnight = false;
-            var statusPawn = false;
-
-            for (int i = 0; i < boardSize; i++)
+            foreach (var possibleMove in _possibleMoves)
             {
-                if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(Piece.Knight, walls, boardSize, i, i, berryPositionX,
-                    berryPositionY))
+                var status = false;
+                for (int i = 0; i < boardSize; i++)
                 {
-                    statusKnight = true;
-                    break;
+                    if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(possibleMove.Value, walls,
+                        boardSize, i, i, berryPositionX, berryPositionY))
+                    {
+                        status = true;
+                        break;
+                    }
                 }
+                if (!status)
+                    return false;
             }
 
-            for (int i = 0; i < boardSize; i++)
-            {
-                if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(Piece.Pawn, walls, boardSize, i, i, berryPositionX,
-                    berryPositionY))
-                {
-                    statusPawn = true;
-                    break;
-                }
-            }
+            return true;
+        }
 
-            return statusKnight && statusPawn;
+        private Dictionary<string, List<(int, int)>> CreatePossibleMovesDictionary()
+        {
+            return _player.GetRegisteredPieceKeys().ToDictionary(k => k, k => _player.GetPossibleMoves(k));
         }
     }
 }

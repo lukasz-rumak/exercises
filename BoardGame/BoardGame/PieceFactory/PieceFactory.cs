@@ -8,7 +8,7 @@ namespace BoardGame.PieceFactory
     public class PieceFactory
     {
         private Dictionary<string, PieceAbstractFactory> _typeMapping = new Dictionary<string, PieceAbstractFactory>();
-
+        
         public void Register(string description, PieceAbstractFactory type)
         {
             _typeMapping.Add(description, type);
@@ -22,6 +22,11 @@ namespace BoardGame.PieceFactory
         public List<string> GetRegisteredKeys()
         {
             return _typeMapping.Keys.ToList();
+        }
+
+        public List<(int, int)> GetPossibleMoves(string description)
+        {
+            return _typeMapping.ContainsKey(description) ? _typeMapping[description].GetPossibleMoves() : new List<(int, int)>();
         }
     }
 }

@@ -10,7 +10,8 @@ namespace BoardGame
         static void Main(string[] args)
         {
             var game = new GameMaster(new ConsoleOutput(), new EventHandler(new ConsoleOutput()), new Validator(),
-                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(), new AStarPathFinderAdapter(new AStarPathFinderAlgorithm()));
+                new Validator(), new Validator(), new PlayersHandler(), new BerryCreator(),
+                new AStarPathFinderAdapter(new AStarPathFinderAlgorithm(), new PlayersHandler()));
             game.RunBoardBuilder(
                 new BoardBuilder(game.ObjectFactory.Get<IEventHandler>(), game.ObjectFactory.Get<IValidatorWall>(),
                         game.ObjectFactory.Get<IValidatorBerry>(), game.ObjectFactory.Get<IBerryCreator>(),

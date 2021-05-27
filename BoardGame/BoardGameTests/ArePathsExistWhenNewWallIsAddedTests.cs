@@ -13,7 +13,7 @@ namespace BoardGameTests
 
         public ArePathsExistWhenNewWallIsAddedTests()
         {
-            _aStarPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm());
+            _aStarPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm(), new PlayersHandler());
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace BoardGameTests
         }
         
         [Fact]
-        public void ReturnFalseForNonExistingPathWhenNoAccess()
+        public void ReturnFalseForNonExistingPathWhenNoAccessForKnightAndPawn()
         {
             var walls = new List<Wall>
             {
@@ -182,6 +182,57 @@ namespace BoardGameTests
                 new Wall
                 {
                     WallPositionField1 = (3, 1),
+                    WallPositionField2 = (4, 0)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (4, 0),
+                    WallPositionField2 = (4, 1)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (4, 1),
+                    WallPositionField2 = (4, 0)
+                }
+            };
+            
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (4, 0)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
+            
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
+            Assert.False(actual);
+        }
+        
+        [Fact]
+        public void ReturnFalseForNonExistingPathWhenNoAccessForPawn()
+        {
+            var walls = new List<Wall>
+            {
+                new Wall
+                {
+                    WallPositionField1 = (4, 0),
+                    WallPositionField2 = (3, 0)
+                },
+                new Wall
+                {
+                    WallPositionField1 = (3, 0),
                     WallPositionField2 = (4, 0)
                 },
                 new Wall

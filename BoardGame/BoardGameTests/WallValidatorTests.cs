@@ -60,7 +60,7 @@ namespace BoardGameTests
         {
             var walls = new List<Wall>();
             var berries = new List<IBerry>();
-            var aStartPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm());
+            var aStartPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm(), new PlayersHandler());
             var actual = _validator.ValidateWallInputWithReason(instruction, boardSize, walls, berries, aStartPathFinder);
             Assert.Equal(expectedResult, actual.IsValid);
             Assert.Equal(expectedReason, actual.Reason);

@@ -17,7 +17,7 @@ namespace BoardGameApi.Controllers
     public class BoardGameController : ControllerBase
     {
         private readonly IGameHolder _gameHolder;
-        private readonly IPlayer _playersHandler;
+        private readonly IPlayerCreation _playersHandler;
         private readonly IPresentation _presentation;
         private readonly IValidator _validator;
         private readonly IValidatorWall _validatorWall;
@@ -26,7 +26,7 @@ namespace BoardGameApi.Controllers
         private readonly IBerryCreator _berryCreator;
         private readonly IAStarPathFinderAdapter _aStarPathFinder;
 
-        public BoardGameController(IGameHolder gameHolder, IPlayer playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
+        public BoardGameController(IGameHolder gameHolder, IPlayerCreation playersHandler, IPresentation presentation, IValidator validator, IEventHandler eventHandler, IValidatorWall validatorWall, IValidatorBerry validatorBerry, IBerryCreator berryCreator, IAStarPathFinderAdapter aStarPathFinder)
         {
             _gameHolder = gameHolder;
             _playersHandler = playersHandler;

@@ -5,7 +5,7 @@ namespace BoardGame.Interfaces
 {
     public interface IAStarPathFinderAlgorithm
     {
-        bool IsPathPossibleUsingAStarSearchAlgorithm(Piece pieceType, List<Wall> walls, int boardSize,
+        bool IsPathPossibleUsingAStarSearchAlgorithm(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize,
             int piecePositionX, int piecePositionY,
             int berryPositionX, int berryPositionY);
     }
