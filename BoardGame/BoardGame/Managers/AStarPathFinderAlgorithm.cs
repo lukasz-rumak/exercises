@@ -8,7 +8,7 @@ namespace BoardGame.Managers
 {
     public class AStarPathFinderAlgorithm : IAStarPathFinderAlgorithm
     {
-        public bool IsPathPossibleUsingAStarSearchAlgorithm(List<(int, int)> possibleMoves, List<Wall> walls, 
+        public bool IsPathExists(List<(int, int)> movementRules, List<Obstacle> obstacles, 
             int boardSize, int startX, int startY, int targetX, int targetY)
         {
             var start = GetStartPosition(startX, startY);
@@ -27,7 +27,7 @@ namespace BoardGame.Managers
                 visitedTiles.Add(checkTile);
                 activeTiles.Remove(checkTile);
 
-                var walkableTiles = GetWalkableTiles(possibleMoves, walls, boardSize, checkTile, finish);
+                var walkableTiles = GetWalkableTiles(movementRules, obstacles, boardSize, checkTile, finish);
 
                 foreach (var walkableTile in walkableTiles)
                 {
@@ -71,7 +71,7 @@ namespace BoardGame.Managers
             };
         }
 
-        private List<Tile> GetWalkableTiles(List<(int, int)> possibleMoves, List<Wall> walls, int boardSize, Tile currentTile, Tile targetTile)
+        private List<Tile> GetWalkableTiles(List<(int, int)> possibleMoves, List<Obstacle> obstacles, int boardSize, Tile currentTile, Tile targetTile)
         {
             var possibleTiles = GetPossibleTiles(possibleMoves, currentTile);
             
@@ -83,19 +83,31 @@ namespace BoardGame.Managers
             return possibleTiles
                 .Where(tile => tile.X >= 0 && tile.X <= maxX)
                 .Where(tile => tile.Y >= 0 && tile.Y <= maxY)
-                .Where(tile => IsMovePossible(walls, currentTile.X, currentTile.Y, tile.X, tile.Y))
+                .Where(tile => IsMovePossible(obstacles, currentTile.X, currentTile.Y, tile.X, tile.Y))
                 .ToList();
         }
-        
-        private bool IsMovePossible(IReadOnlyCollection<Wall> walls, int currentX, int currentY, int newX, int newY)
+
+        private bool IsMovePossible(List<Obstacle> obstacles, int currentX, int currentY, int newX, int newY)
         {
-            if (walls == null) return true;
-            if (!walls.Any(wall =>
-                wall.WallPositionField1.Item1 == currentX &&
-                wall.WallPositionField1.Item2 == currentY &&
-                wall.WallPositionField2.Item1 == newX && wall.WallPositionField2.Item2 == newY))
-                return true;
-            return false;
+            if (obstacles == null) return true;
+            foreach (var obstacle in obstacles)
+            {
+                if (obstacle.FromX == null || obstacle.FromY == null)
+                {
+                    if (obstacle.ToX == newX && obstacle.ToY == newY)
+                        return false;
+                }
+                else
+                {
+                    if (obstacle.FromX == currentX &&
+                        obstacle.FromY == currentY &&
+                        obstacle.ToX == newX &&
+                        obstacle.ToY == newY)
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         private List<Tile> GetPossibleTiles(List<(int, int)> possibleMoves, Tile currentTile)

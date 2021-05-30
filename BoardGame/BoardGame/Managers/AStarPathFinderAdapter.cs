@@ -21,6 +21,7 @@ namespace BoardGame.Managers
 
         public bool ArePathsExistWhenNewWallIsAdded(List<Wall> walls, List<IBerry> berries, int boardSize)
         {
+            var obstacles = ConvertWallsToObstacles(walls);
             foreach (var possibleMove in _possibleMoves)
             {
                 var counter = 0;
@@ -28,7 +29,7 @@ namespace BoardGame.Managers
                 {
                     for (int i = 0; i < boardSize; i++)
                     {
-                        if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(possibleMove.Value, walls,
+                        if (_aStarPathFinder.IsPathExists(possibleMove.Value, obstacles,
                             boardSize, i, i, berry.BerryPosition.Item1,
                             berry.BerryPosition.Item2))
                         {
@@ -47,12 +48,13 @@ namespace BoardGame.Managers
         public bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
             int berryPositionY)
         {
+            var obstacles = ConvertWallsToObstacles(walls);
             foreach (var possibleMove in _possibleMoves)
             {
                 var status = false;
                 for (int i = 0; i < boardSize; i++)
                 {
-                    if (_aStarPathFinder.IsPathPossibleUsingAStarSearchAlgorithm(possibleMove.Value, walls,
+                    if (_aStarPathFinder.IsPathExists(possibleMove.Value, obstacles,
                         boardSize, i, i, berryPositionX, berryPositionY))
                     {
                         status = true;
@@ -69,6 +71,15 @@ namespace BoardGame.Managers
         private Dictionary<string, List<(int, int)>> CreatePossibleMovesDictionary()
         {
             return _player.GetRegisteredPieceKeys().ToDictionary(k => k, k => _player.GetPossibleMoves(k));
+        }
+
+        private List<Obstacle> ConvertWallsToObstacles(List<Wall> walls)
+        {
+            return walls.Select(wall => new Obstacle
+            {
+                FromX = wall.WallPositionField1.Item1, FromY = wall.WallPositionField1.Item2,
+                ToX = wall.WallPositionField2.Item1, ToY = wall.WallPositionField2.Item2
+            }).ToList();
         }
     }
 }

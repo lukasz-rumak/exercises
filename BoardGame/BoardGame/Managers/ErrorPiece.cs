@@ -1,4 +1,5 @@
-﻿using BoardGame.Interfaces;
+﻿using System.Collections.Generic;
+using BoardGame.Interfaces;
 using BoardGame.Models;
 
 namespace BoardGame.Managers
@@ -12,7 +13,7 @@ namespace BoardGame.Managers
             get => false;
             set { }
         }
-
+        public List<(int, int)> PossibleMoves { get; set; }
         public IPosition Position =>
             new Position
             {

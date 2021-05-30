@@ -1,4 +1,5 @@
-﻿using BoardGame.Models;
+﻿using System.Collections.Generic;
+using BoardGame.Models;
 
 namespace BoardGame.Interfaces
 {
@@ -7,6 +8,7 @@ namespace BoardGame.Interfaces
         int PieceId { get; set; }
         string PieceType { get; set; }
         bool IsAlive { get; set; }
+        List<(int, int)> PossibleMoves { get; set; }
         IPosition Position { get; }
         void CollectBerry(IBerry berry);
         int CalculateScore();

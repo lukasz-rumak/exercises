@@ -8,7 +8,7 @@ namespace BoardGame.PieceFactory
     {
         public override IPiece CreatePiece(int pieceId)
         {
-            return new Pawn(pieceId);
+            return new Pawn(pieceId, GetPossibleMoves());
         }
 
         public override List<(int, int)> GetPossibleMoves()

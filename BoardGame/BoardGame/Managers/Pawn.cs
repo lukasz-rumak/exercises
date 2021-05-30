@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BoardGame.Interfaces;
 using BoardGame.Models;
 using BoardGame.Models.Berries;
@@ -10,13 +11,15 @@ namespace BoardGame.Managers
         public int PieceId { get; set; }
         public string PieceType { get; set; }
         public bool IsAlive { get; set; }
+        public List<(int, int)> PossibleMoves { get; set; }
         public IPosition Position { get; }
         
-        public Pawn(int pawnId)
+        public Pawn(int pawnId, List<(int, int)> possibleMoves)
         {
             PieceId = pawnId;
             PieceType = "Pawn";
             IsAlive = true;
+            PossibleMoves = possibleMoves;
             Position = new Position
             {
                 X = pawnId,
