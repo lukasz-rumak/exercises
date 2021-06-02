@@ -112,16 +112,11 @@ namespace BoardGame.Managers
 
         private List<Tile> GetPossibleTiles(List<(int, int)> possibleMoves, Tile currentTile)
         {
-            var list = new List<Tile>();
-            foreach (var (x, y) in possibleMoves)
+            return possibleMoves.Select(item => new Tile
             {
-                list.Add(new Tile
-                {
-                    X = currentTile.X + x, Y = currentTile.Y + y, Parent = currentTile, Cost = currentTile.Cost + 1
-                });
-            }
-
-            return list;
+                X = currentTile.X + item.Item1, Y = currentTile.Y + item.Item2, Parent = currentTile,
+                Cost = currentTile.Cost + 1
+            }).ToList();
         }
     }
 }
