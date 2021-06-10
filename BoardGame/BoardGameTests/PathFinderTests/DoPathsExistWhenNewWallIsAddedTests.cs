@@ -2,15 +2,16 @@ using System.Collections.Generic;
 using BoardGame.Interfaces;
 using BoardGame.Managers;
 using BoardGame.Models;
+using BoardGame.Models.Berries;
 using Xunit;
 
 namespace BoardGameTests
 {
-    public class IsPathExistsWhenNewBerryIsAddedTests
+    public class DoPathsExistWhenNewWallIsAddedTests
     {
-        private readonly IAStarPathFinderAdapter _aStarPathFinder;
+        private readonly AStarPathFinderAdapter _aStarPathFinder;
 
-        public IsPathExistsWhenNewBerryIsAddedTests()
+        public DoPathsExistWhenNewWallIsAddedTests()
         {
             _aStarPathFinder = new AStarPathFinderAdapter(new AStarPathFinderAlgorithm(), new PlayersHandler());
         }
@@ -26,8 +27,28 @@ namespace BoardGameTests
                     WallPositionField2 = (2, 2)
                 }
             };
+
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (3, 1)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5,4, 4);
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
             Assert.True(actual);
         }
         
@@ -53,7 +74,27 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 2);
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (3, 1)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
+            
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
             Assert.True(actual);
         }
         
@@ -93,8 +134,28 @@ namespace BoardGameTests
                     WallPositionField2 = (0, 0)
                 }
             };
+
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (3, 1)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 2);
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
             Assert.True(actual);
         }
         
@@ -135,7 +196,27 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 0);
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (4, 0)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
+            
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
             Assert.False(actual);
         }
         
@@ -166,7 +247,27 @@ namespace BoardGameTests
                 }
             };
             
-            var actual = _aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, 5, 4, 0);
+            var berries = new List<IBerry>
+            {
+                new BlueBerry
+                {
+                    BerryPosition = (0, 2)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (1, 3)
+                },
+                new BlueBerry
+                {
+                    BerryPosition = (4, 0)
+                },
+                new StrawBerry
+                {
+                    BerryPosition = (2, 4)
+                }
+            };
+            
+            var actual = _aStarPathFinder.ArePathsExistWhenNewWallIsAdded(walls, berries, 5);
             Assert.False(actual);
         }
     }

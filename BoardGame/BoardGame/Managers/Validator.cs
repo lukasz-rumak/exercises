@@ -126,7 +126,7 @@ namespace BoardGame.Managers
         private bool ValidateBerryAgainstEndingGame(IAStarPathFinderAdapter aStarPathFinder, List<Wall> walls, int boardSize,
             int berryPositionX, int berryPositionY)
         {
-            return aStarPathFinder.IsPathExistsWhenNewBerryIsAdded(walls, boardSize, berryPositionX, berryPositionY);
+            return aStarPathFinder.DoesPathExistWhenNewBerryIsAdded(walls, boardSize, berryPositionX, berryPositionY);
         }
 
         private List<int> CreateBerryIntegerList(string input)

@@ -8,11 +8,11 @@ namespace BoardGame.Managers
 {
     public class AStarPathFinderAlgorithm : IAStarPathFinderAlgorithm
     {
-        public bool IsPathExists(List<(int, int)> movementRules, List<Obstacle> obstacles, 
+        public bool DoesPathExist(List<(int, int)> movementRules, List<Obstacle> obstacles, 
             int boardSize, int startX, int startY, int targetX, int targetY)
         {
-            var start = GetStartPosition(startX, startY);
-            var finish = GetFinishPosition(targetX, targetY);
+            var start = CreateTile(startX, startY);
+            var finish = CreateTile(targetX, targetY);
             start.SetDistance(finish.X, finish.Y);
             var activeTiles = new List<Tile> { start };
             var visitedTiles = new List<Tile>();
@@ -31,12 +31,12 @@ namespace BoardGame.Managers
 
                 foreach (var walkableTile in walkableTiles)
                 {
-                    if (visitedTiles.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
+                    if (visitedTiles.Any(tile => tile.HasSamePosition(walkableTile)))
                         continue;
 
-                    if (activeTiles.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
+                    if (activeTiles.Any(tile => tile.HasSamePosition(walkableTile)))
                     {
-                        var existingTile = activeTiles.First(x => x.X == walkableTile.X && x.Y == walkableTile.Y);
+                        var existingTile = activeTiles.Single(tile => tile.HasSamePosition(walkableTile));
                         if (existingTile.CostDistance > checkTile.CostDistance)
                         {
                             activeTiles.Remove(existingTile);
@@ -53,21 +53,12 @@ namespace BoardGame.Managers
             return false;
         }
 
-        private Tile GetStartPosition(int startX, int startY)
+        private Tile CreateTile(int x, int y)
         {
             return new Tile
             {
-                Y = startY,
-                X = startX
-            };
-        }
-
-        private Tile GetFinishPosition(int targetX, int targetY)
-        {
-            return new Tile
-            {
-                Y = targetY,
-                X = targetX
+                Y = y,
+                X = x
             };
         }
 

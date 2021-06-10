@@ -56,7 +56,7 @@ namespace BoardGameTests
                 new Obstacle {FromX = 4, FromY = 3, ToX = 4, ToY = 4},
             };
             var actual =
-                _pathFinder.IsPathExists(pawnMoves, obstacles, boardSize, startX, startY, targetX, targetY);
+                _pathFinder.DoesPathExist(pawnMoves, obstacles, boardSize, startX, startY, targetX, targetY);
             Assert.Equal(expectedResult, actual);
         }
         
@@ -103,7 +103,7 @@ namespace BoardGameTests
                 new Obstacle {FromX = 3, FromY = 3, ToX = 4, ToY = 4},
             };
             var actual =
-                _pathFinder.IsPathExists(knightMoves, obstacles, boardSize, startX, startY, targetX, targetY);
+                _pathFinder.DoesPathExist(knightMoves, obstacles, boardSize, startX, startY, targetX, targetY);
             Assert.Equal(expectedResult, actual);
         }
     }

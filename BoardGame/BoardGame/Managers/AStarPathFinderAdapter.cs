@@ -29,7 +29,7 @@ namespace BoardGame.Managers
                 {
                     for (int i = 0; i < boardSize; i++)
                     {
-                        if (_aStarPathFinder.IsPathExists(possibleMove.Value, obstacles,
+                        if (_aStarPathFinder.DoesPathExist(possibleMove.Value, obstacles,
                             boardSize, i, i, berry.BerryPosition.Item1,
                             berry.BerryPosition.Item2))
                         {
@@ -45,7 +45,7 @@ namespace BoardGame.Managers
             return true;
         }
 
-        public bool IsPathExistsWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
+        public bool DoesPathExistWhenNewBerryIsAdded(List<Wall> walls, int boardSize, int berryPositionX,
             int berryPositionY)
         {
             var obstacles = ConvertWallsToObstacles(walls);
@@ -54,7 +54,7 @@ namespace BoardGame.Managers
                 var status = false;
                 for (int i = 0; i < boardSize; i++)
                 {
-                    if (_aStarPathFinder.IsPathExists(possibleMove.Value, obstacles,
+                    if (_aStarPathFinder.DoesPathExist(possibleMove.Value, obstacles,
                         boardSize, i, i, berryPositionX, berryPositionY))
                     {
                         status = true;
