@@ -29,7 +29,8 @@ namespace BoardGame.Managers
             return new Dictionary<EventType, Action<string>>
             {
                 [EventType.GameStarted] = EventGameStarted,
-                [EventType.BoardBuilt] = EventBoardBuilt,
+                [EventType.BoardCreationDone] = EventBoardCreationDone,
+                [EventType.BoardCreationError] = EventBoardCreationError,
                 [EventType.PlayerAdded] = EventPlayerAdded,
                 [EventType.PieceMoved] = EventPieceMove,
                 [EventType.WallCreationDone] = EventWallCreationDone,
@@ -42,6 +43,7 @@ namespace BoardGame.Managers
                 [EventType.WallOnTheRoute] = EventWallOnTheRoute,
                 [EventType.IncorrectPlayerId] = EventIncorrectPlayerId,
                 [EventType.GeneratedBoardOutput] = EventGeneratedBoardOutput,
+                [EventType.IncorrectBoardSize] = EventIncorrectBoardSize,
                 [EventType.None] = EventNone
             };
         }
@@ -60,11 +62,18 @@ namespace BoardGame.Managers
             EventsLog.Add(new EventLog {Type = EventType.PlayerAdded, Description = eventMsg});
         }
         
-        private void EventBoardBuilt(string description)
+        private void EventBoardCreationDone(string description)
         {
             var eventMsg = CreateEventMessage(description);
-            _presentation.PrintEventOutput(EventType.BoardBuilt, eventMsg);
-            EventsLog.Add(new EventLog {Type = EventType.BoardBuilt, Description = eventMsg});
+            _presentation.PrintEventOutput(EventType.BoardCreationDone, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BoardCreationDone, Description = eventMsg});
+        }
+        
+        private void EventBoardCreationError(string description)
+        {
+            var eventMsg = CreateEventMessage(description);
+            _presentation.PrintEventOutput(EventType.BoardCreationError, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.BoardCreationError, Description = eventMsg});
         }
 
         private void EventPieceMove(string description)
@@ -142,6 +151,13 @@ namespace BoardGame.Managers
             var eventMsg = CreateEventMessage(description);
             _presentation.PrintEventOutput(EventType.GeneratedBoardOutput, eventMsg);
             EventsLog.Add(new EventLog {Type = EventType.GeneratedBoardOutput, Description = eventMsg});
+        }
+        
+        private void EventIncorrectBoardSize(string description)
+        {
+            var eventMsg = CreateEventMessage(description);
+            _presentation.PrintEventOutput(EventType.IncorrectBoardSize, eventMsg);
+            EventsLog.Add(new EventLog {Type = EventType.IncorrectBoardSize, Description = eventMsg});
         }
         
         private void EventNone(string description)

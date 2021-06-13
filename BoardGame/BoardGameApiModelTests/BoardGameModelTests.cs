@@ -16,7 +16,6 @@ namespace BoardGameApiModelTests
         }
         
         [Theory]
-        [InlineData(2)]
         [InlineData(3)]
         [InlineData(4)]
         [InlineData(5)]
@@ -32,19 +31,20 @@ namespace BoardGameApiModelTests
         }
 
         [Theory]
-        [InlineData(-20 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(-10 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(-5 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(-1 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(0 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(1 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(21 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(22 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(23 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(30 ,new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(50, new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(100, new [] {"Please enter valid board size from 2 to 20"})]
-        [InlineData(1000, new [] {"Please enter valid board size from 2 to 20"})]
+        [InlineData(-20, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(-10, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(-5, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(-1, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(0, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(1, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(2, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(21, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(22, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(23, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(30, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(50, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(100, new[] {"Please enter valid board size from 3 to 20"})]
+        [InlineData(1000, new[] {"Please enter valid board size from 3 to 20"})]
         public void Board_Model_WithSize_Should_Return_Error(int withSize, string[] expectedResult)
         {
             var model = new Board {WithSize = withSize};
@@ -52,7 +52,7 @@ namespace BoardGameApiModelTests
             var resultErrorMessage = result.Select(x => x.ErrorMessage);
             resultErrorMessage.Should().Contain(expectedResult);
         }
-        
+
         [Theory]
         [InlineData("B 0 1")]
         [InlineData("B 1 0")]

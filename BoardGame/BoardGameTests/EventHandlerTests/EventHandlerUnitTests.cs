@@ -22,7 +22,7 @@ namespace BoardGameTests
 
         [Theory]
         [InlineData(EventType.GameStarted)]
-        [InlineData(EventType.BoardBuilt)]
+        [InlineData(EventType.BoardCreationDone)]
         [InlineData(EventType.PlayerAdded)]
         [InlineData(EventType.PieceMoved)]
         [InlineData(EventType.WallCreationDone)]

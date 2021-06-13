@@ -18,19 +18,19 @@ namespace BoardGameTests
         }
 
         [Theory]
-        [InlineData(new []{"PMRMLMRM"}, new []{"[P] 2 2 East [S] 0"})]
-        [InlineData(new []{"PRMMMLMM"}, new []{"[P] 2 2 North [S] 0"})]
-        [InlineData(new []{"PMMMMM"}, new []{"[P] 0 2 North [S] 0"})]
-        [InlineData(new []{"PRMMMMM"}, new []{"[P] 2 0 East [S] 0"})]
-        [InlineData(new []{"PRMRRMMMM"}, new []{"[P] 0 0 West [S] 0"})]
-        [InlineData(new []{"PMMMMMMMMM"}, new []{"[P] 0 2 North [S] 0"})]
-        [InlineData(new []{"PMMMMMMMMMR"}, new []{"[P] 0 2 East [S] 0"})]
-        [InlineData(new []{"PMMMMMMMMML"}, new []{"[P] 0 2 West [S] 0"})]
-        [InlineData(new []{"PMMMMMMMMMRMMMMMMM"}, new []{"[P] 2 2 East [S] 0"})]
-        [InlineData(new []{"PMXMMM"}, new []{"Instruction not clear. Exiting..."})]
-        [InlineData(new []{""}, new []{"Instruction not clear. Exiting..."})]
-        [InlineData(new []{" "}, new []{"Instruction not clear. Exiting..."})]
-        [InlineData(null, new []{"Instruction not clear. Exiting..."})]
+        [InlineData(new[] {"PMRMLMRM"}, new[] {"[P] 2 2 East [S] 0"})]
+        [InlineData(new[] {"PRMMMLMM"}, new[] {"[P] 2 2 North [S] 0"})]
+        [InlineData(new[] {"PMMMMM"}, new[] {"[P] 0 2 North [S] 0"})]
+        [InlineData(new[] {"PRMMMMM"}, new[] {"[P] 2 0 East [S] 0"})]
+        [InlineData(new[] {"PRMRRMMMM"}, new[] {"[P] 0 0 West [S] 0"})]
+        [InlineData(new[] {"PMMMMMMMMM"}, new[] {"[P] 0 2 North [S] 0"})]
+        [InlineData(new[] {"PMMMMMMMMMR"}, new[] {"[P] 0 2 East [S] 0"})]
+        [InlineData(new[] {"PMMMMMMMMML"}, new[] {"[P] 0 2 West [S] 0"})]
+        [InlineData(new[] {"PMMMMMMMMMRMMMMMMM"}, new[] {"[P] 2 2 East [S] 0"})]
+        [InlineData(new[] {"PMXMMM"}, new[] {"Instruction not clear. Exiting..."})]
+        [InlineData(new[] {""}, new[] {"Instruction not clear. Exiting..."})]
+        [InlineData(new[] {" "}, new[] {"Instruction not clear. Exiting..."})]
+        [InlineData(null, new[] {"Instruction not clear. Exiting..."})]
         public void ReturnExpectedVersusActualForDifferentInputInstructions(string[] input, string[] expectedResult)
         {
             var actual = _game.PlayTheGame(input);

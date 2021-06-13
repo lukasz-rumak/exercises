@@ -160,7 +160,7 @@ namespace BoardGameApiTests
             await _testHelper.TestGetEndpoint(_client, "getLastEvent", sessionId, HttpStatusCode.OK,
                 "GeneratedBoardOutput");
             await _testHelper.TestGetEndpoint(_client, "getEvents", sessionId, HttpStatusCode.OK,
-                "[0] GameStarted [1] BoardBuilt [2] GeneratedBoardOutput ");
+                "[0] GameStarted [1] BoardCreationDone [2] GeneratedBoardOutput ");
             await _testHelper.TestGetEndpoint(_client, "seeBoard", sessionId, HttpStatusCode.OK,
                 "|-----|-----|-----|-----|-----");
         }

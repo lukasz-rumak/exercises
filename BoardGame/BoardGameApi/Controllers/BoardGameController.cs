@@ -94,7 +94,7 @@ namespace BoardGameApi.Controllers
             if (IsSessionIdValid(sessionId) && !IsGameComplete(sessionId) && !IsBoardBuilt(sessionId))
             {
                 RunInTheGame(sessionId).FinaliseBoardBuilder();
-                if (IsBoardBuilt(sessionId) && GetLastEventType(sessionId) == EventType.BoardBuilt)
+                if (IsBoardBuilt(sessionId) && GetLastEventType(sessionId) == EventType.BoardCreationDone)
                 {
                     return ReturnStatusCodeWithResponse(201, sessionId, "Created");
                 }

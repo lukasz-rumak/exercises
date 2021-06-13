@@ -3,7 +3,8 @@ namespace BoardGame.Models
     public enum EventType
     {
         GameStarted,
-        BoardBuilt,
+        BoardCreationDone,
+        BoardCreationError,
         PlayerAdded,
         PieceMoved,
         WallCreationDone,
@@ -16,6 +17,7 @@ namespace BoardGame.Models
         WallOnTheRoute,
         IncorrectPlayerId,
         GeneratedBoardOutput,
+        IncorrectBoardSize,
         None
     }
 }

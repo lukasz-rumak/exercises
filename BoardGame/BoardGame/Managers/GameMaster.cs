@@ -45,8 +45,16 @@ namespace BoardGame.Managers
         public void RunBoardBuilder(IGameBoard board)
         {
             _board = board;
-            _isBoardBuilt = true;
-            _eventHandler.PublishEvent(EventType.BoardBuilt, "");
+            if (_board.WithSize == 0)
+            {
+                _board = null;
+                _eventHandler.PublishEvent(EventType.BoardCreationError, "");
+            }
+            else
+            {
+                _isBoardBuilt = true;
+                _eventHandler.PublishEvent(EventType.BoardCreationDone, "");
+            }
         }
 
         public void StartBoardBuilder(IBoardBuilder board)
@@ -71,7 +79,7 @@ namespace BoardGame.Managers
             if (_isGameComplete) return;
             _board = _boardBuilder.BuildBoard();
             _isBoardBuilt = true;
-            _eventHandler.PublishEvent(EventType.BoardBuilt, "");
+            _eventHandler.PublishEvent(EventType.BoardCreationDone, "");
         }
 
         public bool IsBoardBuilt()
@@ -82,7 +90,13 @@ namespace BoardGame.Managers
         public string[] PlayTheGame(string[] instructions)
         {
             if (_board is null)
-                return new[] {"Please create board first!"};
+                return _eventHandler.EventsLog.Any(e => e.Type == EventType.IncorrectBoardSize)
+                    ? new[]
+                    {
+                        "Please create board first!",
+                        _eventHandler.EventsLog.First(e => e.Type == EventType.IncorrectBoardSize).Description
+                    }
+                    : new[] {"Please create board first!"};
             if (instructions is null)
                 return new []{"Instruction not clear. Exiting..."};
 

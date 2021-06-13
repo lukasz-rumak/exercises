@@ -72,7 +72,9 @@ namespace BoardGame.Managers
             {
                 [EventType.GameStarted] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
-                [EventType.BoardBuilt] = eventMsg => 
+                [EventType.BoardCreationDone] = eventMsg => 
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.BoardCreationError] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.PlayerAdded] = eventMsg => 
                     Console.WriteLine($"{eventMsg}"),
@@ -97,6 +99,8 @@ namespace BoardGame.Managers
                 [EventType.IncorrectPlayerId] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.GeneratedBoardOutput] = eventMsg =>
+                    Console.WriteLine($"{eventMsg}"),
+                [EventType.IncorrectBoardSize] = eventMsg =>
                     Console.WriteLine($"{eventMsg}"),
                 [EventType.None] = eventMsg => 
                     Console.WriteLine($"{eventMsg}")

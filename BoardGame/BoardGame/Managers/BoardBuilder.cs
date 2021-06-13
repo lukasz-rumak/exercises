@@ -28,6 +28,11 @@ namespace BoardGame.Managers
 
         public IBoardBuilder WithSize(int size)
         {
+            if (size < 3)
+            {
+                _eventHandler.PublishEvent(EventType.IncorrectBoardSize, "Cannot create board with size less than 3");
+                return this;
+            }
             _board.WithSize = size;
             _eventHandler.PublishEvent(EventType.GameStarted, "");
             return this;

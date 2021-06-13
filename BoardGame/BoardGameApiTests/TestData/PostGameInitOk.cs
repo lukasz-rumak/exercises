@@ -10,9 +10,9 @@ namespace BoardGameApiTests.TestData
         private readonly List<object[]> _data = new List<object[]>
         {
             new object[]
-                {new Board {WithSize = 2}, HttpStatusCode.OK, "The game has started"},
-            new object[]
                 {new Board {WithSize = 3}, HttpStatusCode.OK, "The game has started"},
+            new object[]
+                {new Board {WithSize = 4}, HttpStatusCode.OK, "The game has started"},
             new object[]
                 {new Board {WithSize = 5}, HttpStatusCode.OK, "The game has started"},
             new object[]
