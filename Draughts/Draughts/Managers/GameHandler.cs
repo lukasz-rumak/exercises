@@ -12,6 +12,8 @@ namespace Draughts.Managers
         private readonly IMovement _movement;
         private readonly IEventsHandler _eventsHandler;
         private readonly IHumanPlayer _humanHandler;
+        private readonly Dictionary<Players, Func<Players, List<Event>>> _executePlayersMovement;
+        private readonly Dictionary<GameMode, Func<Players, List<Event>>> _executeGameMode;
 
         public GameHandler(IBoardCreator board, IOutput output, IMovement movement, IEventsHandler eventsHandler, IHumanPlayer humanHandler)
         {
@@ -20,29 +22,16 @@ namespace Draughts.Managers
             _movement = movement;
             _eventsHandler = eventsHandler;
             _humanHandler = humanHandler;
+            _executePlayersMovement = CreateDictExecutePlayersMovement();
+            _executeGameMode = CreateDictGameModel();
         }
 
         public void PlayTheGame(GameMode gameMode)
         {
-            switch (gameMode)
-            {
-                case GameMode.ComputerVersusComputer:
-                    ComputerVersusComputerGame(gameMode);
-                    break;
-                case GameMode.HumanVersusComputer:
-                    HumanVersusComputerGame(gameMode);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(gameMode), gameMode, null);
-            }
-        }
-
-        private void ComputerVersusComputerGame(GameMode gameMode)
-        {
             var player = Players.Player1;
             var gameOver = false;
             GenerateInitOutput();
-            
+
             while (!gameOver)
             {
                 if (CheckConditionIfGameShouldEndDueToNoPawns())
@@ -50,61 +39,61 @@ namespace Draughts.Managers
                     gameOver = true;
                     continue;
                 }
-                
+
                 GenerateStartRoundOutput(gameMode, player);
-                var events = ExecuteComputerPlayerMovement(player);
+
+                var events = _executeGameMode[gameMode](player);
+                if (events == null && player == Players.Player1)
+                {
+                    player = SkipPlayer1Round();
+                    continue;
+                }
+
                 GenerateEndRoundOutput(gameMode, player, events);
                 player = player == Players.Player1 ? Players.Player2 : Players.Player1;
                 gameOver = CheckConditionIfGameShouldEndDueToNoEvents(events);
             }
-            
+
             Console.WriteLine("GAME OVER");
         }
 
-        private void HumanVersusComputerGame(GameMode gameMode)
+        private Dictionary<GameMode, Func<Players, List<Event>>> CreateDictGameModel()
         {
-            var player = Players.Player1;
-            var gameOver = false;
-            
-            while (!gameOver)
+            return new Dictionary<GameMode, Func<Players, List<Event>>>
             {
-                if (CheckConditionIfGameShouldEndDueToNoPawns())
-                {
-                    gameOver = true;
-                    continue;
-                }
-                
-                GenerateStartRoundOutput(gameMode, player);
-                var events = new List<Event>();
-                
-                if (player == Players.Player1)
-                {
-                    var allEvents = _humanHandler.ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(player);
-                    if (allEvents == null)
-                    {
-                        player = SkipPlayer1Round();
-                        continue;
-                    }
-                    
-                    var option = _humanHandler.ReturnOptionSelectedByPlayer(allEvents);
-                    if (option == null)
-                    {
-                        player = SkipPlayer1Round();
-                        continue;
-                    }
-                    
-                    events = allEvents[option.Value];
-                    _movement.MovePawn(_board.GetBoard(), player, events);
-                }
-                else
-                {
-                    events = ExecuteComputerPlayerMovement(player);
-                }
-                
-                GenerateEndRoundOutput(gameMode, player, events);
-                player = player == Players.Player1 ? Players.Player2 : Players.Player1;
-                gameOver = CheckConditionIfGameShouldEndDueToNoEvents(events);
-            }
+                [GameMode.ComputerVersusComputer] = ExecuteComputerPlayerMovement,
+                [GameMode.HumanVersusComputer] = HumanVersusComputerGame
+            };
+        }
+
+        private List<Event> HumanVersusComputerGame(Players player)
+        {
+            return _executePlayersMovement[player](player);
+        }
+        
+        private Dictionary<Players, Func<Players, List<Event>>> CreateDictExecutePlayersMovement()
+        {
+            return new Dictionary<Players, Func<Players, List<Event>>>
+            {
+                [Players.Player1] = ExecuteHumanPlayerMovement,
+                [Players.Player2] = ExecuteComputerPlayerMovement
+            };
+        }
+
+        private List<Event> ExecuteHumanPlayerMovement(Players player)
+        {
+            var allEvents = _humanHandler.ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(player);
+            if (allEvents == null)
+                return null;
+
+            var option = _humanHandler.ReturnOptionSelectedByPlayer(allEvents);
+            if (option == null)
+                return null;
+
+            var events = allEvents[option.Value];
+            _movement.MovePawn(_board.GetBoard(), player, events);
+
+            return events;
         }
 
         private List<Event> ExecuteComputerPlayerMovement(Players player)
@@ -150,7 +139,7 @@ namespace Draughts.Managers
         
         private Players SkipPlayer1Round()
         {
-            Console.WriteLine("Skipping player1 round");
+            Console.WriteLine("Skipping Player1 round");
             return Players.Player2;
         }
     }
