@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Draughts", "Draughts\Draughts.csproj", "{FBB4A633-DFD3-43C9-9DB5-F7B22A79B112}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Draughts.Tests", "Draughts.Tests\Draughts.Tests.csproj", "{964985CB-C753-4326-9471-69F3B21116B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBB4A633-DFD3-43C9-9DB5-F7B22A79B112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB4A633-DFD3-43C9-9DB5-F7B22A79B112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB4A633-DFD3-43C9-9DB5-F7B22A79B112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB4A633-DFD3-43C9-9DB5-F7B22A79B112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964985CB-C753-4326-9471-69F3B21116B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964985CB-C753-4326-9471-69F3B21116B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964985CB-C753-4326-9471-69F3B21116B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964985CB-C753-4326-9471-69F3B21116B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

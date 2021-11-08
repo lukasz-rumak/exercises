@@ -103,3 +103,11 @@ BoardGame/BoardGameApiModelTests/obj/Debug/netcoreapp3.1/BoardGameApiModelTests.
 BoardGame/BoardGameApiModelTests/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
 BoardGame/BoardGameApiModelTests/bin/Debug/netcoreapp3.1/BoardGame
 BoardGame/BoardGameApiModelTests/bin/Debug/netcoreapp3.1/BoardGameApi
+Draughts/Draughts/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Draughts/Draughts/obj/Debug/net5.0/Draughts.GeneratedMSBuildEditorConfig.editorconfig
+Draughts/Draughts/obj/Debug/net5.0/Draughts.AssemblyInfo.cs
+Draughts/Draughts.Tests/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Draughts/Draughts.Tests/obj/Debug/net5.0/Draughts.Tests.AssemblyInfo.cs
+Draughts/Draughts.Tests/obj/Debug/net5.0/Draughts.Tests.csproj.CopyComplete
+Draughts/Draughts.Tests/obj/Debug/net5.0/Draughts.Tests.GeneratedMSBuildEditorConfig.editorconfig
+Draughts/Draughts.sln.DotSettings.user
