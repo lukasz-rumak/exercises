@@ -8,6 +8,6 @@ namespace Draughts.Interfaces
         Dictionary<(int, int), Field> GetBoard();
         int GetBoardSize();
         int ReturnNumberOfPawnOnTheBoard();
-        Players ReturnPlayerNameFromTheField((int, int) position);
+        Players ReturnPlayerNameFromTheField((int x, int y) position);
     }
 }

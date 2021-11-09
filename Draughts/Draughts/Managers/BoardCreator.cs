@@ -9,7 +9,7 @@ namespace Draughts.Managers
     {
         private readonly Dictionary<(int, int), Field> _board;
         private readonly int _boardSize;
-
+        
         public BoardCreator(int boardSize, int pawnsNumberPerPlayer)
         {
             _boardSize = boardSize;
@@ -25,15 +25,16 @@ namespace Draughts.Managers
         {
             return _boardSize;
         }
-        
+
         public int ReturnNumberOfPawnOnTheBoard()
         {
             return _board.Count(x => x.Value.Player != Players.None);
         }
 
-        public Players ReturnPlayerNameFromTheField((int, int) position)
+        public Players ReturnPlayerNameFromTheField((int x, int y) position)
         {
-            return _board[position].Player;
+            return position.x >= 0 && position.x < _boardSize && position.y >= 0 && position.y < _boardSize 
+                ? _board[position].Player : Players.None;
         }
 
         private Dictionary<(int, int), Field> CreateBoard(int boardSize, int pawnsNumberPerPlayer)
