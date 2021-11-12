@@ -230,7 +230,7 @@ namespace Draughts.Tests
         }
         
         [Fact]
-        public void GivenVerySimpleSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenVerySimpleSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -254,7 +254,7 @@ namespace Draughts.Tests
         }
         
         [Fact]
-        public void GivenSimpleSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenSimpleSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -283,7 +283,7 @@ namespace Draughts.Tests
         }
 
         [Fact]
-        public void GivenAnotherSimpleSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenAnotherSimpleSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -312,7 +312,7 @@ namespace Draughts.Tests
         }
 
         [Fact]
-        public void GivenMediumSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenMediumSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -339,7 +339,43 @@ namespace Draughts.Tests
         }
         
         [Fact]
-        public void GivenLargeSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenAnotherMediumSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        {
+            var board = new Dictionary<(int, int), Field>
+            {
+                { (0, 0), new Field { Playable = true, Player = Players.None } },
+            };
+
+            var events = new List<Event>
+            {
+                new() { Source = (2, 2), Destination = (3, 3), Action = Action.Kill },
+                new() { Source = (2, 2), Destination = (4, 4), Action = Action.Move },
+                new() { Source = (4, 4), Destination = (5, 5), Action = Action.Kill },
+                new() { Source = (4, 4), Destination = (6, 6), Action = Action.Move },
+                new() { Source = (2, 2), Destination = (3, 3), Action = Action.Kill },
+                new() { Source = (2, 2), Destination = (4, 4), Action = Action.Move },
+                new() { Source = (2, 2), Destination = (1, 3), Action = Action.Kill },
+                new() { Source = (2, 2), Destination = (0, 4), Action = Action.Move }
+            };
+            
+            var boardMock = new Mock<IBoardCreator>();
+            boardMock.Setup(s => s.GetBoard()).Returns(board);
+            boardMock.Setup(s => s.GetBoardSize()).Returns(1);
+            var eventsHandler = new EventsHandler(boardMock.Object, new EventsCreator(boardMock.Object, new PositionProcessor()));
+            
+            var result = eventsHandler.SelectTheBestPathForPawn(events);
+            var expected = new List<Event>
+            {
+                new() { Source = (2, 2), Destination = (3, 3), Action = Action.Kill },
+                new() { Source = (2, 2), Destination = (4, 4), Action = Action.Move },
+                new() { Source = (4, 4), Destination = (5, 5), Action = Action.Kill },
+                new() { Source = (4, 4), Destination = (6, 6), Action = Action.Move },
+            };
+            expected.Should().BeEquivalentTo(result);
+        }
+        
+        [Fact]
+        public void GivenLargeSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -354,16 +390,38 @@ namespace Draughts.Tests
                 new() { Source = (1, 5), Destination = (3, 3), Action = Action.Move },
                 new() { Source = (3, 3), Destination = (4, 2), Action = Action.Kill },
                 new() { Source = (3, 3), Destination = (5, 1), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (2, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (1, 5), Action = Action.Move },
+                new() { Source = (1, 5), Destination = (2, 4), Action = Action.Kill },
+                new() { Source = (1, 5), Destination = (3, 3), Action = Action.Move },
                 new() { Source = (3, 3), Destination = (2, 2), Action = Action.Kill },
                 new() { Source = (3, 3), Destination = (1, 1), Action = Action.Move },
                 new() { Source = (1, 1), Destination = (0, 0), Action = Action.Kill },
                 new() { Source = (1, 1), Destination = (-1, -1), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (2, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (1, 5), Action = Action.Move },
+                new() { Source = (1, 5), Destination = (2, 4), Action = Action.Kill },
+                new() { Source = (1, 5), Destination = (3, 3), Action = Action.Move },
+                new() { Source = (3, 3), Destination = (2, 2), Action = Action.Kill },
+                new() { Source = (3, 3), Destination = (1, 1), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (2, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (1, 5), Action = Action.Move },
+                new() { Source = (1, 5), Destination = (2, 4), Action = Action.Kill },
+                new() { Source = (1, 5), Destination = (3, 3), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (2, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (1, 5), Action = Action.Move },
                 new() { Source = (3, 7), Destination = (4, 6), Action = Action.Kill },
                 new() { Source = (3, 7), Destination = (5, 5), Action = Action.Move },
                 new() { Source = (5, 5), Destination = (6, 4), Action = Action.Kill },
                 new() { Source = (5, 5), Destination = (7, 3), Action = Action.Move },
                 new() { Source = (7, 3), Destination = (6, 2), Action = Action.Kill },
-                new() { Source = (7, 3), Destination = (5, 1), Action = Action.Move }
+                new() { Source = (7, 3), Destination = (5, 1), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (4, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (5, 5), Action = Action.Move },
+                new() { Source = (5, 5), Destination = (6, 4), Action = Action.Kill },
+                new() { Source = (5, 5), Destination = (7, 3), Action = Action.Move },
+                new() { Source = (3, 7), Destination = (4, 6), Action = Action.Kill },
+                new() { Source = (3, 7), Destination = (5, 5), Action = Action.Move }
             };
             
             var boardMock = new Mock<IBoardCreator>();
@@ -387,7 +445,7 @@ namespace Draughts.Tests
         }
         
         [Fact]
-        public void GivenAnotherLargeSetsOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
+        public void GivenAnotherLargeSetOfEventsWhenISelectTheBestPathThenTheBestPathIsReturned()
         {
             var board = new Dictionary<(int, int), Field>
             {
@@ -399,14 +457,24 @@ namespace Draughts.Tests
                 new() { Source = (3, 0), Destination = (1, 2), Action = Action.Move },
                 new() { Source = (1, 2), Destination = (2, 3), Action = Action.Kill },
                 new() { Source = (1, 2), Destination = (3, 4), Action = Action.Move },
+                new() { Source = (3, 0), Destination = (2, 1), Action = Action.Kill },
+                new() { Source = (3, 0), Destination = (1, 2), Action = Action.Move },
                 new() { Source = (3, 0), Destination = (4, 1), Action = Action.Kill },
                 new() { Source = (3, 0), Destination = (5, 2), Action = Action.Move },
                 new() { Source = (5, 2), Destination = (4, 3), Action = Action.Kill },
                 new() { Source = (5, 2), Destination = (3, 4), Action = Action.Move },
                 new() { Source = (3, 4), Destination = (4, 5), Action = Action.Kill },
                 new() { Source = (3, 4), Destination = (5, 6), Action = Action.Move },
+                new() { Source = (3, 0), Destination = (4, 1), Action = Action.Kill },
+                new() { Source = (3, 0), Destination = (5, 2), Action = Action.Move },
+                new() { Source = (5, 2), Destination = (4, 3), Action = Action.Kill },
+                new() { Source = (5, 2), Destination = (3, 4), Action = Action.Move },
+                new() { Source = (3, 0), Destination = (4, 1), Action = Action.Kill },
+                new() { Source = (3, 0), Destination = (5, 2), Action = Action.Move },
                 new() { Source = (5, 2), Destination = (6, 3), Action = Action.Kill },
-                new() { Source = (5, 2), Destination = (7, 4), Action = Action.Move }
+                new() { Source = (5, 2), Destination = (7, 4), Action = Action.Move },
+                new() { Source = (3, 0), Destination = (4, 1), Action = Action.Kill },
+                new() { Source = (3, 0), Destination = (5, 2), Action = Action.Move }
             };
 
             var boardMock = new Mock<IBoardCreator>();

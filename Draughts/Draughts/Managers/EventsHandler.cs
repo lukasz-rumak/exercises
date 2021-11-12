@@ -49,7 +49,7 @@ namespace Draughts.Managers
 
             return events.All(e => e.Action != Action.Kill) 
                 ? events.Select(e => new List<Event> { e }).ToList() 
-                : CreateAllPossiblePathsIfThereIsKilling(events);
+                : GroupAllPossiblePathsIfThereIsKilling(events);
         }
 
         public List<Event> SelectTheBestPathForPawn(List<Event> events)
@@ -60,7 +60,7 @@ namespace Draughts.Managers
             var randomMoveEvent = ReturnRandomMoveEventIfThereIsNoKilling(events);
             if (randomMoveEvent != null)
                 return randomMoveEvent;
-            var allPaths= CreateAllPossiblePathsIfThereIsKilling(events);
+            var allPaths= GroupAllPossiblePathsIfThereIsKilling(events);
             return ReturnTheLongestPath(allPaths);
         }
         
@@ -72,39 +72,30 @@ namespace Draughts.Managers
             return new List<Event> { randomEvent };
         }
         
-        private List<List<Event>> CreateAllPossiblePathsIfThereIsKilling(List<Event> events)
+        private List<List<Event>> GroupAllPossiblePathsIfThereIsKilling(List<Event> events)
         {
             var allPaths = new List<List<Event>>();
-
-            while (events.Count > 1)
+            if (events == null || events.Count == 0)
+                return allPaths;
+            
+            while (events.Count > 0)
             {
-                var pointer = events[0];
                 allPaths.Add(new List<Event>());
                 allPaths[^1].Add(events[0]);
-                for (int i = 1; i < events.Count; i++)
+                for (var i = 1; i < events.Count; i++)
                 {
-                    if (Math.Abs(pointer.Destination.Item1 - events[i].Destination.Item1) == 1
-                        && Math.Abs(pointer.Destination.Item2 - events[i].Destination.Item2) == 1)
+                    if (Math.Abs(events[i].Destination.Item1 - events[i - 1].Destination.Item1) == 1
+                        && Math.Abs(events[i].Destination.Item2 - events[i - 1].Destination.Item2) == 1)
                     {
                         allPaths[^1].Add(events[i]);
-                        pointer = events[i];
-                        if (i == events.Count - 1)
-                        {
-                            events.RemoveAt(i);
-                            break;
-                        }
                     }
                     else
-                    {
-                        events.RemoveAt(i - 1);
                         break;
-                    }
                 }
+
+                events.RemoveRange(0, allPaths[^1].Count);
             }
-            
-            if (events.Count == 1 && events[0].Action == Action.Move)
-                allPaths.Add(new List<Event> { events[0] });
-            allPaths.RemoveAll(path => path[^1].Action == Action.Kill);
+
             return allPaths;
         }
 

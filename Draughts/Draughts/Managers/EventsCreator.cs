@@ -15,13 +15,13 @@ namespace Draughts.Managers
             _positions = positions;
         }
         
-        public List<Event> CreateEventsForPawn(Players player, (int x, int y) pos)
+        public List<Event> CreateEventsForPawn(Players player, (int x, int y) initPosition)
         {
             var node = new Node
             {
                 PreviousNode = null,
-                PosX = pos.x,
-                PosY = pos.y,
+                PosX = initPosition.x,
+                PosY = initPosition.y,
             };
 
             var events = new List<Event>();
@@ -48,7 +48,12 @@ namespace Draughts.Managers
                     else if (node.RightNode == null)
                         ProcessKillingMove(events, ref node, Direction.Right, player, positionsRight);
                     else
+                    {
                         node = node.PreviousNode;
+                        if (node.PreviousNode == null)
+                            continue;
+                        AddMissingEventsToEventsList(events, (node.PosX, node.PosY), initPosition);
+                    }
                 }
             }
 
@@ -126,6 +131,28 @@ namespace Draughts.Managers
                     node = node.RightNode;
                 }
             }
+        }
+
+        private void AddMissingEventsToEventsList(List<Event> events, (int x, int y) nodePosition, (int x, int y) initPosition)
+        {
+            var trigger = false;
+            var tmpEvents = new List<Event>();
+            for (var i = events.Count - 1; i >= 0; i--)
+            {
+                if (trigger)
+                    tmpEvents.Add(events[i]);
+                else if (events[i].Destination.Equals(nodePosition))
+                {
+                    tmpEvents.Add(events[i]);
+                    trigger = true;
+                }
+
+                if (events[i].Source.Equals(initPosition) && events[i].Action == Action.Kill)
+                    break;
+            }
+                        
+            tmpEvents.Reverse();
+            events.AddRange(tmpEvents);
         }
         
         private bool ValidatePosition(int x, int y)
