@@ -15,12 +15,34 @@ namespace Draughts.Managers
             _board = board;
             _eventsHandler = eventsHandler;
         }
+        
+        public GameMode ReturnSelectedGameMode()
+        {
+            Console.WriteLine("Please select game mode and press enter");
+            Console.WriteLine("Option 0: Computer versus computer");
+            Console.WriteLine("Option 1: Human versus computer");
+            var key= ReturnAndValidateKeyFromConsole();
+            if (key != null) return (GameMode)key;
+            Console.WriteLine("No game mode selected. The computer versus computer is loaded by default");
+            return GameMode.ComputerVersusComputer;
+        }
+        
+        public Players ReturnSelectedPlayer()
+        {
+            Console.WriteLine("Please select player number for human player and press enter");
+            Console.WriteLine("Option 0: Player1");
+            Console.WriteLine("Option 1: Player2");
+            var key= ReturnAndValidateKeyFromConsole();
+            if (key != null) return (Players)key;
+            Console.WriteLine("No player selected. The Player1 is loaded by default");
+            return Players.Player1;
+        }
 
-        public List<List<Event>> ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(Players player)
+        public List<List<Event>> ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(Players player, Players humanPlayer)
         {
             for (var i = 0; i < 5; i++)
             {
-                var pos = ReadPawnPositionFromConsole();
+                var pos = ReadPawnPositionFromConsole(humanPlayer);
                 if (pos?.X == null || pos.Y == null)
                     return null;
                 
@@ -46,7 +68,7 @@ namespace Draughts.Managers
             return ReadOptionFromConsole(counter);
         }
 
-        private Position ReadPawnPositionFromConsole()
+        private Position ReadPawnPositionFromConsole(Players humanPlayer)
         {
             var pos = new Position();
             for (var i = 0; i < 5; i++)
@@ -55,7 +77,7 @@ namespace Draughts.Managers
                 if (pos.X == null) continue;
                 pos.Y = ReadPositionFromConsole("Y");
                 if (pos.Y == null) continue;
-                if (_board.ReturnPlayerNameFromTheField((pos.X.Value, pos.Y.Value)) == Players.Player1)
+                if (_board.ReturnPlayerNameFromTheField((pos.X.Value, pos.Y.Value)) == humanPlayer)
                     return pos;
                 Console.WriteLine("Please enter valid position for pawn");
             }
@@ -96,7 +118,7 @@ namespace Draughts.Managers
                     continue;
                 }
 
-                if (key.Value >= optionRange)
+                if (key.Value < 0 || key.Value >= optionRange)
                 {
                     Console.WriteLine("Please enter valid option");
                     continue;
@@ -106,6 +128,41 @@ namespace Draughts.Managers
             }
 
             return null;
+        }
+
+        private int? ReturnAndValidateKeyFromConsole()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                var key = ReturnKeyFromConsole();
+                if (key == null)
+                {
+                    Console.WriteLine("Please enter valid option");
+                    continue;
+                }
+
+                return key;
+            }
+
+            return null;
+        }
+
+        private int? ReturnKeyFromConsole()
+        {
+            int? key;
+            try
+            {
+                key = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
+            if (key.Value < 0 || key.Value > 1)
+                return null;
+            
+            return key;
         }
     }
 }

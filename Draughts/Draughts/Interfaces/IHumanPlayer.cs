@@ -5,7 +5,10 @@ namespace Draughts.Interfaces
 {
     public interface IHumanPlayer
     {
-        List<List<Event>> ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(Players player);
+        GameMode ReturnSelectedGameMode();
+        Players ReturnSelectedPlayer();
+        List<List<Event>> ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(Players player, Players humanPlayer);
         int? ReturnOptionSelectedByPlayer(List<List<Event>> allEvents);
+        
     }
 }

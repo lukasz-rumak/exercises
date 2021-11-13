@@ -14,12 +14,9 @@ namespace Draughts
             var eventHandler = new EventsHandler(board, new EventsCreator(board, new PositionProcessor()));
             var game = new GameHandler(board, new ConsoleOutput(), new MovementHandler(), eventHandler, new HumanPlayerHandler(board, eventHandler));
             
-            game.PlayTheGame(GameMode.HumanVersusComputer);
-            game.PlayTheGame(GameMode.ComputerVersusComputer);
+            game.PlayTheGame();
             
             // TODO: dodaj HumanVersusHuman
-            // TODO: dodaj ComputerVersusHuman
-            // TODO: wczytaj ktory gracz ma byc czlowiekiem, a ktory komputerem
         }
     }
 }

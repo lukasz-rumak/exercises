@@ -12,8 +12,8 @@ namespace Draughts.Managers
         private readonly IMovement _movement;
         private readonly IEventsHandler _eventsHandler;
         private readonly IHumanPlayer _humanHandler;
-        private readonly Dictionary<Players, Func<Players, List<Event>>> _executePlayersMovement;
         private readonly Dictionary<GameMode, Func<Players, List<Event>>> _executeGameMode;
+        private Players _humanPlayer;
 
         public GameHandler(IBoardCreator board, IOutput output, IMovement movement, IEventsHandler eventsHandler, IHumanPlayer humanHandler)
         {
@@ -22,13 +22,17 @@ namespace Draughts.Managers
             _movement = movement;
             _eventsHandler = eventsHandler;
             _humanHandler = humanHandler;
-            _executePlayersMovement = CreateDictExecutePlayersMovement();
             _executeGameMode = CreateDictGameModel();
+            _humanPlayer = Players.None;
         }
 
-        public void PlayTheGame(GameMode gameMode)
+        public void PlayTheGame()
         {
-            var player = Players.Player1;
+            var roundOwner = Players.Player1;
+            var gameMode = _humanHandler.ReturnSelectedGameMode();
+            if (gameMode == GameMode.HumanVersusComputer)
+                _humanPlayer = _humanHandler.ReturnSelectedPlayer();
+            
             var gameOver = false;
             GenerateInitOutput();
 
@@ -40,17 +44,17 @@ namespace Draughts.Managers
                     continue;
                 }
 
-                GenerateStartRoundOutput(gameMode, player);
+                GenerateStartRoundOutput(gameMode, roundOwner);
 
-                var events = _executeGameMode[gameMode](player);
-                if (events == null && player == Players.Player1)
+                var events = _executeGameMode[gameMode](roundOwner);
+                if (events == null && roundOwner == _humanPlayer)
                 {
-                    player = SkipPlayer1Round();
+                    roundOwner = SkipHumanPlayerRound();
                     continue;
                 }
 
-                GenerateEndRoundOutput(gameMode, player, events);
-                player = player == Players.Player1 ? Players.Player2 : Players.Player1;
+                GenerateEndRoundOutput(gameMode, roundOwner, events);
+                roundOwner = roundOwner == Players.Player1 ? Players.Player2 : Players.Player1;
                 gameOver = CheckConditionIfGameShouldEndDueToNoEvents(events);
             }
 
@@ -68,21 +72,12 @@ namespace Draughts.Managers
 
         private List<Event> HumanVersusComputerGame(Players player)
         {
-            return _executePlayersMovement[player](player);
-        }
-        
-        private Dictionary<Players, Func<Players, List<Event>>> CreateDictExecutePlayersMovement()
-        {
-            return new Dictionary<Players, Func<Players, List<Event>>>
-            {
-                [Players.Player1] = ExecuteHumanPlayerMovement,
-                [Players.Player2] = ExecuteComputerPlayerMovement
-            };
+            return player == _humanPlayer ? ExecuteHumanPlayerMovement(player) : ExecuteComputerPlayerMovement(player);
         }
 
         private List<Event> ExecuteHumanPlayerMovement(Players player)
         {
-            var allEvents = _humanHandler.ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(player);
+            var allEvents = _humanHandler.ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(player, _humanPlayer);
             if (allEvents == null)
                 return null;
 
@@ -114,14 +109,14 @@ namespace Draughts.Managers
         {
             Console.WriteLine("NEXT ROUND");
             Console.WriteLine($"{player}");
-            if (gameMode == GameMode.HumanVersusComputer && player == Players.Player1)
+            if (gameMode == GameMode.HumanVersusComputer && player == _humanPlayer)
                 _output.GenerateBoardVisualization(_board);
         }
 
         private void GenerateEndRoundOutput(GameMode gameMode, Players player, List<Event> events)
         {
             _output.GeneratePlayerMovement(player, events);
-            if (gameMode == GameMode.HumanVersusComputer && player == Players.Player2)
+            if (gameMode == GameMode.HumanVersusComputer && player != _humanPlayer)
                 return;
             _output.GenerateBoardVisualization(_board);
             _output.GenerateSummary(_board);
@@ -137,10 +132,10 @@ namespace Draughts.Managers
             return events.Count == 0;
         }
         
-        private Players SkipPlayer1Round()
+        private Players SkipHumanPlayerRound()
         {
-            Console.WriteLine("Skipping Player1 round");
-            return Players.Player2;
+            Console.WriteLine("Skipping human player round");
+            return _humanPlayer == Players.Player1 ? Players.Player2 : Players.Player1;
         }
     }
 }
