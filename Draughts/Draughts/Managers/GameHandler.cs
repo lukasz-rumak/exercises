@@ -32,6 +32,8 @@ namespace Draughts.Managers
             var gameMode = _humanHandler.ReturnSelectedGameMode();
             if (gameMode == GameMode.HumanVersusComputer)
                 _humanPlayer = _humanHandler.ReturnSelectedPlayer();
+            if (gameMode == GameMode.HumanVersusHuman)
+                _humanPlayer = roundOwner;
             
             var gameOver = false;
             GenerateInitOutput();
@@ -55,6 +57,8 @@ namespace Draughts.Managers
 
                 GenerateEndRoundOutput(gameMode, roundOwner, events);
                 roundOwner = roundOwner == Players.Player1 ? Players.Player2 : Players.Player1;
+                if (gameMode == GameMode.HumanVersusHuman)
+                    _humanPlayer = roundOwner;
                 gameOver = CheckConditionIfGameShouldEndDueToNoEvents(events);
             }
 
@@ -66,8 +70,14 @@ namespace Draughts.Managers
             return new Dictionary<GameMode, Func<Players, List<Event>>>
             {
                 [GameMode.ComputerVersusComputer] = ExecuteComputerPlayerMovement,
-                [GameMode.HumanVersusComputer] = HumanVersusComputerGame
+                [GameMode.HumanVersusComputer] = HumanVersusComputerGame,
+                [GameMode.HumanVersusHuman] = HumanVersusHumanGame
             };
+        }
+
+        private List<Event> HumanVersusHumanGame(Players player)
+        {
+            return ExecuteHumanPlayerMovement(player);
         }
 
         private List<Event> HumanVersusComputerGame(Players player)
@@ -109,7 +119,8 @@ namespace Draughts.Managers
         {
             Console.WriteLine("NEXT ROUND");
             Console.WriteLine($"{player}");
-            if (gameMode == GameMode.HumanVersusComputer && player == _humanPlayer)
+            if ((gameMode == GameMode.HumanVersusComputer && player == _humanPlayer) 
+                || gameMode == GameMode.HumanVersusHuman)
                 _output.GenerateBoardVisualization(_board);
         }
 

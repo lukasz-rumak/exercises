@@ -12,7 +12,7 @@ namespace Draughts
             
             var board = new BoardCreator(8, 12);
             var eventHandler = new EventsHandler(board, new EventsCreator(board, new PositionProcessor()));
-            var game = new GameHandler(board, new ConsoleOutput(), new MovementHandler(), eventHandler, new HumanPlayerHandler(board, eventHandler));
+            var game = new GameHandler(board, new ConsoleOutput(), new MovementHandler(), eventHandler, new HumanPlayerHandler(board, eventHandler, 3));
             
             game.PlayTheGame();
             

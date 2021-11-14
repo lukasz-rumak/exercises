@@ -9,11 +9,13 @@ namespace Draughts.Managers
     {
         private readonly IBoardCreator _board;
         private readonly IEventsHandler _eventsHandler;
-
-        public HumanPlayerHandler(IBoardCreator board, IEventsHandler eventsHandler)
+        private readonly int _consoleRetries;
+        
+        public HumanPlayerHandler(IBoardCreator board, IEventsHandler eventsHandler, int consoleRetries)
         {
             _board = board;
             _eventsHandler = eventsHandler;
+            _consoleRetries = consoleRetries;
         }
         
         public GameMode ReturnSelectedGameMode()
@@ -21,7 +23,8 @@ namespace Draughts.Managers
             Console.WriteLine("Please select game mode and press enter");
             Console.WriteLine("Option 0: Computer versus computer");
             Console.WriteLine("Option 1: Human versus computer");
-            var key= ReturnAndValidateKeyFromConsole();
+            Console.WriteLine("Option 2: Human versus human");
+            var key= ReturnAndValidateKeyFromConsole(3);
             if (key != null) return (GameMode)key;
             Console.WriteLine("No game mode selected. The computer versus computer is loaded by default");
             return GameMode.ComputerVersusComputer;
@@ -32,7 +35,7 @@ namespace Draughts.Managers
             Console.WriteLine("Please select player number for human player and press enter");
             Console.WriteLine("Option 0: Player1");
             Console.WriteLine("Option 1: Player2");
-            var key= ReturnAndValidateKeyFromConsole();
+            var key= ReturnAndValidateKeyFromConsole(2);
             if (key != null) return (Players)key;
             Console.WriteLine("No player selected. The Player1 is loaded by default");
             return Players.Player1;
@@ -40,7 +43,7 @@ namespace Draughts.Managers
 
         public List<List<Event>> ReadPawnPositionFromConsoleAndReturnAllEventsForGivenPawn(Players player, Players humanPlayer)
         {
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < _consoleRetries; i++)
             {
                 var pos = ReadPawnPositionFromConsole(humanPlayer);
                 if (pos?.X == null || pos.Y == null)
@@ -65,13 +68,14 @@ namespace Draughts.Managers
                 Console.WriteLine($"Option {counter}: {e[^1].Destination} {e[^1].Action}");
                 counter++;
             }
-            return ReadOptionFromConsole(counter);
+            Console.WriteLine($"Please enter option and press enter");
+            return ReturnAndValidateKeyFromConsole(counter);
         }
 
         private Position ReadPawnPositionFromConsole(Players humanPlayer)
         {
             var pos = new Position();
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < _consoleRetries; i++)
             {
                 pos.X = ReadPositionFromConsole("X");
                 if (pos.X == null) continue;
@@ -101,40 +105,12 @@ namespace Draughts.Managers
 
             return key;
         }
-
-        private int? ReadOptionFromConsole(int optionRange)
+        
+        private int? ReturnAndValidateKeyFromConsole(int optionRange)
         {
-            int? key;
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < _consoleRetries; i++)
             {
-                Console.WriteLine($"Please enter option and press enter");
-                try
-                {
-                    key = Convert.ToInt32(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Please enter valid option");
-                    continue;
-                }
-
-                if (key.Value < 0 || key.Value >= optionRange)
-                {
-                    Console.WriteLine("Please enter valid option");
-                    continue;
-                }
-
-                return key;
-            }
-
-            return null;
-        }
-
-        private int? ReturnAndValidateKeyFromConsole()
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                var key = ReturnKeyFromConsole();
+                var key = ReturnKeyFromConsole(optionRange);
                 if (key == null)
                 {
                     Console.WriteLine("Please enter valid option");
@@ -147,7 +123,7 @@ namespace Draughts.Managers
             return null;
         }
 
-        private int? ReturnKeyFromConsole()
+        private int? ReturnKeyFromConsole(int optionRange)
         {
             int? key;
             try
@@ -159,7 +135,7 @@ namespace Draughts.Managers
                 return null;
             }
             
-            if (key.Value < 0 || key.Value > 1)
+            if (key.Value < 0 || key.Value >= optionRange)
                 return null;
             
             return key;
