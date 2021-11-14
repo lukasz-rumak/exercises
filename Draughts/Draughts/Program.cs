@@ -15,8 +15,6 @@ namespace Draughts
             var game = new GameHandler(board, new ConsoleOutput(), new MovementHandler(), eventHandler, new HumanPlayerHandler(board, eventHandler, 3));
             
             game.PlayTheGame();
-            
-            // TODO: dodaj HumanVersusHuman
         }
     }
 }
