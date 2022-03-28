@@ -63,11 +63,12 @@ export const validateInputAgainstNumbers = (input) => {
 }
 
 const validateInputAgainstNumbersPerPosition = (input) => {
-    return Array.from(input).map(String).every(value => {
-        if (Number.isInteger(Number(value))) {
-            return true
-        }
-    })
+    return validateInputAgainstLeadingZeros(input)
+        && !isNaN(Number(input))
+}
+
+const validateInputAgainstLeadingZeros = (input) => {
+    return input.length === String(Number(input)).length
 }
 
 export const validateInputAgainstBoardSize = (input, boardLength) => {

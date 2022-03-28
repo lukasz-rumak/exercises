@@ -130,13 +130,20 @@ test('Validate Input Againt Empty String - False', () => {
 })
 
 test('Validate Input Against Numbers - True', () => {
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['0', '0'])).toBeTruthy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['0', '1'])).toBeTruthy()
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['1', '0'])).toBeTruthy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['1', '2'])).toBeTruthy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['123', '23'])).toBeTruthy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['555', '9999'])).toBeTruthy()
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['-11', '11'])).toBeTruthy() 
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['11', '-11'])).toBeTruthy()
 })
 
 test('Validate Input Against Numbers- False', () => {
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['02', '11'])).toBeFalsy() 
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['11', '00'])).toBeFalsy()
+    expect(ticTacToeExtentions.validateInputAgainstNumbers(['11', '000002'])).toBeFalsy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['xxx', '111'])).toBeFalsy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['111', 'xxx'])).toBeFalsy()
     expect(ticTacToeExtentions.validateInputAgainstNumbers(['xxx', 'yyy'])).toBeFalsy()
