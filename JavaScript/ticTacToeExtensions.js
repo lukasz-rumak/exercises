@@ -64,7 +64,7 @@ export const validateInputAgainstNumbers = (input) => {
 
 const validateInputAgainstNumbersPerPosition = (input) => {
     return validateInputAgainstLeadingZeros(input)
-        && !isNaN(Number(input))
+        && Number.isInteger(Number(input))
 }
 
 const validateInputAgainstLeadingZeros = (input) => {
