@@ -1,0 +1,6 @@
+[
+  {
+    "action": "talk",
+    "text": "<speak><s>This is a test call from Vonage Call Center</s><break time='10s' /><s>This is a test call from Vonage Call Center</s><break time='10s' /><s>This is a test call from Vonage Call Center</s><break time='10s' /><s>This is a test call from Vonage Call Center</s><break time='10s' /><s>This is a test call from Vonage Call Center</s></speak>"
+  }
+]
